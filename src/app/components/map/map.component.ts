@@ -54,7 +54,13 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
       style: `https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte-imagery.vt/style.json`,
       // style: `https://api.maptiler.com/maps/basic-v2/style.json?key=KvRgWGYbyNZgzbSTt1ga`,
       center: [initialState.lng, initialState.lat],
-      zoom: initialState.zoom
+      zoom: initialState.zoom,
+      // transformRequest: function (url, resourceType) {
+      //   return {
+      //     url: url.concat('?ngsw-bypass=true'),
+      //     // 'credentials': 'same-origin'
+      //   }
+      // }
     });
 
     this.map.on('load', (e) => {
