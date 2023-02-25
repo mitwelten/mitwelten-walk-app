@@ -24,6 +24,8 @@ h1 {
 #progress {
   position: absolute;
   top: 20%;
+  font-size: 24px;
+  font-weight: bold;
   left: 8px;
   background-color: rgba(255,255,255,0.7);
   border: 2px solid #888;

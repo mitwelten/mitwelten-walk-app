@@ -6,7 +6,7 @@
 </div>
 
 <div id="progress">
-  Progress: {{ progress | percent }}
+  Progress: {{ progress | percent:'1.2-2' }}
 </div>
 
 <app-map [coordinates]="location" (progressSet)="progress = $event"></app-map>
