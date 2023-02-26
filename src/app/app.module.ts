@@ -5,7 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { MapComponent } from './components/map/map.component';
-import { POSITION_OPTIONS } from '@ng-web-apis/geolocation';
+import { GeolocationService, POSITION_OPTIONS } from '@ng-web-apis/geolocation';
+import { GeolocationMockService } from './testing/geolocation-mock.service';
 
 @NgModule({
   declarations: [
@@ -23,10 +24,14 @@ import { POSITION_OPTIONS } from '@ng-web-apis/geolocation';
     })
   ],
   providers: [
-   {
+    {
+      provide: GeolocationService,
+      useClass: GeolocationMockService
+    },
+    {
       provide: POSITION_OPTIONS,
-      useValue: {enableHighAccuracy: true, timeout: 3000, maximumAge: 1000},
-   },
+      useValue: { enableHighAccuracy: true, timeout: 27000, maximumAge: 30000 },
+    },
   ],
   bootstrap: [AppComponent]
 })
