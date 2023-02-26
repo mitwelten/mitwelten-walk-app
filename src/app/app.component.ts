@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
+import { tap } from 'rxjs';
 import { CoordinatePoint } from './shared';
 
 @Component({
