@@ -1,45 +1,69 @@
 import {
-  AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges,
+  AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Inject, Input, OnChanges,
   OnDestroy, Output, SimpleChanges, ViewChild
 } from '@angular/core';
 import { Map, Marker, GeoJSONSource } from 'maplibre-gl';
 import { Position } from 'geojson';
 import { parcours } from './map.data';
 import { CoordinatePoint } from '../../shared';
+import { TrackProgressService } from 'src/app/shared/track-progress.service';
+import { GeolocationService } from '@ng-web-apis/geolocation';
+import { startWith } from 'rxjs';
+import { MAP_STYLE_CONFIG } from 'src/app/shared/configuration';
 
 @Component({
-  // changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class MapComponent implements AfterViewInit, OnDestroy {
 
-  map: Map | undefined;
-  marker: Marker | undefined;
-  tracker: Marker | undefined;
-  trackerLocation: Position | undefined;
-  trace: Position[] = [];
-  parcoursPath: Position[] = parcours;
-  parcoursLength = 0;
-  parcoursProgress = 0;
+  private map: Map | undefined;
+  private marker: Marker | undefined;
+  private tracker: Marker | undefined;
+  private trackerLocation: Position | undefined;
+  private trace: Position[] = [];
+  private parcoursPath: Position[] = parcours;
+  private parcoursLength = 0;
 
-  @Output()
-  coordinatesSet = new EventEmitter<CoordinatePoint>;
-
-  @Output()
-  progressSet = new EventEmitter<number>;
-
+  /** Initial coordinates to center the map on */
   @Input()
   coordinates?: CoordinatePoint;
-
-  @Input()
-  readonly = true;
 
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
 
-  constructor() { }
+  constructor(
+    @Inject(MAP_STYLE_CONFIG) private mapStyle: string,
+    private readonly geolocation: GeolocationService,
+    private trackProgress: TrackProgressService) {
+      this.geolocation.pipe(
+        startWith({ coords: { // reinacher heide
+          longitude: 7.609027254014222,
+          latitude: 47.506450512010844
+        }})
+        // tap(l => console.dir(l))
+        ).subscribe(l => {
+          const loc: CoordinatePoint = { lon: l.coords.longitude, lat: l.coords.latitude}
+          // TODO: do something with the accuracy value (skip, or warn)
+          this.trackerLocation = [l.coords.longitude, l.coords.latitude];
+          this.updateProjection(this.trackerLocation);
+          this.map?.setCenter(loc);
+          this.tracker?.setLngLat(loc); // TODO: does this trigger 'on drag'?
+
+          // draw track
+          this.trace?.push(this.trackerLocation);
+          const s = <GeoJSONSource>this.map?.getSource('route');
+          if (s) s.setData({
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: this.trace
+            }
+          })
+      });
+    }
 
   ngOnDestroy(): void {
     this.map?.remove();
@@ -53,17 +77,9 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 
     this.map = new Map({
       container: this.mapContainer.nativeElement,
-      // style: `https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte.vt/style.json`,
-      style: `https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte-imagery.vt/style.json`,
-      // style: `https://api.maptiler.com/maps/basic-v2/style.json?key=KvRgWGYbyNZgzbSTt1ga`,
+      style: this.mapStyle,
       center: [initialState.lng, initialState.lat],
       zoom: initialState.zoom,
-      // transformRequest: function (url, resourceType) {
-      //   return {
-      //     url: url.concat('?ngsw-bypass=true'),
-      //     // 'credentials': 'same-origin'
-      //   }
-      // }
     });
 
     this.map.on('load', (e) => {
@@ -86,7 +102,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
       if (ll !== undefined) {
         this.trackerLocation = [ll.lng, ll.lat];
         this.updateProjection(this.trackerLocation);
-        this.coordinatesSet.emit({lat: ll.lat, lon: ll.lng});
       }
     });
   }
@@ -120,8 +135,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
         }
         distanceAlongPath += this.distance(start, end);
       }
-      this.parcoursProgress = (distanceAlongPath / this.parcoursLength);
-      this.progressSet.emit(this.parcoursProgress);
+      this.trackProgress.setProgress(distanceAlongPath / this.parcoursLength);
 
       if (closestPoint) {
         const s = <GeoJSONSource>this.map?.getSource('projection');
@@ -240,26 +254,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
     const projectionX = start[0] + t * dx;
     const projectionY = start[1] + t * dy;
     return [this.distance(point, [projectionX, projectionY]), [projectionX, projectionY]];
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('coordinates' in changes) {
-      this.map?.setCenter(changes['coordinates'].currentValue)
-      this.tracker?.setLngLat(changes['coordinates'].currentValue)
-      this.updateProjection([changes['coordinates'].currentValue.lon, changes['coordinates'].currentValue.lat]);
-
-      // draw track
-      this.trace?.push([changes['coordinates'].currentValue.lon, changes['coordinates'].currentValue.lat]);
-      const s = <GeoJSONSource>this.map?.getSource('route');
-      if (s) s.setData({
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: this.trace
-        }
-      })
-    }
   }
 
 }

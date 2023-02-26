@@ -7,6 +7,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { MapComponent } from './components/map/map.component';
 import { GeolocationService, POSITION_OPTIONS } from '@ng-web-apis/geolocation';
 import { GeolocationMockService } from './testing/geolocation-mock.service';
+import { MAP_STYLE_CONFIG } from './shared/configuration';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,12 @@ import { GeolocationMockService } from './testing/geolocation-mock.service';
       provide: POSITION_OPTIONS,
       useValue: { enableHighAccuracy: true, timeout: 27000, maximumAge: 30000 },
     },
+    {
+      provide: MAP_STYLE_CONFIG,
+      useValue: 'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte-imagery.vt/style.json',
+      // useValue: 'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte.vt/style.json',
+      // useValue: 'https://api.maptiler.com/maps/basic-v2/style.json?key=KvRgWGYbyNZgzbSTt1ga',
+    }
   ],
   bootstrap: [AppComponent]
 })
