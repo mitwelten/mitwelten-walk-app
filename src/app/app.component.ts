@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
-import { tap } from 'rxjs';
+import { startWith, tap } from 'rxjs';
 import { CoordinatePoint } from './shared';
 
 @Component({
@@ -10,30 +10,24 @@ import { CoordinatePoint } from './shared';
 })
 export class AppComponent implements OnInit {
   title = 'Datawalk Prototype';
-  location: CoordinatePoint;
+  location?: CoordinatePoint;
   progress = 0;
 
   constructor(
     private readonly geolocation: GeolocationService,
-  ) {
-    this.location = { // reinacher heide
-      lon: 7.609027254014222,
-      lat: 47.506450512010844
-    }
-  }
+  ) { }
 
   ngOnInit(): void {
     this.geolocation.pipe(
+      startWith({ coords: { // reinacher heide
+        longitude: 7.609027254014222,
+        latitude: 47.506450512010844
+      }})
       // tap(l => console.dir(l))
       ).subscribe(l => {
         const loc: CoordinatePoint = { lon: l.coords.longitude, lat: l.coords.latitude}
         this.location = loc;
     });
-    this.location = {
-      lon: 7.609027254014222,
-      lat: 47.506450512010844
-    }
-
   }
 
   track(event: any) {

@@ -31,7 +31,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
   progressSet = new EventEmitter<number>;
 
   @Input()
-  coordinates: CoordinatePoint = { lon: 7.614704694445322, lat: 47.53603016174955 } ;
+  coordinates?: CoordinatePoint;
 
   @Input()
   readonly = true;
@@ -46,7 +46,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   ngAfterViewInit(): void {
-    let initialState = { lng: this.coordinates.lon, lat: this.coordinates.lat, zoom: 16 };
+    let initialState = { lng: 7.614704694445322, lat: 47.53603016174955, zoom: 16 }
+    if (this.coordinates) {
+      initialState = Object.assign(initialState, { lng: this.coordinates.lon, lat: this.coordinates.lat });
+    }
 
     this.map = new Map({
       container: this.mapContainer.nativeElement,

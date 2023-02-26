@@ -1,8 +1,8 @@
 <h1>{{ title }}</h1>
 
 <div id="coords">
-  Latitude: {{ location.lat | number:'1.10-10' }} |
-  Longitude: {{ location.lon | number:'1.10-10' }}
+  Latitude: {{ location?.lat | number:'1.10-10' }} |
+  Longitude: {{ location?.lon | number:'1.10-10' }}
 </div>
 
 <div id="progress">
