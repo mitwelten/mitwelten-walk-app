@@ -1,5 +1,6 @@
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -7,6 +8,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { MapComponent } from './components/map/map.component';
 import { GeolocationService, POSITION_OPTIONS } from '@ng-web-apis/geolocation';
 import { GeolocationMockService } from './testing/geolocation-mock.service';
+import { AuthInterceptor } from './shared/auth.interceptor';
 import { MAP_STYLE_CONFIG } from './shared/configuration';
 import { RecordControlComponent } from './components/record-control/record-control.component';
 
@@ -18,6 +20,7 @@ import { RecordControlComponent } from './components/record-control/record-contr
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
@@ -40,7 +43,8 @@ import { RecordControlComponent } from './components/record-control/record-contr
       useValue: 'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte-imagery.vt/style.json',
       // useValue: 'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte.vt/style.json',
       // useValue: 'https://api.maptiler.com/maps/basic-v2/style.json?key=KvRgWGYbyNZgzbSTt1ga',
-    }
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

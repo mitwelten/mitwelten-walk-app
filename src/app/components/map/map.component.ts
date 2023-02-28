@@ -5,9 +5,10 @@ import {
 import { Map, Marker, GeoJSONSource } from 'maplibre-gl';
 import { Position } from 'geojson';
 import { parcours } from './map.data';
-import { CoordinatePoint } from '../../shared';
+import { CoordinatePoint, DataService } from '../../shared';
 import { TrackProgressService } from 'src/app/shared/track-progress.service';
 import { TrackRecorderService } from 'src/app/shared/track-recorder.service';
+import { Deployment } from 'src/app/shared/deployment.type';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { map, tap } from 'rxjs';
 import { MAP_STYLE_CONFIG } from 'src/app/shared/configuration';
@@ -25,6 +26,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private trackerLocation: Position | undefined;
   private parcoursPath: Position[] = parcours;
   private parcoursLength = 0;
+  private deployments: Deployment[] = [];
 
   /** Initial coordinates to center the map on */
   @Input()
@@ -37,7 +39,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     @Inject(MAP_STYLE_CONFIG) private mapStyle: string,
     private readonly geolocation: GeolocationService,
     private trackProgress: TrackProgressService,
-    private trackRecorder: TrackRecorderService) {
+    private trackRecorder: TrackRecorderService,
+    private dataService: DataService,) {
       this.geolocation.pipe(
         tap(l => this.trackRecorder.addPosition(l))
         ).subscribe({
@@ -65,7 +68,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             coordinates: track
           }
         })
-      })
+      });
     }
 
   ngOnDestroy(): void {
@@ -89,6 +92,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (this.map) {
         this.setParcours(this.map);
         this.setTrace(this.map);
+        this.dataService.listDeployments().subscribe(deployments => {
+          this.deployments = deployments;
+          this.drawDepoyments(this.map!);
+        })
       };
     });
 
@@ -109,7 +116,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  updateProjection(location: Position) {
+  private updateProjection(location: Position) {
     // Find the closest point on the path to the object
     let closestPoint: Position | undefined;
     let lastStartPoint: Position | undefined;
@@ -155,7 +162,37 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  setParcours(map: Map) {
+  private drawDepoyments(map: Map) {
+    map.addSource('deployments', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: this.deployments.map(d => {
+          return {
+            type: 'feature',
+            properties: { title: d.node.node_label, data: d.description },
+            geometry: { type: 'Point', coordinates: [d.location.lon, d.location.lat] }
+          }
+        })
+      }
+    });
+    map.addLayer({
+      id: 'deployments',
+      type: 'circle',
+      source: 'deployments',
+      layout: { },
+      paint: {
+        'circle-radius': 5,
+        'circle-color': '#fff',
+        'circle-opacity': 0.6,
+        'circle-stroke-color': '#B42222',
+        'circle-stroke-opacity': 0.9,
+        'circle-stroke-width': 1
+      }
+    });
+  }
+
+  private setParcours(map: Map) {
     // get length of path
     this.parcoursLength = 0;
     for (let i = 0; i < this.parcoursPath.length - 1; i++) {
@@ -212,7 +249,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  setTrace(map: Map) {
+  private setTrace(map: Map) {
     map.addSource('route', {
      'type': 'geojson',
      'data': {
