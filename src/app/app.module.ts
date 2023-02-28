@@ -8,11 +8,13 @@ import { MapComponent } from './components/map/map.component';
 import { GeolocationService, POSITION_OPTIONS } from '@ng-web-apis/geolocation';
 import { GeolocationMockService } from './testing/geolocation-mock.service';
 import { MAP_STYLE_CONFIG } from './shared/configuration';
+import { RecordControlComponent } from './components/record-control/record-control.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapComponent
+    MapComponent,
+    RecordControlComponent
   ],
   imports: [
     BrowserModule,
