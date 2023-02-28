@@ -25,7 +25,8 @@ $datawalk-proto-theme: mat.define-light-theme((
     primary: $datawalk-proto-primary,
     accent: $datawalk-proto-accent,
     warn: $datawalk-proto-warn,
-  )
+    ),
+  density: -2,
 ));
 
 // Include theme styles for core and each component used in your app.
