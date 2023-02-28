@@ -14,6 +14,7 @@ import { AuthInterceptor } from './shared/auth.interceptor';
 import { MAP_STYLE_CONFIG } from './shared/configuration';
 import { RecordControlComponent } from './components/record-control/record-control.component';
 import { LoginComponent } from './components/login/login.component';
+import { EntryFormComponent } from './components/entry-form/entry-form.component';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
@@ -26,6 +27,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
 
 import '@angular/common/locales/global/de';
 
@@ -34,7 +37,8 @@ import '@angular/common/locales/global/de';
     AppComponent,
     MapComponent,
     RecordControlComponent,
-    LoginComponent
+    LoginComponent,
+    EntryFormComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +62,8 @@ import '@angular/common/locales/global/de';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatSelectModule,
   ],
   providers: [
     // {

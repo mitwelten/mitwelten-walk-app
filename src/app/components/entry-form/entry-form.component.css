@@ -1,0 +1,22 @@
+mat-card-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 8px;
+  max-width: 400px;
+}
+
+.full-width-field {
+  width: 100%;
+}
+
+.coordinates-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: min-content 1fr 1fr;
+  column-gap: 10px;
+  align-items: start;
+}
+
+.coordinates-container button {
+  margin-top: 4px;
+}
