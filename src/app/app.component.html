@@ -1,7 +1,7 @@
 <app-map (closeDeployments)="deployments = $event"></app-map>
 
 <mat-toolbar class="mat-elevation-z8" color="primary">
-  <button mat-icon-button aria-label="Open main menu">
+  <button mat-icon-button [matMenuTriggerFor]="mainMenu" aria-label="Open main menu">
     <mat-icon class="material-symbols-outlined">menu</mat-icon>
   </button>
   <span class="mat-h2" style="margin: 0;">{{ title }}</span>
@@ -13,6 +13,17 @@
     <mat-icon class="material-symbols-outlined">share</mat-icon>
   </button>
 </mat-toolbar>
+
+<mat-menu #mainMenu="matMenu">
+  <button *ngIf="!isLoggedIn" mat-menu-item (click)="login()">
+    <mat-icon color="accent" class="material-symbols-outlined">login</mat-icon>
+    <span>Log in</span>
+  </button>
+  <button *ngIf="isLoggedIn" mat-menu-item (click)="logout()">
+    <mat-icon color="accent" class="material-symbols-outlined">logout</mat-icon>
+    <span>Log out</span>
+  </button>
+</mat-menu>
 
 <mat-menu #gpsRecordMenu="matMenu">
   <app-record-control style="width: min-content;"></app-record-control>

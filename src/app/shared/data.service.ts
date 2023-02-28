@@ -12,6 +12,10 @@ export class DataService {
 
   constructor(public readonly http: HttpClient) { }
 
+  public login(): Observable<{authenticated: boolean}> {
+    return this.http.get<{authenticated: boolean}>(`${this.apiUrl}/login`);
+  }
+
   public listDeployments(node_id?: number): Observable<Array<Deployment>> {
     const queryParams = node_id !== undefined ? `?node_id=${node_id}` : '';
     return this.http.get<Array<Deployment>>(`${this.apiUrl}/deployments${queryParams}`);
