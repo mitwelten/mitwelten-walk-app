@@ -13,6 +13,11 @@ import { AuthInterceptor } from './shared/auth.interceptor';
 import { MAP_STYLE_CONFIG } from './shared/configuration';
 import { RecordControlComponent } from './components/record-control/record-control.component';
 
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +34,12 @@ import { RecordControlComponent } from './components/record-control/record-contr
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    MatButtonModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatSlideToggleModule,
   ],
   providers: [
     // {

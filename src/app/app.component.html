@@ -1,3 +1,19 @@
+<app-map (closeDeployments)="deployments = $event"></app-map>
+
+<mat-toolbar class="mat-elevation-z8" color="primary">
+  <button mat-icon-button aria-label="Open main menu">
+    <mat-icon class="material-symbols-outlined">menu</mat-icon>
+  </button>
+  <span class="mat-h2" style="margin: 0;">{{ title }}</span>
+  <span class="spacer"></span>
+  <button mat-icon-button [matMenuTriggerFor]="gpsRecordMenu" aria-label="Open GPS recording menu">
+    <mat-icon class="material-symbols-outlined">location_on</mat-icon>
+  </button>
+  <button mat-icon-button [matMenuTriggerFor]="parcoursMenu" aria-label="Open Parcours menu">
+    <mat-icon class="material-symbols-outlined">share</mat-icon>
+  </button>
+</mat-toolbar>
+
 <h1>{{ title }}</h1>
 <app-record-control style="width: min-content;"></app-record-control>
 
@@ -19,5 +35,3 @@
     </li>
   </ul>
 </div>
-
-<app-map (closeDeployments)="deployments = $event"></app-map>
