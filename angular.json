@@ -33,7 +33,8 @@
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json",
             "allowedCommonJsDependencies": [
-              "maplibre-gl"
+              "maplibre-gl",
+              "file-saver"
             ]
           },
           "configurations": {
