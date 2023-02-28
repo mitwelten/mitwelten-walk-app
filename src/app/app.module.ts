@@ -25,10 +25,10 @@ import { MAP_STYLE_CONFIG } from './shared/configuration';
     })
   ],
   providers: [
-    {
-      provide: GeolocationService,
-      useClass: GeolocationMockService
-    },
+    // {
+    //   provide: GeolocationService,
+    //   useClass: GeolocationMockService
+    // },
     {
       provide: POSITION_OPTIONS,
       useValue: { enableHighAccuracy: true, timeout: 27000, maximumAge: 30000 },
