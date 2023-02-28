@@ -3,6 +3,7 @@ import { GeolocationService } from '@ng-web-apis/geolocation';
 import { startWith, tap } from 'rxjs';
 import { CoordinatePoint } from './shared';
 import { TrackProgressService } from './shared/track-progress.service';
+import { TrackRecorderService } from './shared/track-recorder.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     private readonly geolocation: GeolocationService,
+    public trackRecorder: TrackRecorderService,
     public trackProgress: TrackProgressService
   ) { }
 

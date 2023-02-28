@@ -7,8 +7,9 @@ import { Position } from 'geojson';
 import { parcours } from './map.data';
 import { CoordinatePoint } from '../../shared';
 import { TrackProgressService } from 'src/app/shared/track-progress.service';
+import { TrackRecorderService } from 'src/app/shared/track-recorder.service';
 import { GeolocationService } from '@ng-web-apis/geolocation';
-import { startWith } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { MAP_STYLE_CONFIG } from 'src/app/shared/configuration';
 
 @Component({
@@ -22,7 +23,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private marker: Marker | undefined;
   private tracker: Marker | undefined;
   private trackerLocation: Position | undefined;
-  private trace: Position[] = [];
   private parcoursPath: Position[] = parcours;
   private parcoursLength = 0;
 
@@ -36,33 +36,36 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(MAP_STYLE_CONFIG) private mapStyle: string,
     private readonly geolocation: GeolocationService,
-    private trackProgress: TrackProgressService) {
+    private trackProgress: TrackProgressService,
+    private trackRecorder: TrackRecorderService) {
       this.geolocation.pipe(
-        startWith({ coords: { // reinacher heide
-          longitude: 7.609027254014222,
-          latitude: 47.506450512010844
-        }})
-        // tap(l => console.dir(l))
-        ).subscribe(l => {
-          const loc: CoordinatePoint = { lon: l.coords.longitude, lat: l.coords.latitude}
-          // TODO: do something with the accuracy value (skip, or warn)
-          this.trackerLocation = [l.coords.longitude, l.coords.latitude];
-          this.updateProjection(this.trackerLocation);
-          this.map?.setCenter(loc);
-          this.tracker?.setLngLat(loc); // TODO: does this trigger 'on drag'?
+        tap(l => this.trackRecorder.addPosition(l))
+        ).subscribe({
+          next: l => {
+            const loc: CoordinatePoint = { lon: l.coords.longitude, lat: l.coords.latitude}
+            // TODO: do something with the accuracy value (skip, or warn)
+            this.trackerLocation = [l.coords.longitude, l.coords.latitude];
+            this.updateProjection(this.trackerLocation);
+            this.map?.setCenter(loc);
+            this.tracker?.setLngLat(loc); // TODO: does this trigger 'on drag'?
+          },
+          error: e => console.warn(e)
+        });
 
-          // draw track
-          this.trace?.push(this.trackerLocation);
-          const s = <GeoJSONSource>this.map?.getSource('route');
-          if (s) s.setData({
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'LineString',
-              coordinates: this.trace
-            }
-          })
-      });
+      // draw track
+      this.trackRecorder.track.pipe(
+        map(track => track.map(p => <Position>[p.coords.longitude, p.coords.latitude])))
+      .subscribe(track => {
+        const s = <GeoJSONSource>this.map?.getSource('route');
+        if (s) s.setData({
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: track
+          }
+        })
+      })
     }
 
   ngOnDestroy(): void {
