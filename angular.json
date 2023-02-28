@@ -34,7 +34,8 @@
             "ngswConfigPath": "ngsw-config.json",
             "allowedCommonJsDependencies": [
               "maplibre-gl",
-              "file-saver"
+              "file-saver",
+              "moment"
             ]
           },
           "configurations": {
