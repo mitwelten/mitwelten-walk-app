@@ -10,4 +10,14 @@
   Progress: {{ trackProgress.progress | async | percent:'1.2-2' }}
 </div>
 
-<app-map></app-map>
+<div id="closeDepoyements">
+  <strong>Close deployments</strong>
+  <ul>
+    <li *ngFor="let d of deployments">
+      {{ d.node.node_label }}, {{ d.node.type }}:
+      {{d.description}} ({{d.distance | number:'1.1-1'}}m)
+    </li>
+  </ul>
+</div>
+
+<app-map (closeDeployments)="deployments = $event"></app-map>

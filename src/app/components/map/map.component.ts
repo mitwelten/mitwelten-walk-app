@@ -6,6 +6,7 @@ import { Map, Marker, GeoJSONSource } from 'maplibre-gl';
 import { Position } from 'geojson';
 import { parcours } from './map.data';
 import { CoordinatePoint, DataService } from '../../shared';
+import distance from '@turf/distance';
 import { TrackProgressService } from 'src/app/shared/track-progress.service';
 import { TrackRecorderService } from 'src/app/shared/track-recorder.service';
 import { Deployment } from 'src/app/shared/deployment.type';
@@ -27,6 +28,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private parcoursPath: Position[] = parcours;
   private parcoursLength = 0;
   private deployments: Deployment[] = [];
+
+  @Output()
+  public closeDeployments = new EventEmitter<(Deployment & { distance: number })[]>;
 
   /** Initial coordinates to center the map on */
   @Input()
@@ -131,6 +135,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         minDistance = distance;
       }
     }
+    const closeDeployments = this.deployments
+      .map(d => Object.assign(d, { distance: distance([d.location.lon, d.location.lat], location, { units: 'meters' })}))
+      .sort((a,b) => a.distance - b.distance)
+      .slice(0, 10);
+    this.closeDeployments.emit(closeDeployments);
 
     if(minDistance < 0.0016477864372379668) {
       // Calculate the distance along the path

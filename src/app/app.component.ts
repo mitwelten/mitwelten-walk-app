@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { startWith, tap } from 'rxjs';
 import { CoordinatePoint } from './shared';
+import { Deployment } from './shared/deployment.type';
 import { TrackProgressService } from './shared/track-progress.service';
 import { TrackRecorderService } from './shared/track-recorder.service';
 
@@ -13,6 +14,7 @@ import { TrackRecorderService } from './shared/track-recorder.service';
 export class AppComponent implements OnInit {
   title = 'Datawalk Prototype';
   location?: CoordinatePoint;
+  deployments: (Deployment & { distance: number })[] = [];
 
   constructor(
     private readonly geolocation: GeolocationService,
