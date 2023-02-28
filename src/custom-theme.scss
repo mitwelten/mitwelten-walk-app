@@ -33,3 +33,6 @@ $datawalk-proto-theme: mat.define-light-theme((
 // that you are using.
 @include mat.all-component-themes($datawalk-proto-theme);
 
+// Use Material Typography.
+$my-typography: mat.define-typography-config();
+@include mat.typography-hierarchy($my-typography);
