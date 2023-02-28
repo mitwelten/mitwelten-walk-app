@@ -4,26 +4,16 @@ import { TrackRecorderService } from 'src/app/shared/track-recorder.service';
 @Component({
   selector: 'app-record-control',
   template: `
-    <div id="poscount">GPS Coords: {{ elems }}</div>
-    <button (click)="trackRecorder.storeTrack()">store</button>
-    <button (click)="trackRecorder.clearTrack()">clear</button>
-  `,
-  styles: [`
-  #poscount {
-    display: block;
-    margin: 2px 4px;
-    white-space: nowrap;
-  }
-  button {
-    margin: 2px 4px;
-  }
-  :host {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    background-color: #fff;
-    align-items: center;
-  }
-  `]
+    <div mat-menu-item disabled>GPS coordinates recorded: {{ elems }}</div>
+    <button mat-menu-item (click)="trackRecorder.storeTrack()">
+      <mat-icon color="accent" class="material-symbols-outlined">download</mat-icon>
+      <span>Download GPS trace</span>
+    </button>
+    <button mat-menu-item (click)="trackRecorder.clearTrack()">
+      <mat-icon color="accent" class="material-symbols-outlined">restart_alt</mat-icon>
+      <span>Clear GPS trace</span>
+    </button>
+  `
 })
 export class RecordControlComponent implements OnInit {
 
