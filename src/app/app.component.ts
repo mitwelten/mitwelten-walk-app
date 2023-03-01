@@ -15,7 +15,7 @@ import { TrackRecorderService } from './shared/track-recorder.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Datawalk Prototype';
+  title = 'Mitwelten Datawalk';
   location?: CoordinatePoint;
   deployments: (Deployment & { distance: number })[] = [];
   isLoggedIn = false;
