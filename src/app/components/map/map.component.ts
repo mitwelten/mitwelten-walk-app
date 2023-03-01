@@ -10,12 +10,11 @@ import distance from '@turf/distance';
 import { TrackProgressService } from 'src/app/shared/track-progress.service';
 import { TrackRecorderService } from 'src/app/shared/track-recorder.service';
 import { AuthService } from 'src/app/shared/auth.service';
+import { EntryService } from 'src/app/shared/entry.service';
 import { Deployment } from 'src/app/shared/deployment.type';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { map, of, switchMap, tap } from 'rxjs';
 import { MAP_STYLE_CONFIG } from 'src/app/shared/configuration';
-import { MatDialog } from '@angular/material/dialog';
-import { EntryFormComponent } from '../entry-form/entry-form.component';
 
 @Component({
   selector: 'app-map',
@@ -49,7 +48,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     private trackRecorder: TrackRecorderService,
     private dataService: DataService,
     private authService: AuthService,
-    private dialog: MatDialog) {
+    private entryService: EntryService) {
       this.geolocation.pipe(
         tap(l => this.trackRecorder.addPosition(l))
         ).subscribe({
@@ -112,7 +111,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     this.map.on('click', ev => {
-      this.dialog.open(EntryFormComponent, { data: ev });
+      this.entryService.add(ev);
     })
 
     this.marker = new Marker({color: "#FF0000", draggable: false})
