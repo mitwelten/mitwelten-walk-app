@@ -10,6 +10,7 @@ import { Deployment } from './shared/deployment.type';
 import { EntryService } from './shared/entry.service';
 import { TrackProgressService } from './shared/track-progress.service';
 import { TrackRecorderService } from './shared/track-recorder.service';
+import pkgJson from '../../package.json';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ import { TrackRecorderService } from './shared/track-recorder.service';
 })
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'Mitwelten Datawalk';
+  version = pkgJson.version;
   location?: CoordinatePoint;
   deployments: (Deployment & { distance: number })[] = [];
   isLoggedIn = false;
