@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MapMouseEvent } from 'maplibre-gl';
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { EntryFormComponent } from '../components/entry-form/entry-form.component';
 
 @Injectable({
