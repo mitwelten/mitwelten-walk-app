@@ -1,6 +1,6 @@
 {
-  "name": "datawalk-proto",
-  "short_name": "datawalk-proto",
+  "name": "Mitwelten Datawalk",
+  "short_name": "datawalk",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "datawalk-proto": {
+    "mitwelten-datawalk": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/datawalk-proto",
+            "outputPath": "dist/mitwelten-datawalk",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -69,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "datawalk-proto:build:production"
+              "browserTarget": "mitwelten-datawalk:build:production"
             },
             "development": {
-              "browserTarget": "datawalk-proto:build:development"
+              "browserTarget": "mitwelten-datawalk:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -80,7 +80,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "datawalk-proto:build"
+            "browserTarget": "mitwelten-datawalk:build"
           }
         },
         "test": {
