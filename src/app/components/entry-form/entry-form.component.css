@@ -17,6 +17,11 @@ mat-card-content {
   align-items: start;
 }
 
-.coordinates-container button {
+.coordinates-container button,
+.coordinates-container mat-spinner {
   margin-top: 4px;
+}
+
+mat-card-actions button {
+  margin-left: 16px;
 }

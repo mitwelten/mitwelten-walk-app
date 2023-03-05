@@ -29,6 +29,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import '@angular/common/locales/global/de';
 
@@ -38,7 +40,7 @@ import '@angular/common/locales/global/de';
     MapComponent,
     RecordControlComponent,
     LoginComponent,
-    EntryFormComponent
+    EntryFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,6 +66,8 @@ import '@angular/common/locales/global/de';
     MatInputModule,
     MatDatepickerModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
   ],
   providers: [
     // {

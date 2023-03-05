@@ -1,8 +1,8 @@
 import {
-  AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Inject, Input, OnChanges,
-  OnDestroy, Output, SimpleChanges, ViewChild
+  AfterViewInit, Component, ElementRef, EventEmitter, Inject, Input,
+  OnDestroy, Output, ViewChild
 } from '@angular/core';
-import { Map, Marker, GeoJSONSource } from 'maplibre-gl';
+import { Map, Marker, GeoJSONSource, Popup } from 'maplibre-gl';
 import { Feature, Position } from 'geojson';
 import { parcours } from './map.data';
 import { CoordinatePoint, DataService } from '../../shared';
@@ -24,7 +24,7 @@ import { MAP_STYLE_CONFIG } from 'src/app/shared/configuration';
 export class MapComponent implements AfterViewInit, OnDestroy {
 
   private map: Map | undefined;
-  private marker: Marker | undefined;
+  private markers: Marker[] = [];
   private tracker: Marker | undefined;
   private trackerLocation: Position | undefined;
   private parcoursPath: Position[] = parcours;
@@ -114,9 +114,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.entryService.add(ev);
     })
 
-    this.marker = new Marker({color: "#FF0000", draggable: false})
-      .setLngLat([initialState.lng, initialState.lat])
-      .addTo(this.map);
+    this.entryService.entries.subscribe(entries => {
+      this.markers.forEach(m => m.remove());
+      entries.forEach(m => {
+        this.markers.push(new Marker({draggable: true, scale: 0.6})
+          .setLngLat([m.location.lon, m.location.lat])
+          .on('dragend', event => {
+            const update = { entry_id: m.entry_id,
+              location: { lon: event.target._lngLat.lng, lat: event.target._lngLat.lat }
+            };
+            this.dataService.patchEntry(update).subscribe(() => m.location = update.location);
+          })
+          .setPopup(new Popup().on('open', () => this.entryService.edit(m)))
+          .addTo(this.map!));
+      })
+    });
 
     this.tracker = new Marker({color: "#00FF00", draggable: true})
       .setLngLat([initialState.lng, initialState.lat])

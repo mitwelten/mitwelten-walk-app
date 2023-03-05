@@ -1,7 +1,8 @@
 <form [formGroup]="entryForm" (ngSubmit)="submit()">
   <mat-card>
     <mat-card-header>
-      <mat-card-title class="mat-h2">Add / Edit entry on map</mat-card-title>
+      <mat-card-title *ngIf="!data.entry" class="mat-h2">Add entry to map</mat-card-title>
+      <mat-card-title *ngIf="data.entry"  class="mat-h2">Edit entry</mat-card-title>
     </mat-card-header>
     <mat-card-content>
 
@@ -12,7 +13,7 @@
 
       <mat-form-field class="full-width-field" appearance="outline">
         <mat-label>Type</mat-label>
-        <mat-select>
+        <mat-select formControlName="type">
           <mat-option *ngFor="let type of types" [value]="type">
             <mat-icon class="material-symbols-outlined">my_location</mat-icon> {{type}}
           </mat-option>
@@ -34,18 +35,19 @@
       </mat-form-field>
 
       <div class="coordinates-container">
-        <button (click)="getLocation()" type="button" mat-icon-button color="accent" matTooltip="Use my location" matTooltipPosition="before" matTooltipClass="tight-tooltip">
+        <button *ngIf="!locationLoading" (click)="getLocation()" type="button" mat-icon-button color="accent" matTooltip="Use my location" matTooltipPosition="before" matTooltipClass="tight-tooltip">
           <mat-icon class="material-symbols-outlined">my_location</mat-icon>
         </button>
+        <mat-spinner color="accent" diameter="40" strokeWidth="2" *ngIf="locationLoading"></mat-spinner>
 
         <mat-form-field class="full-width-field" appearance="outline">
           <mat-label>Latitude (WSG48)</mat-label>
-          <input matInput type="number" step="0.00001" [value]="displayCoordinates?.lat" name="lat" (input)="editCoordinates($event)" id="latitude">
+          <input matInput type="number" step="0.00001" formControlName="lat" name="lat" id="latitude">
         </mat-form-field>
 
         <mat-form-field class="full-width-field" appearance="outline">
           <mat-label>Longitude (WSG48)</mat-label>
-          <input matInput type="number" step="0.00001" [value]="displayCoordinates?.lon" name="lon" (input)="editCoordinates($event)" id="longitude">
+          <input matInput type="number" step="0.00001" formControlName="lng" name="lon" id="longitude">
         </mat-form-field>
       </div>
 
@@ -53,7 +55,8 @@
 
     </mat-card-content>
     <mat-card-actions align="end">
-      <button mat-button (click)="cancel()">Cancel</button>
+      <button type="button" mat-button mat-dialog-close>Cancel</button>
+      <button type="button" mat-stroked-button color="warn" (click)="delete()">Delete</button>
       <button mat-raised-button type="submit" color="primary">Save</button>
     </mat-card-actions>
   </mat-card>

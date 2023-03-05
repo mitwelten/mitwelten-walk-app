@@ -2,7 +2,7 @@ import { CoordinatePoint } from "./coordinate-point.type";
 import { Tag } from "./tag.type";
 
 export interface Entry {
-  id?: number;
+  entry_id?: number;
   date?: string;
   name: string;
   description?: string;
