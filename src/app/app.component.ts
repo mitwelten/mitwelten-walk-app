@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { GeolocationService } from '@ng-web-apis/geolocation';
-import { startWith, tap } from 'rxjs';
-import { LoginComponent } from './components/login/login.component';
-import { CoordinatePoint } from './shared';
-import { AuthService } from './shared/auth.service';
+import { startWith } from 'rxjs';
+import { CoordinatePoint, DataService } from './shared';
+import { OidcService } from './shared/oidc.service';
+import { KeycloakProfile } from 'keycloak-js';
 import { Deployment } from './shared/deployment.type';
 import { EntryService } from './shared/entry.service';
 import { TrackProgressService } from './shared/track-progress.service';
@@ -23,6 +22,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   location?: CoordinatePoint;
   deployments: (Deployment & { distance: number })[] = [];
   isLoggedIn = false;
+  userData?: KeycloakProfile;
 
   @ViewChild('toggleAddMarkers')
   private toggleAddMarkers!: MatSlideToggle;
@@ -32,12 +32,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     public trackRecorder: TrackRecorderService,
     public trackProgress: TrackProgressService,
     private entryService: EntryService,
-    private dialog: MatDialog,
-    private authService: AuthService,
+    public dataService: DataService,
+    public authService: OidcService,
   ) { }
 
   ngOnInit(): void {
     this.authService.authStateSubject.subscribe(state => this.isLoggedIn = state);
+    this.authService.userData().subscribe(profile => this.userData = profile);
     this.authService.checkLogin();
 
     this.geolocation.pipe(
@@ -58,7 +59,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   login() {
-    this.dialog.open(LoginComponent);
+    this.authService.login();
   }
 
   logout() {

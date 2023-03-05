@@ -9,7 +9,7 @@ import { CoordinatePoint, DataService } from '../../shared';
 import distance from '@turf/distance';
 import { TrackProgressService } from 'src/app/shared/track-progress.service';
 import { TrackRecorderService } from 'src/app/shared/track-recorder.service';
-import { AuthService } from 'src/app/shared/auth.service';
+import { OidcService } from 'src/app/shared/oidc.service';
 import { EntryService } from 'src/app/shared/entry.service';
 import { Deployment } from 'src/app/shared/deployment.type';
 import { GeolocationService } from '@ng-web-apis/geolocation';
@@ -47,7 +47,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     private trackProgress: TrackProgressService,
     private trackRecorder: TrackRecorderService,
     private dataService: DataService,
-    private authService: AuthService,
+    private authService: OidcService,
     private entryService: EntryService) {
       this.geolocation.pipe(
         tap(l => this.trackRecorder.addPosition(l))

@@ -1,8 +1,8 @@
-import { NgModule, isDevMode, LOCALE_ID } from '@angular/core';
+import { NgModule, isDevMode, LOCALE_ID, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,7 +10,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { MapComponent } from './components/map/map.component';
 import { GeolocationService, POSITION_OPTIONS } from '@ng-web-apis/geolocation';
 import { GeolocationMockService } from './testing/geolocation-mock.service';
-import { AuthInterceptor } from './shared/auth.interceptor';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { MAP_STYLE_CONFIG } from './shared/configuration';
 import { RecordControlComponent } from './components/record-control/record-control.component';
 import { LoginComponent } from './components/login/login.component';
@@ -34,6 +34,22 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import '@angular/common/locales/global/de';
 
+function initializeKeycloak(keycloak: KeycloakService) {
+  return () =>
+    keycloak.init({
+      config: {
+        url: 'https://auth.mitwelten.org/auth',
+        realm: 'mitwelten',
+        clientId: 'walk'
+      },
+      initOptions: {
+        onLoad: 'check-sso',
+        silentCheckSsoRedirectUri:
+          window.location.origin + '/assets/silent-check-sso.html'
+      }
+    });
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +60,7 @@ import '@angular/common/locales/global/de';
   ],
   imports: [
     BrowserModule,
+    KeycloakAngularModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -88,7 +105,12 @@ import '@angular/common/locales/global/de';
     { provide: MAT_DATE_LOCALE, useValue: 'de' },
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [ MAT_DATE_LOCALE ] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService]
+    },
   ],
   bootstrap: [AppComponent]
 })

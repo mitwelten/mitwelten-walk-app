@@ -27,6 +27,7 @@
     <mat-icon color="accent" class="material-symbols-outlined">logout</mat-icon>
     <span>Sign out</span>
   </button>
+  <span *ngIf="userData" mat-menu-item disabled>Signed in as {{ userData.firstName }} {{ userData.lastName }}</span>
   <span mat-menu-item disabled>Version {{version}}</span>
 </mat-menu>
 
