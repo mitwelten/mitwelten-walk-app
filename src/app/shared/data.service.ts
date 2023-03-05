@@ -9,7 +9,7 @@ import { Entry } from './entry.type';
 })
 export class DataService {
 
-  private apiUrl = 'https://data.mitwelten.org/manager/v2';
+  private apiUrl = 'https://data.mitwelten.org/api/v3';
 
   constructor(public readonly http: HttpClient) { }
 
