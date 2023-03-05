@@ -47,11 +47,6 @@
   </div>
 </mat-menu>
 
-<div id="coords">
-  Latitude: {{ location?.lat | number:'1.8-8' }} |
-  Longitude: {{ location?.lon | number:'1.8-8' }}
-</div>
-
 <div id="progress">
   Progress: {{ trackProgress.progress | async | percent:'1.2-2' }}
 </div>
