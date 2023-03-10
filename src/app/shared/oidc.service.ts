@@ -38,8 +38,9 @@ export class OidcService {
     this.keycloakService.login();
   }
 
-  public logout() {
-    this.keycloakService.logout();
+  public async logout() {
+    await this.keycloakService.logout();
+    this.keycloakService.clearToken();
   }
 
   public userData() {
