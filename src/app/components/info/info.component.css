@@ -1,0 +1,27 @@
+:host {
+  /* overflow-y: scroll; */
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* border-top: 3px solid #555; */
+  /* border-bottom: 3px solid #555; */
+  /* border-radius: 30px; */
+  /* overflow: hidden; */
+  /* background-color: rgba(255,255,200,0.5); */
+  margin: 0;
+  padding: 0 24px;
+  background-color: #fff;
+}
+
+.container {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+#close-button {
+  position: fixed;
+  top: 72px;
+  right: 56px;
+}

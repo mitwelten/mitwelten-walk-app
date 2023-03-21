@@ -1,11 +1,18 @@
 <app-map (closeDeployments)="deployments = $event"></app-map>
 
+<div id="showroom">
+  <router-outlet></router-outlet>
+</div>
+
 <mat-toolbar class="mat-elevation-z8" color="primary">
   <button mat-icon-button [matMenuTriggerFor]="mainMenu" aria-label="Open main menu">
     <mat-icon class="material-symbols-outlined">menu</mat-icon>
   </button>
   <span class="mat-h2" style="margin: 0;">{{ title }}</span>
   <span class="spacer"></span>
+  <button mat-icon-button aria-label="Info / How to use" [routerLink]="['/info']">
+    <mat-icon class="material-symbols-outlined">info</mat-icon>
+  </button>
   <button mat-icon-button [matMenuTriggerFor]="gpsRecordMenu" aria-label="Open GPS recording menu">
     <mat-icon class="material-symbols-outlined">location_on</mat-icon>
   </button>
@@ -15,6 +22,10 @@
 </mat-toolbar>
 
 <mat-menu #mainMenu="matMenu">
+  <a mat-menu-item [routerLink]="['/info']">
+    <mat-icon color="accent" class="material-symbols-outlined">info</mat-icon>
+    Info / How to use
+  </a>
   <a mat-menu-item href="https://mitwelten.org" target="_blank">
     <mat-icon color="accent" class="material-symbols-outlined">link</mat-icon>
     https://mitwelten.org
