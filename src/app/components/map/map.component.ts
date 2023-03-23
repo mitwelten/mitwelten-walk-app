@@ -13,7 +13,7 @@ import { OidcService } from 'src/app/shared/oidc.service';
 import { EntryService } from 'src/app/shared/entry.service';
 import { Deployment } from 'src/app/shared/deployment.type';
 import { GeolocationService } from '@ng-web-apis/geolocation';
-import { map, of, switchMap, tap } from 'rxjs';
+import { map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { MAP_STYLE_CONFIG } from 'src/app/shared/configuration';
 
 @Component({
@@ -30,6 +30,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private parcoursPath: Position[] = parcours;
   private parcoursLength = 0;
   private deployments: Deployment[] = [];
+  private destroy = new Subject();
 
   @Output()
   public closeDeployments = new EventEmitter<(Deployment & { distance: number })[]>;
@@ -52,6 +53,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       // draw track
       this.trackRecorder.track.pipe(
+        takeUntil(this.destroy),
         map(track => track.map(p => <Position>[p.coords.longitude, p.coords.latitude])))
       .subscribe(track => {
         const s = <GeoJSONSource>this.map?.getSource('route');
@@ -68,6 +70,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.map?.remove();
+    this.destroy.next(null);
+    this.destroy.complete();
   }
 
   ngAfterViewInit(): void {
@@ -89,9 +93,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.setTrace(this.map);
         this.initGeoLocation();
 
-        this.authService.authStateSubject.pipe(switchMap(state => {
-          if (state) return this.dataService.listDeployments();
-          else return of([]);
+        this.authService.authStateSubject.pipe(
+          takeUntil(this.destroy),
+          switchMap(state => {
+            if (state) return this.dataService.listDeployments();
+            else return of([]);
         })).subscribe(deployments => {
           this.deployments = deployments;
           this.drawDepoyments(this.map!);
@@ -103,7 +109,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.entryService.add(ev);
     })
 
-    this.entryService.entries.subscribe(entries => {
+    this.entryService.entries.pipe(takeUntil(this.destroy)).subscribe(entries => {
       this.markers.forEach(m => m.remove());
       entries.forEach(m => {
         this.markers.push(new Marker({draggable: true, scale: 0.6})
@@ -134,6 +140,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private initGeoLocation() {
     this.geolocation.pipe(
+      takeUntil(this.destroy),
       tap(l => this.trackRecorder.addPosition(l))
     ).subscribe({
       next: l => {
