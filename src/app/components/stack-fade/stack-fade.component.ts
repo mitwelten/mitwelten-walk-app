@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { distinctUntilChanged, map, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { StackImage, TrackProgressService } from 'src/app/shared';
 import { DataService } from 'src/app/shared';
-import { ProgressSimService } from 'src/app/shared/progress-sim.service';
 
 @Component({
   selector: 'app-stack-fade',
@@ -14,7 +12,6 @@ import { ProgressSimService } from 'src/app/shared/progress-sim.service';
 export class StackFadeComponent implements AfterViewInit, OnDestroy {
 
   imagesUrls: string[] = [];
-  imageUrl?: SafeUrl;
   images: HTMLImageElement[] = [];
   progress = 0;   // 0...1
   fade = 0;       // 0...1
@@ -33,7 +30,6 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private ngZone: NgZone,
-    // private domSanitizer: DomSanitizer,
     private dataService: DataService,
     private httpClient: HttpClient,
     private trackProgress: TrackProgressService,
@@ -86,7 +82,6 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
             observer.next(index);
             observer.complete();
           };
-          // const safeUrl = this.domSanitizer.bypassSecurityTrustUrl(url);
           this.images[index].src = blobUrl;
         });
       })
