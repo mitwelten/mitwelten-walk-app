@@ -11,7 +11,7 @@ export class TrackProgressService {
   constructor() { }
 
   public setProgress(progress: number) {
-    this.progress.next(progress);
+    this.progress.next(Math.max(0, Math.min(1, progress)));
   }
 
 }

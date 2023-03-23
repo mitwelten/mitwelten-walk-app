@@ -16,6 +16,7 @@ import { RecordControlComponent } from './components/record-control/record-contr
 import { LoginComponent } from './components/login/login.component';
 import { EntryFormComponent } from './components/entry-form/entry-form.component';
 import { InfoComponent } from './components/info/info.component';
+import { StackFadeComponent } from './components/stack-fade/stack-fade.component';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
@@ -59,6 +60,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     LoginComponent,
     EntryFormComponent,
     InfoComponent,
+    StackFadeComponent,
   ],
   imports: [
     BrowserModule,

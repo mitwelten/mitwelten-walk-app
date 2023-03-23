@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { StackImage } from './stack-image.type';
 import { Deployment } from './deployment.type';
 import { Entry } from './entry.type';
 
@@ -44,5 +45,9 @@ export class DataService {
 
   public deleteEntry(id: number): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/entry/${id}`);
+  }
+
+  public getImageStack() {
+    return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack`)
   }
 }
