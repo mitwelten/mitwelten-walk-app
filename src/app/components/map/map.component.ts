@@ -49,19 +49,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     private dataService: DataService,
     private authService: OidcService,
     private entryService: EntryService) {
-      this.geolocation.pipe(
-        tap(l => this.trackRecorder.addPosition(l))
-        ).subscribe({
-          next: l => {
-            const loc: CoordinatePoint = { lon: l.coords.longitude, lat: l.coords.latitude}
-            // TODO: do something with the accuracy value (skip, or warn)
-            this.trackerLocation = [l.coords.longitude, l.coords.latitude];
-            this.updateProjection(this.trackerLocation);
-            this.map?.setCenter(loc);
-            this.tracker?.setLngLat(loc); // TODO: does this trigger 'on drag'?
-          },
-          error: e => console.warn(e)
-        });
 
       // draw track
       this.trackRecorder.track.pipe(
@@ -100,6 +87,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (this.map) {
         this.setParcours(this.map);
         this.setTrace(this.map);
+        this.initGeoLocation();
+
         this.authService.authStateSubject.pipe(switchMap(state => {
           if (state) return this.dataService.listDeployments();
           else return of([]);
@@ -140,6 +129,22 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.trackerLocation = [ll.lng, ll.lat];
         this.updateProjection(this.trackerLocation);
       }
+    });
+  }
+
+  private initGeoLocation() {
+    this.geolocation.pipe(
+      tap(l => this.trackRecorder.addPosition(l))
+    ).subscribe({
+      next: l => {
+        const loc: CoordinatePoint = { lon: l.coords.longitude, lat: l.coords.latitude}
+        // TODO: do something with the accuracy value (skip, or warn)
+        this.trackerLocation = [l.coords.longitude, l.coords.latitude];
+        this.updateProjection(this.trackerLocation);
+        this.map?.setCenter(loc);
+        this.tracker?.setLngLat(loc); // TODO: does this trigger 'on drag'?
+      },
+      error: e => console.warn(e)
     });
   }
 
