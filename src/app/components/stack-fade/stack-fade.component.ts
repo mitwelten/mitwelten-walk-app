@@ -69,8 +69,7 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
 
   // load images
   loadImage(index: number, url: string) {
-    const requestUrl = `http://localhost:8000/files/${url}`;
-    return this.httpClient.get(requestUrl, {responseType: 'blob'}).pipe(
+    return this.dataService.getImageResource(url).pipe(
       switchMap(blob => {
         // TODO: think about when to call URL.revokeObjectURL (+/- 100 images?)
         // onload: one eventlistener, simple override

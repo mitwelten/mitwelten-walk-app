@@ -50,4 +50,8 @@ export class DataService {
   public getImageStack() {
     return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack`)
   }
+
+  public getImageResource(url: string) {
+    return this.http.get(`${this.apiUrl}/files/${url}`, {responseType: 'blob'});
+  }
 }
