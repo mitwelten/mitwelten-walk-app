@@ -182,7 +182,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         }
         distanceAlongPath += this.distance(start, end);
       }
-      this.trackProgress.setProgress(distanceAlongPath / this.parcoursLength);
+      if (this.parcoursLength) {
+        this.trackProgress.setProgress(distanceAlongPath / this.parcoursLength);
+      }
 
       if (closestPoint) {
         const s = <GeoJSONSource>this.map?.getSource('projection');
