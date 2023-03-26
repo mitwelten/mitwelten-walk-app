@@ -93,25 +93,7 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
       distinctUntilChanged()
     ).subscribe(progress => {
       this.progress = progress;
-      const absProgress = this.progress * this.nImages;
-      this.stackIndex = Math.floor(absProgress);
-      this.fade = absProgress % 1.;
 
-      const pos_1 = (this.stackIndex + 4) % 10;
-      const pos_2 = (this.stackIndex + 5) % 10;
-      const load  = (this.stackIndex + 9) % 10;
-
-      // direction change doesn't work if delta is identical
-      // jumping (delta > 1) will not work
-      // start and end need to be fixed, don't read over the end of this.imageUrls
-      if (this.stackIndex !== this.lastIndex) {
-        const dir = (this.stackIndex - this.lastIndex) > 0 ? 1 : 0; // 1 = forward, 0 = backward
-        this.fetchIndex = this.stackIndex + (dir * this.preLoadCount);
-        this.lastIndex = this.stackIndex;
-        this.loadImage(load, this.imagesUrls[this.fetchIndex]).subscribe();
-        this.loadTexture(0, this.images[pos_1]);
-        this.loadTexture(1, this.images[pos_2]);
-      }
       // console.log(`A ${pos_1} | ${this.fade.toFixed(2)} | B ${pos_2} | L ${load} (${this.stackIndex})`);
     });
   }
@@ -212,7 +194,28 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
     gl.uniform1f(u_progress_location, 0.);
 
     this.ngZone.runOutsideAngular(() => {
+      const filter = new SmoothingFilter(this.progress, 150);
       const render = (time: number) => {
+        const absProgress = filter.f(this.progress * this.nImages);
+        this.stackIndex = Math.floor(absProgress);
+        this.fade = absProgress % 1.;
+
+        const pos_1 = (this.stackIndex + 4) % 10;
+        const pos_2 = (this.stackIndex + 5) % 10;
+        const load  = (this.stackIndex + 9) % 10;
+
+        // direction change doesn't work if delta is identical
+        // jumping (delta > 1) will not work
+        // start and end need to be fixed, don't read over the end of this.imageUrls
+        if (this.stackIndex !== this.lastIndex) {
+          console.log('this.stackIndex !== this.lastIndex');
+          const dir = (this.stackIndex - this.lastIndex) > 0 ? 1 : 0; // 1 = forward, 0 = backward
+          this.fetchIndex = this.stackIndex + (dir * this.preLoadCount);
+          this.lastIndex = this.stackIndex;
+          this.loadImage(load, this.imagesUrls[this.fetchIndex]).subscribe();
+          this.loadTexture(0, this.images[pos_1]);
+          this.loadTexture(1, this.images[pos_2]);
+        }
         gl.uniform1f(u_progress_location, this.fade);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         requestAnimationFrame(render);
@@ -256,3 +259,37 @@ void main() {
   gl_FragColor = mix(texture2D(u_texture_0, v_texture_coordinate), texture2D(u_texture_1, v_texture_coordinate), u_progress);
 }
 `;
+
+class SmoothingFilter {
+
+  /** history buffer */
+  private hh: number[] = [];
+  /** impulse response */
+  private ir: number[] = [];
+
+  /**
+   * Smooth signal with a half cosine ipulse response
+   * @param initial start value, i.e. initial progress
+   * @param l lenght of filter
+   */
+  constructor(initial: number = 0, private l: number = 100) {
+    for (var i=0; i<this.l; i++) {
+      this.hh.push(initial);
+      this.ir.push(Math.cos((i / this.l * Math.PI * 2) + Math.PI) * 0.5 + 0.5)
+    }
+    const sum = this.ir.reduce((m,n) => m+n, 0);
+    this.ir = this.ir.map(v => v / sum);
+  }
+
+  /** filter function */
+  f(x: number) {
+    this.hh.unshift(x)
+    this.hh.pop();
+    return this.hh.reduce((a,b,i) => (b * this.ir[i]) + a, 0);
+  }
+
+  reset(initial: number = 0) {
+    this.hh.fill(initial);
+  }
+
+}
