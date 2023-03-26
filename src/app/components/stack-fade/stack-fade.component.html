@@ -1,1 +1,8 @@
 <canvas id="stack" #stack width="640" height="480"></canvas>
+
+<div id="info">
+  <span>Stacksize<br>{{ imageData.length }}<!-- ({{ totalSize / 1048576 | number: '1.2-2'}} MB) --></span>
+  <span>Current Image<br>{{ stackIndex }}</span>
+  <span>Fade<br>{{ fade | percent: '1.2-2' }}</span>
+  <span *ngIf="imageData.length">Date<br>{{ imageData[stackIndex].time | date:'medium' }}</span>
+</div>

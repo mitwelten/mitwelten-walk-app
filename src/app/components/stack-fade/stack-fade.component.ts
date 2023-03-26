@@ -1,8 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
-import { distinctUntilChanged, map, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
-import { StackImage, TrackProgressService } from 'src/app/shared';
-import { DataService } from 'src/app/shared';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { distinctUntilChanged, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { DataService, StackImage, TrackProgressService } from 'src/app/shared';
 
 @Component({
   selector: 'app-stack-fade',
@@ -11,7 +9,8 @@ import { DataService } from 'src/app/shared';
 })
 export class StackFadeComponent implements AfterViewInit, OnDestroy {
 
-  imagesUrls: string[] = [];
+  imageData: StackImage[] = [];
+  totalSize: number = 0;
   images: HTMLImageElement[] = [];
   progress = 0;   // 0...1
   fade = 0;       // 0...1
@@ -31,9 +30,10 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     private dataService: DataService,
-    private httpClient: HttpClient,
+    private cd: ChangeDetectorRef,
     private trackProgress: TrackProgressService,
   ) {
+    this.cd.detach();
     for (let i = 0; i < 10; i++) {
       const img = new Image();
       // img.addEventListener('load', (ev: Event) => console.log('loaded an image', ev));
@@ -46,12 +46,13 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
     this.initContext();
 
     this.dataService.getImageStack().subscribe((list: StackImage[]) => {
-      this.imagesUrls = list.map((e: StackImage) => e.object_name);
-      this.nImages = this.imagesUrls.length;
+      this.imageData = list;
+      this.totalSize = list.reduce((a,b) => a + b.file_size, 0)
+      this.nImages = this.imageData.length;
 
       // preload images
       for (let i = 0; i < this.preLoadCount; i++) {
-        this.loadImage(i, this.imagesUrls[i]).subscribe(complete => {
+        this.loadImage(i, this.imageData[i].object_name).subscribe(complete => {
           if (complete === (this.preLoadCount - 1)) {
             // start tracking progress once images are preloaded
             this.initTracking();
@@ -195,6 +196,8 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
 
     this.ngZone.runOutsideAngular(() => {
       const filter = new SmoothingFilter(this.progress, 150);
+      let frameTime = 0;
+      let fade_n1 = 0;
       const render = (time: number) => {
         const absProgress = filter.f(this.progress * this.nImages);
         this.stackIndex = Math.floor(absProgress);
@@ -207,15 +210,22 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
         // direction change doesn't work if delta is identical
         // jumping (delta > 1) will not work
         // start and end need to be fixed, don't read over the end of this.imageUrls
-        if (this.stackIndex !== this.lastIndex) {
-          console.log('this.stackIndex !== this.lastIndex');
+        if (this.stackIndex !== this.lastIndex && this.imageData.length) {
           const dir = (this.stackIndex - this.lastIndex) > 0 ? 1 : 0; // 1 = forward, 0 = backward
           this.fetchIndex = this.stackIndex + (dir * this.preLoadCount);
           this.lastIndex = this.stackIndex;
-          this.loadImage(load, this.imagesUrls[this.fetchIndex]).subscribe();
+          this.loadImage(load, this.imageData[this.fetchIndex].object_name).subscribe();
           this.loadTexture(0, this.images[pos_1]);
           this.loadTexture(1, this.images[pos_2]);
+          this.cd.detectChanges();
+        } else if ((time - frameTime) > 100) {
+          if (this.fade !== fade_n1) {
+            this.cd.detectChanges();
+            fade_n1 = this.fade;
+          }
+          frameTime = time;
         }
+
         gl.uniform1f(u_progress_location, this.fade);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         requestAnimationFrame(render);
