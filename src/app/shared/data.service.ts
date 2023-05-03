@@ -48,7 +48,7 @@ export class DataService {
   }
 
   public getImageStack() {
-    return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack`)
+    return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack/1`)
   }
 
   public getImageResource(url: string) {
