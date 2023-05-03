@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { StackImage } from './stack-image.type';
 import { Deployment } from './deployment.type';
 import { Entry } from './entry.type';
+import { SectionText } from './section-text.type';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +50,10 @@ export class DataService {
 
   public getImageStack() {
     return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack/1`)
+  }
+
+  public getWalkText(walk_id: number) {
+    return this.http.get<SectionText[]>(`${this.apiUrl}/walk/text/${walk_id}`)
   }
 
   public getImageResource(url: string) {

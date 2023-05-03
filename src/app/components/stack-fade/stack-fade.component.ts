@@ -1,23 +1,27 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { distinctUntilChanged, Observable, Subject, switchMap, takeUntil } from 'rxjs';
-import { DataService, StackImage, TrackProgressService } from 'src/app/shared';
+import { DataService, SectionText, StackImage, TrackProgressService } from 'src/app/shared';
 
 @Component({
   selector: 'app-stack-fade',
   templateUrl: './stack-fade.component.html',
   styleUrls: ['./stack-fade.component.css']
 })
-export class StackFadeComponent implements AfterViewInit, OnDestroy {
+export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
 
   imageData: StackImage[] = [];
   totalSize: number = 0;
   images: HTMLImageElement[] = [];
+  percent = 0;    // 0...100
   progress = 0;   // 0...1
   fade = 0;       // 0...1
   fetchIndex = 0; // which image in imagesUrls was loaded last?
   stackIndex = 0; // where in the stack are we?
   lastIndex = -1; // n-1 to determin direction
   nImages = 0;
+
+  text: SectionText[] = [];
+  textDisplay: SectionText | null = null;
 
   @ViewChild('stack', {static: true})
   stack?: ElementRef<HTMLCanvasElement>;
@@ -39,6 +43,10 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
       // img.addEventListener('load', (ev: Event) => console.log('loaded an image', ev));
       this.images.push(img);
     }
+  }
+
+  ngOnInit(): void {
+    this.dataService.getWalkText(1).subscribe(text => this.text = text);
   }
 
   ngAfterViewInit(): void {
@@ -96,6 +104,26 @@ export class StackFadeComponent implements AfterViewInit, OnDestroy {
       this.progress = progress;
 
       // console.log(`A ${pos_1} | ${this.fade.toFixed(2)} | B ${pos_2} | L ${load} (${this.stackIndex})`);
+
+      // select text based on progress
+      const p = Math.round(progress * 100);
+      if (p !== this.percent) {
+        this.percent = p;
+        const t = this.text.filter((t: SectionText) => t.percent_in <= p && t.percent_out >= p);
+        if (t.length === 0) {
+          if (this.textDisplay !== null) {
+            this.textDisplay = null;
+            console.log(this.textDisplay);
+          }
+        }
+        else {
+          if (this.textDisplay === null || (this.textDisplay !== null && t[0].text_id !== this.textDisplay.text_id)) {
+            this.textDisplay = t[0];
+            console.log(this.textDisplay);
+          }
+        }
+        console.log(this.percent);
+      }
     });
   }
 
