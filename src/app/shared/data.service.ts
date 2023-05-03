@@ -57,6 +57,6 @@ export class DataService {
   }
 
   public getImageResource(url: string) {
-    return this.http.get(`${this.apiUrl}/files/${url}`, {responseType: 'blob'});
+    return this.http.get(`${this.apiUrl}/files/walk/${url}`, {responseType: 'blob'});
   }
 }
