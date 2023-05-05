@@ -65,7 +65,7 @@
   Progress: {{ trackProgress.progress | async | percent:'1.2-2' }}
 </div>
 
-<div id="closeDepoyements">
+<div id="closeDepoyements" *ngIf="showDeployments">
   <strong>Close deployments</strong>
   <ul>
     <li *ngFor="let d of deployments">

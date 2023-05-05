@@ -21,6 +21,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   version = pkgJson.version;
   location?: CoordinatePoint;
   deployments: (Deployment & { distance: number })[] = [];
+  showDeployments = false;
   isLoggedIn = false;
   userData?: KeycloakProfile;
 
