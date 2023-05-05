@@ -49,7 +49,7 @@ export class DataService {
   }
 
   public getImageStack() {
-    return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack/1`)
+    return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack_s3/42`)
   }
 
   public getWalkText(walk_id: number) {
