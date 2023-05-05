@@ -17,7 +17,7 @@ import pkgJson from '../../package.json';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  title = 'Mitwelten Datawalk';
+  title = 'Mitwelten Walk';
   version = pkgJson.version;
   location?: CoordinatePoint;
   deployments: (Deployment & { distance: number })[] = [];
