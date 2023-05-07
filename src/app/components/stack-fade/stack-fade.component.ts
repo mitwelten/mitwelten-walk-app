@@ -306,7 +306,7 @@ class SmoothingFilter {
   private ir: number[] = [];
 
   /**
-   * Smooth signal with a half cosine ipulse response
+   * Smooth signal with a half cosine impulse response
    * @param initial start value, i.e. initial progress
    * @param l lenght of filter
    */
@@ -321,7 +321,7 @@ class SmoothingFilter {
 
   /** filter function */
   f(x: number) {
-    this.hh.unshift(x)
+    this.hh.unshift(x);
     this.hh.pop();
     return this.hh.reduce((a,b,i) => (b * this.ir[i]) + a, 0);
   }
