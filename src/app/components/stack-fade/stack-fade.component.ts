@@ -19,6 +19,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   stackIndex = 0; // where in the stack are we?
   lastIndex = -1; // n-1 to determin direction
   nImages = 0;
+  glReady = false;
 
   text: SectionText[] = [];
   textDisplay: SectionText | null = null;
@@ -50,14 +51,18 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    // initialise WebGL context
-    this.initContext();
+    /* ideal startup procedure:
+    - attach to tracking
+    - when position is known (any), preload images
+    - initialize gl context / filter (ok)
+    */
 
     this.dataService.getImageStack().subscribe((list: StackImage[]) => {
       this.imageData = list;
       this.totalSize = list.reduce((a,b) => a + b.file_size, 0)
       this.nImages = this.imageData.length;
 
+      // TODO: do this after initTracking completes!
       // preload images
       for (let i = 0; i < this.preLoadCount; i++) {
         this.loadImage(i, this.imageData[i].object_name).subscribe(complete => {
@@ -103,7 +108,8 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
     ).subscribe(progress => {
       this.progress = progress;
 
-      // console.log(`A ${pos_1} | ${this.fade.toFixed(2)} | B ${pos_2} | L ${load} (${this.stackIndex})`);
+      // initialise WebGL context
+      if (!this.glReady) this.initContext();
 
       // select text based on progress
       const p = Math.round(progress * 100);
@@ -128,6 +134,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private initContext() {
+    this.glReady = true;
     if (this.stack === undefined) throw new Error('no canvas');
 
     const gl = this.stack.nativeElement.getContext('webgl');
