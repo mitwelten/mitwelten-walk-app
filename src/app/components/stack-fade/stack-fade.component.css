@@ -34,7 +34,8 @@ canvas {
 }
 
 #text {
-  display: block;
+  display: grid;
+  grid-template-rows: 36px calc(100% - 36px);
   position: absolute;
   bottom: 0;
   left: 0;
@@ -44,4 +45,8 @@ canvas {
   border: 2px solid #888;
   border-radius: 4px;
   padding: 8px;
+}
+
+#text p {
+  overflow-y: scroll;
 }
