@@ -1,11 +1,23 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { trigger, transition, style, animate } from '@angular/animations';
 import { distinctUntilChanged, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { DataService, SectionText, StackImage, TrackProgressService } from 'src/app/shared';
+
+const fadeInOutAnimation = trigger('fadeInOut', [
+  transition(':enter', [
+    style({ bottom: '-33%', opacity: 0 }),
+    animate('1s ease-in-out', style({ bottom: '0%', opacity: 1 }))
+  ]),
+  transition(':leave', [
+    animate('1s ease-in-out', style({ opacity: 0 }))
+  ])
+]);
 
 @Component({
   selector: 'app-stack-fade',
   templateUrl: './stack-fade.component.html',
-  styleUrls: ['./stack-fade.component.css']
+  styleUrls: ['./stack-fade.component.css'],
+  animations: [fadeInOutAnimation]
 })
 export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
 

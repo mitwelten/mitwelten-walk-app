@@ -7,7 +7,7 @@
   <span *ngIf="imageData.length">Date<br>{{ imageData[stackIndex].time | date:'medium' }}</span>
 </div>
 
-<div id="text" *ngIf="textDisplay">
+<div id="text" *ngIf="textDisplay" [@fadeInOut]>
   <h2>{{ textDisplay.title }}</h2>
   <p>{{ textDisplay.text }}</p>
 </div>
