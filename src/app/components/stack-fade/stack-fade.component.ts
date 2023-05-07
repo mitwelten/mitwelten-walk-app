@@ -112,23 +112,20 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
       if (!this.glReady) this.initContext();
 
       // select text based on progress
-      const p = Math.round(progress * 100);
+      const p = Math.floor(progress * 100);
       if (p !== this.percent) {
         this.percent = p;
-        const t = this.text.filter((t: SectionText) => t.percent_in <= p && t.percent_out >= p);
+        const t = this.text.filter((t: SectionText) => t.percent_in <= p && t.percent_out > p);
         if (t.length === 0) {
           if (this.textDisplay !== null) {
             this.textDisplay = null;
-            console.log(this.textDisplay);
           }
         }
         else {
           if (this.textDisplay === null || (this.textDisplay !== null && t[0].text_id !== this.textDisplay.text_id)) {
             this.textDisplay = t[0];
-            console.log(this.textDisplay);
           }
         }
-        console.log(this.percent);
       }
     });
   }
