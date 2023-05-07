@@ -223,7 +223,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
     gl.uniform1f(u_progress_location, 0.);
 
     this.ngZone.runOutsideAngular(() => {
-      const filter = new SmoothingFilter(this.progress, 150);
+      const filter = new SmoothingFilter(this.progress * this.nImages, 150);
       let frameTime = 0;
       let fade_n1 = 0;
       const render = (time: number) => {
