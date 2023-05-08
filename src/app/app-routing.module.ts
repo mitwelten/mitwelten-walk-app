@@ -5,8 +5,7 @@ import { InfoComponent } from './components/info/info.component';
 
 const routes: Routes = [
   { path: 'info', component: InfoComponent },
-  { path: 'walk', component: StackFadeComponent },
-  { path: '', children: [] }
+  { path: '', component: StackFadeComponent, children: [] }
 ];
 
 @NgModule({
