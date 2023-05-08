@@ -29,6 +29,16 @@ export class ParcoursService {
     this.initGeoLocation();
   }
 
+  private setParcours() {
+    // get length of path
+    this.parcoursLength = 0;
+    for (let i = 0; i < this.parcoursPath.length - 1; i++) {
+      const start = this.parcoursPath[i];
+      const end = this.parcoursPath[i + 1];
+      this.parcoursLength += this.distance(start, end);
+    }
+  }
+
   private initGeoLocation() {
     this.geolocation.pipe(
       tap(l => this.trackRecorder.addPosition(l))
@@ -41,16 +51,6 @@ export class ParcoursService {
       },
       error: e => console.warn(e)
     });
-  }
-
-  private setParcours() {
-    // get length of path
-    this.parcoursLength = 0;
-    for (let i = 0; i < this.parcoursPath.length - 1; i++) {
-      const start = this.parcoursPath[i];
-      const end = this.parcoursPath[i + 1];
-      this.parcoursLength += this.distance(start, end);
-    }
   }
 
   public overrideLocation(location: Position) {
