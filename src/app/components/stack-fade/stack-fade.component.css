@@ -50,3 +50,14 @@ canvas {
 #text p {
   overflow-y: scroll;
 }
+
+#dbgimg {
+  position: fixed;
+  top: 56%;
+  bottom: 24%;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}

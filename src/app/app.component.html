@@ -59,9 +59,12 @@
   <div mat-menu-item>
     <mat-slide-toggle #toggleAddMarkers>Add markers</mat-slide-toggle>
   </div>
+  <div mat-menu-item>
+    <mat-slide-toggle #toggleDebugView>Debug</mat-slide-toggle>
+  </div>
 </mat-menu>
 
-<div id="progress">
+<div id="progress" [style.visibility]="(state.debugView | async) ? 'visible':'hidden'">
   Progress: {{ trackProgress.progress | async | percent:'1.2-2' }}
 </div>
 

@@ -10,6 +10,7 @@ import { EntryService } from './shared/entry.service';
 import { TrackProgressService } from './shared/track-progress.service';
 import { TrackRecorderService } from './shared/track-recorder.service';
 import pkgJson from '../../package.json';
+import { StateService } from './shared/state.service';
 
 @Component({
   selector: 'app-root',
@@ -28,12 +29,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('toggleAddMarkers')
   private toggleAddMarkers!: MatSlideToggle;
 
+  @ViewChild('toggleDebugView')
+  private toggleDebugView!: MatSlideToggle;
+
   constructor(
     private readonly geolocation: GeolocationService,
     public trackRecorder: TrackRecorderService,
     public trackProgress: TrackProgressService,
     private entryService: EntryService,
     public dataService: DataService,
+    public state: StateService,
     public authService: OidcService,
   ) { }
 
@@ -57,6 +62,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.entryService.active.subscribe(state => this.toggleAddMarkers.checked = state);
     this.toggleAddMarkers.change.subscribe(() => this.entryService.toggle());
+    this.toggleDebugView.change.subscribe(state => this.state.setDebugView(state.checked));
   }
 
   login() {

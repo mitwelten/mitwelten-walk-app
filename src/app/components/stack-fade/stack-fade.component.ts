@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDest
 import { trigger, transition, style, animate } from '@angular/animations';
 import { distinctUntilChanged, Observable, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
 import { DataService, SectionText, StackImage, TrackProgressService } from 'src/app/shared';
+import { StateService } from 'src/app/shared/state.service';
 
 const fadeInOutAnimation = trigger('fadeInOut', [
   transition(':enter', [
@@ -21,6 +22,7 @@ const fadeInOutAnimation = trigger('fadeInOut', [
 })
 export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
 
+  debug = false;
   imageData: StackImage[] = [];    // urls / meta info for all images of parcours
   totalSize: number = 0;           // total filesize
   images: HTMLImageElement[] = []; // the image preload / display stack
@@ -49,6 +51,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     private dataService: DataService,
+    public state: StateService,
     private cd: ChangeDetectorRef,
     private trackProgress: TrackProgressService,
   ) {
@@ -62,6 +65,10 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.dataService.getWalkText(1).subscribe(text => this.text = text);
+    this.state.debugView.subscribe(state => {
+      this.debug = state;
+      this.cd.detectChanges();
+    });
   }
 
   ngAfterViewInit(): void {

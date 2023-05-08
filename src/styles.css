@@ -2,3 +2,8 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+#dbgimg img {
+  width: 100%;
+  border: 1px solid black;
+}

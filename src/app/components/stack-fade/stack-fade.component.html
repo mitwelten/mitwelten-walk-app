@@ -1,12 +1,14 @@
 <canvas id="stack" #stack width="640" height="480"></canvas>
 
-<div id="info" *ngIf="imageData.length">
+<div id="info" *ngIf="imageData.length && debug">
   <span>Stacksize<br>{{ imageData.length }}<!-- ({{ totalSize / 1048576 | number: '1.2-2'}} MB) --></span>
   <span>Current Image<br>{{ stackIndex }}</span>
   <span>Fade<br>{{ fade | percent: '1.2-2' }}</span>
   <span *ngIf="imageData[stackIndex].time">Date<br>{{ imageData[stackIndex].time | date:'medium' }}</span>
   <span *ngIf="imageData[stackIndex].object_name">Filename<br>{{ imageData[stackIndex].object_name.split('/').pop() }}</span>
 </div>
+
+<div id="dbgimg" [style.visibility]="debug?'visible':'hidden'"></div>
 
 <div id="text" *ngIf="textDisplay" [@fadeInOut]>
   <h2>{{ textDisplay.title }}</h2>
