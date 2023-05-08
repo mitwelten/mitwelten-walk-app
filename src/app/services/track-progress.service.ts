@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, tap } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrackProgressService {
 
-  public progress = new BehaviorSubject(0);
+  public progress = new ReplaySubject<number>(1);
 
   constructor() { }
 
