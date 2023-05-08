@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { distinctUntilChanged, Observable, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
-import { DataService, TrackProgressService, StateService } from 'src/app/services';
+import { DataService, ParcoursService, StateService } from 'src/app/services';
 import { SectionText, StackImage } from 'src/app/shared';
 
 const fadeInOutAnimation = trigger('fadeInOut', [
@@ -53,7 +53,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
     private dataService: DataService,
     public state: StateService,
     private cd: ChangeDetectorRef,
-    private trackProgress: TrackProgressService,
+    private parcoursService: ParcoursService,
   ) {
     this.cd.detach();
     for (let i = 0; i < 10; i++) {
@@ -113,7 +113,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private initTracking() {
-    this.trackProgress.progress.pipe(
+    this.parcoursService.progress.pipe(
       takeUntil(this.destroy),
       distinctUntilChanged()
     ).subscribe(progress => {

@@ -19,6 +19,7 @@ export class ParcoursService {
   public parcoursLength = 0;
   public closestPointOnParcours = new ReplaySubject<Position>(1);
   public trackerCoordinates = new ReplaySubject<CoordinatePoint>(1);
+  public progress = new ReplaySubject<number>(1);
 
   constructor(
     private readonly geolocation: GeolocationService,
@@ -92,7 +93,7 @@ export class ParcoursService {
         distanceAlongPath += this.distance(start, end);
       }
       if (this.parcoursLength) {
-        this.trackProgress.setProgress(distanceAlongPath / this.parcoursLength);
+        this.progress.next(Math.max(0, Math.min(1, distanceAlongPath / this.parcoursLength)));
       }
       if (closestPoint) {
         this.closestPointOnParcours.next(closestPoint);

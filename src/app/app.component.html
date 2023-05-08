@@ -63,7 +63,7 @@
 </mat-menu>
 
 <div id="progress" [style.visibility]="(state.debugView | async) ? 'visible':'hidden'">
-  Progress: {{ trackProgress.progress | async | percent:'1.2-2' }}
+  Progress: {{ parcoursService.progress | async | percent:'1.2-2' }}
 </div>
 
 <div id="closeDepoyements" *ngIf="showDeployments">

@@ -25,7 +25,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   private toggleDebugView!: MatSlideToggle;
 
   constructor(
-    private parcoursService: ParcoursService, // initialise geolocation
+    public parcoursService: ParcoursService,
     public trackRecorder: TrackRecorderService,
     public trackProgress: TrackProgressService,
     private entryService: EntryService,
