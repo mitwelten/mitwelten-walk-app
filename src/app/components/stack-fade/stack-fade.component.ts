@@ -21,16 +21,16 @@ const fadeInOutAnimation = trigger('fadeInOut', [
 })
 export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
 
-  imageData: StackImage[] = [];
-  totalSize: number = 0;
-  images: HTMLImageElement[] = [];
+  imageData: StackImage[] = [];    // urls / meta info for all images of parcours
+  totalSize: number = 0;           // total filesize
+  images: HTMLImageElement[] = []; // the image preload / display stack
   percent = 0;    // 0...100
   progress = 0;   // 0...1
   fade = 0;       // 0...1
   fetchIndex = 0; // which image in imagesUrls was loaded last?
   stackIndex = 0; // where in the stack are we?
   lastIndex = -1; // n-1 to determin direction
-  nImages = 0;
+  nImages = 0;    // imageData.length
   glReady = false;
 
   text: SectionText[] = [];
