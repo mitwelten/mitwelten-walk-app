@@ -4,17 +4,12 @@ import {
 } from '@angular/core';
 import { Map, Marker, GeoJSONSource, Popup } from 'maplibre-gl';
 import { Feature, Position } from 'geojson';
+import { DataService, EntryService, OidcService, TrackProgressService, TrackRecorderService } from 'src/app/services';
+import { CoordinatePoint, Deployment, MAP_STYLE_CONFIG } from 'src/app/shared';
 import { parcours } from './map.data';
-import { CoordinatePoint, DataService } from '../../shared';
 import distance from '@turf/distance';
-import { TrackProgressService } from 'src/app/shared/track-progress.service';
-import { TrackRecorderService } from 'src/app/shared/track-recorder.service';
-import { OidcService } from 'src/app/shared/oidc.service';
-import { EntryService } from 'src/app/shared/entry.service';
-import { Deployment } from 'src/app/shared/deployment.type';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
-import { MAP_STYLE_CONFIG } from 'src/app/shared/configuration';
 
 @Component({
   selector: 'app-map',

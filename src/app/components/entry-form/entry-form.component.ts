@@ -6,7 +6,8 @@ import { GeolocationService } from '@ng-web-apis/geolocation';
 import { MapMouseEvent } from 'maplibre-gl';
 import { delayWhen,  timer, Observable, throwError, of } from 'rxjs';
 import { mergeMap, map, retryWhen, take, tap, catchError } from 'rxjs/operators';
-import { DataService, Entry } from 'src/app/shared';
+import { DataService } from 'src/app/services';
+import { Entry } from 'src/app/shared';
 
 
 const genericRetryStrategy = ({

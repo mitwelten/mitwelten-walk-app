@@ -4,7 +4,7 @@ import { MapMouseEvent } from 'maplibre-gl';
 import { BehaviorSubject } from 'rxjs';
 import { EntryFormComponent } from '../components/entry-form/entry-form.component';
 import { DataService } from './data.service';
-import { Entry } from './entry.type';
+import { Entry } from '../shared';
 
 @Injectable({
   providedIn: 'root'

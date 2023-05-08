@@ -1,10 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { StackImage } from './stack-image.type';
-import { Deployment } from './deployment.type';
-import { Entry } from './entry.type';
-import { SectionText } from './section-text.type';
+import { Deployment, Entry, SectionText, StackImage } from '../shared';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +9,7 @@ import { SectionText } from './section-text.type';
 export class DataService {
 
   private apiUrl = 'https://data.mitwelten.org/api/v3';
+  // private apiUrl = 'http://localhost:8000';
 
   constructor(public readonly http: HttpClient) { }
 
@@ -48,6 +46,13 @@ export class DataService {
     return this.http.delete<boolean>(`${this.apiUrl}/entry/${id}`);
   }
 
+  /**
+   * TODO: how to define a specific interval for fetch a stack?
+   *       i.e. fetch images with an interval of 5 minutes in capture time
+   * TODO: define threshold when to skip fetch requests
+   *       (when moving faster than images can be loaded...)
+   * @returns Observable<StackImage[]> A selection of image records
+   */
   public getImageStack() {
     return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack_s3/42`)
   }

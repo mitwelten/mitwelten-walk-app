@@ -2,15 +2,10 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { startWith } from 'rxjs';
-import { CoordinatePoint, DataService } from './shared';
-import { OidcService } from './shared/oidc.service';
 import { KeycloakProfile } from 'keycloak-js';
-import { Deployment } from './shared/deployment.type';
-import { EntryService } from './shared/entry.service';
-import { TrackProgressService } from './shared/track-progress.service';
-import { TrackRecorderService } from './shared/track-recorder.service';
+import { CoordinatePoint, Deployment } from './shared';
+import { DataService, EntryService, OidcService, StateService, TrackProgressService, TrackRecorderService } from './services';
 import pkgJson from '../../package.json';
-import { StateService } from './shared/state.service';
 
 @Component({
   selector: 'app-root',

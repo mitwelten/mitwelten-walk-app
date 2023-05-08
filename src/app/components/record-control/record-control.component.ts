@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TrackRecorderService } from 'src/app/shared/track-recorder.service';
+import { TrackRecorderService } from 'src/app/services';
 
 @Component({
   selector: 'app-record-control',

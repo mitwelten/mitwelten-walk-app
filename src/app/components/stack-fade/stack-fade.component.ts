@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { distinctUntilChanged, Observable, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
-import { DataService, SectionText, StackImage, TrackProgressService } from 'src/app/shared';
-import { StateService } from 'src/app/shared/state.service';
+import { DataService, TrackProgressService, StateService } from 'src/app/services';
+import { SectionText, StackImage } from 'src/app/shared';
 
 const fadeInOutAnimation = trigger('fadeInOut', [
   transition(':enter', [
