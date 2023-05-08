@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { distinctUntilChanged, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Observable, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
 import { DataService, SectionText, StackImage, TrackProgressService } from 'src/app/shared';
 
 const fadeInOutAnimation = trigger('fadeInOut', [
@@ -32,6 +32,8 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   lastIndex = -1; // n-1 to determin direction
   nImages = 0;    // imageData.length
   glReady = false;
+
+  loaders: Subscription[] = new Array(10);
 
   text: SectionText[] = [];
   textDisplay: SectionText | null = null;
@@ -74,17 +76,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
       this.totalSize = list.reduce((a,b) => a + b.file_size, 0)
       this.nImages = this.imageData.length;
 
-      // TODO: do this after initTracking completes!
-      // preload images
-      for (let i = 0; i < this.preLoadCount; i++) {
-        this.loadImage(i, this.imageData[i].object_name).subscribe(complete => {
-          if (complete === (this.preLoadCount - 1)) {
-            // start tracking progress once images are preloaded
-            this.initTracking();
-          }
-        });
-        this.fetchIndex = i;
-      }
+      this.initTracking();
     });
   }
 
@@ -120,8 +112,29 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
     ).subscribe(progress => {
       this.progress = progress;
 
-      // initialise WebGL context
-      if (!this.glReady) this.initContext();
+      if (!this.glReady) {
+        const initIndex = Math.floor((this.progress * this.nImages) - (this.images.length / 2));
+        // preload images
+        let preloaded = 0;
+        for (let i = 0; i < this.preLoadCount; i++) {
+          let fi = i + initIndex;
+          if (fi < 0) fi = 0;
+          if (fi >= this.nImages-1) fi = this.nImages-1;
+          this.loaders[fi] = this.loadImage(i, this.imageData[fi].object_name).subscribe(complete => {
+            preloaded++;
+            if (preloaded === this.preLoadCount) {
+              // debug view for preloaded images
+              for (let i of this.images) {
+                document.getElementById('dbgimg')?.appendChild(i)
+              }
+              // initialise WebGL context
+              this.initContext();
+            }
+          });
+          this.fetchIndex = fi;
+        }
+      }
+
 
       // select text based on progress
       const p = Math.floor(progress * 100);
@@ -256,9 +269,32 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
         // start and end need to be fixed, don't read over the end of this.imageUrls
         if (this.stackIndex !== this.lastIndex && this.imageData.length) {
           const dir = (this.stackIndex - this.lastIndex) > 0 ? 1 : 0; // 1 = forward, 0 = backward
-          this.fetchIndex = this.stackIndex + (dir * this.preLoadCount);
+          const offset = dir === 1 ? 4 : -5; // forward current i + 4, bw current i - 5
+          // this.fetchIndex = this.stackIndex + (dir * this.preLoadCount); // forward = stackIndex+preLoadCount (load at end of loadstack), backward = stackIndex (load at beginning of loadstack)
+          this.fetchIndex = this.stackIndex + offset;
+          if (this.fetchIndex < 0) this.fetchIndex = 0;
+          if (this.fetchIndex >= this.nImages-1) this.fetchIndex = this.nImages-1;
           this.lastIndex = this.stackIndex;
-          this.loadImage(load, this.imageData[this.fetchIndex].object_name).subscribe();
+          // console.log('new stackIndex, fetchIndex', this.stackIndex, this.fetchIndex, pos_1, pos_2, load)
+          // console.log('object_name', this.imageData[this.fetchIndex].object_name)
+          // when walking backwards, load index needs to be offset by one (or it will load the image into next backward, which is one less)
+          const loadIndex = (load + (dir ? 0:1)) % 10;
+          // console.log('loadIndex', this.loaders[loadIndex] ? this.loaders[loadIndex].closed : 'empty');
+          if (this.loaders[loadIndex] && !this.loaders[loadIndex].closed) {
+            // console.log('cancelling', loadIndex)
+            this.loaders[loadIndex].unsubscribe();
+            this.loaders[loadIndex] = this.loadImage(loadIndex, this.imageData[this.fetchIndex].object_name).subscribe(x => {
+              // force texture refresh when image resources is done loading
+              // this doesn't work predictably, the loadTexture call should be
+              // run on the currently displayed frame (and the next one), not on the index 9
+              // this.loadTexture(0, this.images[pos_1]);
+              // this.loadTexture(1, this.images[pos_2]);
+              // if (x === (this.stackIndex + 4) % 10) this.loadTexture(0, this.images[pos_1]);
+              // if (x === (this.stackIndex + 5) % 10) this.loadTexture(1, this.images[pos_2]);
+            });
+          } else {
+            this.loaders[loadIndex] = this.loadImage(loadIndex, this.imageData[this.fetchIndex].object_name).subscribe();
+          }
           this.loadTexture(0, this.images[pos_1]);
           this.loadTexture(1, this.images[pos_2]);
           this.cd.detectChanges();
