@@ -1,8 +1,4 @@
-<app-map (closeDeployments)="deployments = $event"></app-map>
-
-<div id="showroom">
-  <router-outlet></router-outlet>
-</div>
+<router-outlet></router-outlet>
 
 <mat-toolbar class="mat-elevation-z8" color="primary">
   <button mat-icon-button [matMenuTriggerFor]="mainMenu" aria-label="Open main menu">
@@ -50,11 +46,13 @@
   <div mat-menu-item>
     <strong>Parcours Mode / Settings</strong>
   </div>
-  <div mat-menu-item routerLink="/walk">
-    Stack Fade Prototype
+  <div mat-menu-item [routerLink]="['/map']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    <mat-icon color="accent" class="material-symbols-outlined">map</mat-icon>
+    <em>Map View</em>
   </div>
-  <div mat-menu-item>
-    <mat-slide-toggle>Parcours</mat-slide-toggle>
+  <div mat-menu-item [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    <mat-icon color="accent" class="material-symbols-outlined">wallpaper_slideshow</mat-icon>
+    <em>Stack Fade View</em>
   </div>
   <div mat-menu-item>
     <mat-slide-toggle #toggleAddMarkers>Add markers</mat-slide-toggle>
