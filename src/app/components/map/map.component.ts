@@ -4,12 +4,9 @@ import {
 } from '@angular/core';
 import { Map, Marker, GeoJSONSource, Popup } from 'maplibre-gl';
 import { Feature, Position } from 'geojson';
-import { DataService, EntryService, OidcService, TrackProgressService, TrackRecorderService } from 'src/app/services';
+import { DataService, EntryService, OidcService, ParcoursService, TrackRecorderService } from 'src/app/services';
 import { CoordinatePoint, Deployment, MAP_STYLE_CONFIG } from 'src/app/shared';
-import { parcours } from './map.data';
-import distance from '@turf/distance';
-import { GeolocationService } from '@ng-web-apis/geolocation';
-import { map, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { map, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -21,9 +18,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private map: Map | undefined;
   private markers: Marker[] = [];
   private tracker: Marker | undefined;
-  private trackerLocation: Position | undefined;
-  private parcoursPath: Position[] = parcours;
-  private parcoursLength = 0;
   private deployments: Deployment[] = [];
   private destroy = new Subject();
 
@@ -39,8 +33,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     @Inject(MAP_STYLE_CONFIG) private mapStyle: string,
-    private readonly geolocation: GeolocationService,
-    private trackProgress: TrackProgressService,
+    private parcoursService: ParcoursService,
     private trackRecorder: TrackRecorderService,
     private dataService: DataService,
     private authService: OidcService,
@@ -86,7 +79,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (this.map) {
         this.setParcours(this.map);
         this.setTrace(this.map);
-        this.initGeoLocation();
+        this.parcoursService.trackerCoordinates.pipe(takeUntil(this.destroy)).subscribe(loc => {
+          this.map?.setCenter(loc);
+          this.tracker?.setLngLat(loc);
+        });
+        this.parcoursService.closestPointOnParcours.pipe(takeUntil(this.destroy)).subscribe(pos => {
+          const s = <GeoJSONSource>this.map?.getSource('projection');
+          if (s) s.setData({
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              coordinates: pos,
+              type: 'Point'
+          }});
+        });
 
         this.authService.authStateSubject.pipe(
           takeUntil(this.destroy),
@@ -127,80 +133,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.tracker.on('drag', () => {
       const ll = this.tracker?.getLngLat();
       if (ll !== undefined) {
-        this.trackerLocation = [ll.lng, ll.lat];
-        this.updateProjection(this.trackerLocation);
+        this.parcoursService.overrideLocation([ll.lng, ll.lat]);
       }
     });
-  }
-
-  private initGeoLocation() {
-    this.geolocation.pipe(
-      takeUntil(this.destroy),
-      tap(l => this.trackRecorder.addPosition(l))
-    ).subscribe({
-      next: l => {
-        const loc: CoordinatePoint = { lon: l.coords.longitude, lat: l.coords.latitude}
-        // TODO: do something with the accuracy value (skip, or warn)
-        this.trackerLocation = [l.coords.longitude, l.coords.latitude];
-        this.updateProjection(this.trackerLocation);
-        this.map?.setCenter(loc);
-        this.tracker?.setLngLat(loc); // TODO: does this trigger 'on drag'?
-      },
-      error: e => console.warn(e)
-    });
-  }
-
-  private updateProjection(location: Position) {
-    // Find the closest point on the path to the object
-    let closestPoint: Position | undefined;
-    let lastStartPoint: Position | undefined;
-    let minDistance = Infinity;
-    for (let i = 0; i < this.parcoursPath.length - 1; i++) {
-      const start = this.parcoursPath[i];
-      const end = this.parcoursPath[i + 1];
-      const [distance, closest] = this.perpendicularDistance(location, start, end);
-      if (distance < minDistance) {
-        lastStartPoint = start;
-        closestPoint = closest;
-        minDistance = distance;
-      }
-    }
-    const closeDeployments = this.deployments
-      .map(d => Object.assign(d, { distance: distance([d.location.lon, d.location.lat], location, { units: 'meters' })}))
-      .sort((a,b) => a.distance - b.distance)
-      .slice(0, 10);
-    this.closeDeployments.emit(closeDeployments);
-
-    if(minDistance < 0.0016477864372379668) {
-      // Calculate the distance along the path
-      // from the starting point to the closest point
-      let distanceAlongPath = 0;
-      for (let i = 0; i < this.parcoursPath.length - 1; i++) {
-        const start = this.parcoursPath[i];
-        const end = this.parcoursPath[i + 1];
-        if (closestPoint && lastStartPoint && start[0] === lastStartPoint[0] && start[1] === lastStartPoint[1]) {
-          distanceAlongPath += this.distance(start, closestPoint);
-          break;
-        }
-        distanceAlongPath += this.distance(start, end);
-      }
-      if (this.parcoursLength) {
-        this.trackProgress.setProgress(distanceAlongPath / this.parcoursLength);
-      }
-
-      if (closestPoint) {
-        const s = <GeoJSONSource>this.map?.getSource('projection');
-        if (s) s.setData({
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            coordinates: closestPoint,
-            type: 'Point'
-        }});
-      }
-    } else {
-      console.error('too far away from parcours');
-    }
   }
 
   private drawDepoyments(map: Map) {
@@ -243,19 +178,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   private setParcours(map: Map) {
-    // get length of path
-    this.parcoursLength = 0;
-    for (let i = 0; i < this.parcoursPath.length - 1; i++) {
-      const start = this.parcoursPath[i];
-      const end = this.parcoursPath[i + 1];
-      this.parcoursLength += this.distance(start, end);
-    }
     // draw path
     map.addSource('parcoursPath', {
       type: 'geojson',
       data: {
         type: 'Feature',
-        geometry: { type: 'LineString', coordinates: this.parcoursPath }
+        geometry: { type: 'LineString', coordinates: this.parcoursService.parcoursPath }
       }
     });
     // draw point of progress
@@ -327,23 +255,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
        'line-opacity': 0.5,
      }
    });
-  }
-
-  private distance(a: Position, b: Position): number {
-    const dx = a[0] - b[0];
-    const dy = a[1] - b[1];
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-
-  private perpendicularDistance(point: Position, start: Position, end: Position): [number, Position] {
-    const dx = end[0] - start[0];
-    const dy = end[1] - start[1];
-    const dot = dx * (point[0] - start[0]) + dy * (point[1] - start[1]);
-    const len = dx * dx + dy * dy;
-    const t = Math.min(1, Math.max(0, dot / len));
-    const projectionX = start[0] + t * dx;
-    const projectionY = start[1] + t * dy;
-    return [this.distance(point, [projectionX, projectionY]), [projectionX, projectionY]];
   }
 
 }
