@@ -134,6 +134,8 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
               for (let i of this.images) {
                 document.getElementById('dbgimg')?.appendChild(i)
               }
+              // update data binding
+              this.cd.detectChanges();
               // initialise WebGL context
               this.initContext();
             }
