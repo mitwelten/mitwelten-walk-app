@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Position } from 'geojson';
-import { ReplaySubject, tap } from 'rxjs';
+import { ReplaySubject, distinctUntilChanged, tap } from 'rxjs';
 import { CoordinatePoint } from '../shared';
 import { parcours } from '../shared/map.data';
 import { TrackRecorderService } from './track-recorder.service';
 import distance from '@turf/distance';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DistanceWarningDialogComponent } from '../components/distance-warning-dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -21,13 +23,19 @@ export class ParcoursService {
   public progress = new ReplaySubject<number>(1);
   public distanceToPath = new ReplaySubject<number>(1);
   public active = new ReplaySubject<boolean>(1);
+  private dialogRef?: MatDialogRef<DistanceWarningDialogComponent>;
 
   constructor(
     private readonly geolocation: GeolocationService,
     private trackRecorder: TrackRecorderService,
+    public dialog: MatDialog
   ) {
     this.setParcours();
     this.initGeoLocation();
+    this.active.pipe(distinctUntilChanged()).subscribe(active => {
+      if (active) this.dialogRef?.close();
+      else this.dialogRef = this.dialog.open(DistanceWarningDialogComponent);
+    })
   }
 
   private setParcours() {
