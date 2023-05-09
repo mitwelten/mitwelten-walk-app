@@ -4,7 +4,6 @@ import { Position } from 'geojson';
 import { ReplaySubject, tap } from 'rxjs';
 import { CoordinatePoint } from '../shared';
 import { parcours } from '../shared/map.data';
-import { TrackProgressService } from './track-progress.service';
 import { TrackRecorderService } from './track-recorder.service';
 import distance from '@turf/distance';
 
@@ -23,7 +22,6 @@ export class ParcoursService {
 
   constructor(
     private readonly geolocation: GeolocationService,
-    private trackProgress: TrackProgressService,
     private trackRecorder: TrackRecorderService,
   ) {
     this.setParcours();

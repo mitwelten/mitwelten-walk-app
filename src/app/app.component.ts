@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { KeycloakProfile } from 'keycloak-js';
 import { Deployment } from './shared';
-import { DataService, EntryService, OidcService, ParcoursService, StateService, TrackProgressService, TrackRecorderService } from './services';
+import { DataService, EntryService, OidcService, ParcoursService, StateService, TrackRecorderService } from './services';
 import pkgJson from '../../package.json';
 
 @Component({
@@ -27,7 +27,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     public parcoursService: ParcoursService,
     public trackRecorder: TrackRecorderService,
-    public trackProgress: TrackProgressService,
     private entryService: EntryService,
     public dataService: DataService,
     public state: StateService,

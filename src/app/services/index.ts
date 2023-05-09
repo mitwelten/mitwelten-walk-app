@@ -5,4 +5,3 @@ export * from './oidc.service';
 export * from './parcours.service';
 export * from './state.service';
 export * from './track-recorder.service';
-export * from './track-progress.service';
