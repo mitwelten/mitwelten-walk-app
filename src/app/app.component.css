@@ -29,17 +29,23 @@ mat-toolbar {
   flex: 1 1 auto;
 }
 
-#progress {
+#progress, #distance {
   position: fixed;
-  top: 72px;
   left: 10px;
   width: 120px;
   font-size: 14px;
-  font-weight: bold;
   background-color: rgba(255,255,255,0.7);
   border-radius: 4px;
   padding: 4px;
 }
+#progress {
+  font-weight: bold;
+  top: 72px;
+}
+#distance {
+  top: 108px;
+}
+
 
 #closeDepoyements {
   position: absolute;

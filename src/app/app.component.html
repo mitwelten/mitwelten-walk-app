@@ -62,9 +62,14 @@
   </div>
 </mat-menu>
 
-<div id="progress" [style.visibility]="(state.debugView | async) ? 'visible':'hidden'">
-  Progress: {{ parcoursService.progress | async | percent:'1.2-2' }}
-</div>
+<ng-container *ngIf="(state.debugView | async)">
+  <div id="progress">
+    Progress: {{ parcoursService.progress | async | percent:'1.2-2' }}
+  </div>
+  <div id="distance">
+    Distance: {{ parcoursService.distanceToPath | async | number:'1.2-2' }} m
+  </div>
+</ng-container>
 
 <div id="closeDepoyements" *ngIf="showDeployments">
   <strong>Close deployments</strong>
