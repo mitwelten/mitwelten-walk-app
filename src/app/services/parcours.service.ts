@@ -19,6 +19,8 @@ export class ParcoursService {
   public closestPointOnParcours = new ReplaySubject<Position>(1);
   public trackerCoordinates = new ReplaySubject<CoordinatePoint>(1);
   public progress = new ReplaySubject<number>(1);
+  public distanceToPath = new ReplaySubject<number>(1);
+  public active = new ReplaySubject<boolean>(1);
 
   constructor(
     private readonly geolocation: GeolocationService,
@@ -64,11 +66,11 @@ export class ParcoursService {
     for (let i = 0; i < this.parcoursPath.length - 1; i++) {
       const start = this.parcoursPath[i];
       const end = this.parcoursPath[i + 1];
-      const [distance, closest] = this.perpendicularDistance(location, start, end);
-      if (distance < minDistance) {
+      const [p_dist, closest] = this.perpendicularDistance(location, start, end);
+      if (p_dist < minDistance) {
         lastStartPoint = start;
         closestPoint = closest;
-        minDistance = distance;
+        minDistance = p_dist;
       }
     }
     /* const closeDeployments = this.deployments
@@ -76,8 +78,10 @@ export class ParcoursService {
       .sort((a,b) => a.distance - b.distance)
       .slice(0, 10);
     this.closeDeployments.emit(closeDeployments); */
+    const distantceSphericalMeters = distance(location, closestPoint!) * 1000;
+    this.distanceToPath.next(distantceSphericalMeters);
 
-    if(minDistance < 0.0016477864372379668) {
+    if(distantceSphericalMeters < 50) {
       // Calculate the distance along the path
       // from the starting point to the closest point
       let distanceAlongPath = 0;
@@ -96,8 +100,9 @@ export class ParcoursService {
       if (closestPoint) {
         this.closestPointOnParcours.next(closestPoint);
       }
+      this.active.next(true);
     } else {
-      console.error('too far away from parcours');
+      this.active.next(false);
     }
   }
 
