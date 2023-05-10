@@ -41,6 +41,7 @@ export class RecordControlComponent implements OnInit {
     const reader = new FileReader();
     reader.onload = (ev) => {
       const track = <GeolocationPosition[]>JSON.parse(<string>ev.target?.result);
+      this.trackRecorder.loadTrack(track);
     };
     if (this.fileInput?.nativeElement.files?.length) {
       reader.readAsText(this.fileInput?.nativeElement.files[0]);

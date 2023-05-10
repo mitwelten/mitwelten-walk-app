@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ReplaySubject, timestamp } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, timestamp } from 'rxjs';
 import { saveAs } from 'file-saver';
 
 @Injectable({
@@ -8,11 +8,14 @@ import { saveAs } from 'file-saver';
 export class TrackRecorderService {
 
   private _track: GeolocationPosition[];
+  private _playbackTrack: GeolocationPosition[];
+
   public position: ReplaySubject<GeolocationPosition>;
   public track: ReplaySubject<GeolocationPosition[]>;
 
   constructor() {
     this._track = [];
+    this._playbackTrack = [];
     this.position = new ReplaySubject();
     this.track = new ReplaySubject();
   }
@@ -47,4 +50,10 @@ export class TrackRecorderService {
     const track = new Blob([trackJson], {type: 'application/json;charset=utf-8'})
     saveAs(track, 'gps-track.json');
   }
+
+  loadTrack(track: GeolocationPosition[]) {
+    this._playbackTrack = track;
+    this.track.next(track); // show track on load
+  }
+
 }
