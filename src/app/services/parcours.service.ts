@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Position } from 'geojson';
-import { ReplaySubject, distinctUntilChanged, tap } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, distinctUntilChanged, switchMap, tap } from 'rxjs';
 import { CoordinatePoint } from '../shared';
 import { parcours } from '../shared/map.data';
 import { TrackRecorderService } from './track-recorder.service';
@@ -16,6 +16,7 @@ import { AudioService } from './audio.service';
 export class ParcoursService {
 
   private trackerLocation: Position | undefined; /** position of device */
+  private toggleSource?: BehaviorSubject<GeolocationService|ReplaySubject<GeolocationPosition>>;
 
   public parcoursPath: Position[] = parcours;
   public parcoursLength = 0;
@@ -51,7 +52,9 @@ export class ParcoursService {
   }
 
   private initGeoLocation() {
-    this.geolocation.pipe(
+    this.toggleSource = new BehaviorSubject(this.geolocation);
+    this.toggleSource.pipe(
+      switchMap(source => source),
       // tap(l => this.audioService.ping()),
       tap(l => this.trackRecorder.addPosition(l))
     ).subscribe({
@@ -63,6 +66,11 @@ export class ParcoursService {
       },
       error: e => console.warn(e)
     });
+    // switch between geolocation and playback
+    this.trackRecorder.playbackOn.subscribe(state => {
+      if (state) this.toggleSource?.next(this.trackRecorder.playback);
+      else this.toggleSource?.next(this.geolocation);
+    })
   }
 
   public overrideLocation(location: Position) {
