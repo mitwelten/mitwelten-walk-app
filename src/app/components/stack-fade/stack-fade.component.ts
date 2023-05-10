@@ -34,6 +34,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   lastIndex = -1; // n-1 to determin direction
   nImages = 0;    // imageData.length
   glReady = false;
+  textReady = true;
 
   loaders: Subscription[] = new Array(10);
 
@@ -64,7 +65,10 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.dataService.getWalkText(1).subscribe(text => this.text = text);
+    this.dataService.getWalkText(1).subscribe(text => {
+      this.text = text;
+      this.textReady = true;
+    });
     this.state.debugView.subscribe(state => {
       this.debug = state;
       this.cd.detectChanges();
@@ -147,7 +151,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
 
       // select text based on progress
       const p = Math.floor(progress * 100);
-      if (p !== this.percent) {
+      if (p !== this.percent || !this.textReady) {
         this.percent = p;
         const t = this.text.filter((t: SectionText) => t.percent_in <= p && t.percent_out > p);
         if (t.length === 0) {
