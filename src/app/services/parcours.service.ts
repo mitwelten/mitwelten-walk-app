@@ -8,6 +8,7 @@ import { TrackRecorderService } from './track-recorder.service';
 import distance from '@turf/distance';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DistanceWarningDialogComponent } from '../components/distance-warning-dialog.component';
+import { AudioService } from './audio.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,7 @@ export class ParcoursService {
   constructor(
     private readonly geolocation: GeolocationService,
     private trackRecorder: TrackRecorderService,
+    private audioService: AudioService,
     public dialog: MatDialog
   ) {
     this.setParcours();
@@ -50,6 +52,7 @@ export class ParcoursService {
 
   private initGeoLocation() {
     this.geolocation.pipe(
+      // tap(l => this.audioService.ping()),
       tap(l => this.trackRecorder.addPosition(l))
     ).subscribe({
       next: l => {

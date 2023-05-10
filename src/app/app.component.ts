@@ -4,6 +4,7 @@ import { KeycloakProfile } from 'keycloak-js';
 import { Deployment } from './shared';
 import { DataService, EntryService, OidcService, ParcoursService, StateService, TrackRecorderService } from './services';
 import pkgJson from '../../package.json';
+import { AudioService } from './services/audio.service';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     public parcoursService: ParcoursService,
     public trackRecorder: TrackRecorderService,
+    public audioService: AudioService,
     private entryService: EntryService,
     public dataService: DataService,
     public state: StateService,

@@ -3,6 +3,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { distinctUntilChanged, Observable, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
 import { DataService, ParcoursService, StateService } from 'src/app/services';
 import { SectionText, StackImage } from 'src/app/shared';
+import { AudioService } from 'src/app/services/audio.service';
 
 const fadeInOutAnimation = trigger('fadeInOut', [
   transition(':enter', [
@@ -52,6 +53,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     private dataService: DataService,
+    private audioService: AudioService,
     public state: StateService,
     private cd: ChangeDetectorRef,
     private parcoursService: ParcoursService,
@@ -161,6 +163,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
         }
         else {
           if (this.textDisplay === null || (this.textDisplay !== null && t[0].text_id !== this.textDisplay.text_id)) {
+            this.audioService.ping();
             this.textDisplay = t[0];
           }
         }

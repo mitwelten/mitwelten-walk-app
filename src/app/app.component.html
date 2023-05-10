@@ -6,6 +6,9 @@
   </button>
   <span class="mat-h3" style="margin: 0;">{{ title }}</span>
   <span class="spacer"></span>
+  <button mat-icon-button aria-label="Toggle Audio" (click)="audioService.start()">
+    <mat-icon class="material-symbols-outlined">sensors</mat-icon>
+  </button>
   <button mat-icon-button aria-label="Info / How to use" [routerLink]="['/info']">
     <mat-icon class="material-symbols-outlined">info</mat-icon>
   </button>
