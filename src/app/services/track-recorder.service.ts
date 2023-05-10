@@ -12,12 +12,16 @@ export class TrackRecorderService {
 
   public position: ReplaySubject<GeolocationPosition>;
   public track: ReplaySubject<GeolocationPosition[]>;
+  public playback: ReplaySubject<GeolocationPosition>;
+  public playbackOn: BehaviorSubject<boolean>;
 
   constructor() {
     this._track = [];
     this._playbackTrack = [];
     this.position = new ReplaySubject();
     this.track = new ReplaySubject();
+    this.playback = new ReplaySubject(1);
+    this.playbackOn = new BehaviorSubject(false);
   }
 
   public addPosition(p: GeolocationPosition) {
@@ -56,4 +60,22 @@ export class TrackRecorderService {
     this.track.next(track); // show track on load
   }
 
+  startPlayback() {
+    this.clearTrack(); // erase track to start recording the playback
+    this.playbackOn.next(true);
+    let i = 0;
+    const schedule = () => {
+      if (i < (this._playbackTrack.length-1) && this.playbackOn.getValue()) {
+        const d = this._playbackTrack[i+1].timestamp - this._playbackTrack[i].timestamp;
+        i++;
+        setTimeout(schedule, d);
+      }
+      this.playback.next(this._playbackTrack[i])
+    };
+    schedule();
+  }
+
+  stopPlayback() {
+    this.playbackOn.next(false);
+  }
 }

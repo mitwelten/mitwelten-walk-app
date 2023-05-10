@@ -18,7 +18,14 @@ import { TrackRecorderService } from 'src/app/services';
       <mat-icon color="accent" class="material-symbols-outlined">upload</mat-icon>
       <span>Load GPS trace</span>
     </button>
-
+    <button mat-menu-item (click)="startPlayback()">
+      <mat-icon color="accent" class="material-symbols-outlined">play_arrow</mat-icon>
+      <span>Start Playback</span>
+    </button>
+    <button mat-menu-item (click)="stopPlayback()">
+      <mat-icon color="accent" class="material-symbols-outlined">stop</mat-icon>
+      <span>Stop Playback</span>
+    </button>
     <input #fileInput type="file" style="display:none" (change)="handleFile()">
   `
 })
@@ -48,4 +55,11 @@ export class RecordControlComponent implements OnInit {
     }
   }
 
+  startPlayback() {
+    this.trackRecorder.startPlayback();
+  }
+
+  stopPlayback() {
+    this.trackRecorder.stopPlayback();
+  }
 }
