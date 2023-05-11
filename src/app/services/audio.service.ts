@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { Gain } from 'tone';
 import { context, start, Oscillator, Filter, Distortion, Reverb, AmplitudeEnvelope} from 'tone';
 
 @Injectable({
@@ -7,9 +9,14 @@ import { context, start, Oscillator, Filter, Distortion, Reverb, AmplitudeEnvelo
 export class AudioService {
   private sonarEnv: AmplitudeEnvelope;
   private sonar: Oscillator;
+  private master: Gain;
+
+  public running: BehaviorSubject<boolean>;
 
   constructor() {
-    this.sonar = new Oscillator(1024, 'sine').start();
+    this.running = new BehaviorSubject(false);
+    this.master = new Gain(1).toDestination();
+    this.sonar = new Oscillator(1024, 'sine');
     this.sonarEnv = new AmplitudeEnvelope({
       attack: 0.02,
       decay: 0.1,
@@ -19,15 +26,36 @@ export class AudioService {
     this.sonar.chain(
       this.sonarEnv,
       (new Distortion(0.8)),
-      (new Filter(1024*1.5, 'lowpass')).toDestination(),
-      (new Reverb(5)).toDestination());
-
-    if (context.state !== 'running') start();
+      (new Filter(1024*1.5, 'lowpass')).connect(this.master),
+      (new Reverb(5)),
+      this.master);
   }
 
   start() {
-    if (context.state !== 'running') start();
-    this.ping();
+    start().then(
+      () => {
+        this.sonar.start();
+        this.running.next(true);
+        this.master.gain.rampTo(1, 0);
+        this.ping();
+    }).catch(e => {
+      console.warn(e);
+    });
+  }
+
+  toggle() {
+    if (this.running.getValue()) {
+      this.running.next(false);
+      this.master.gain.rampTo(0, 0.2);
+    } else {
+      if (context.state !== 'running') {
+        this.start();
+      } else {
+        this.running.next(true);
+        this.master.gain.rampTo(1, 0);
+        this.ping();
+      }
+    }
   }
 
   ping() {
