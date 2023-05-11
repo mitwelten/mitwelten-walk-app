@@ -21,7 +21,7 @@ export class ParcoursService {
   public parcoursPath: Position[] = parcours;
   public parcoursLength = 0;
   public closestPointOnParcours = new ReplaySubject<Position>(1);
-  public trackerCoordinates = new ReplaySubject<CoordinatePoint>(1);
+  public location = new ReplaySubject<GeolocationPosition>(1);
   public progress = new ReplaySubject<number>(1);
   public distanceToPath = new ReplaySubject<number>(1);
   public active = new ReplaySubject<boolean>(1);
@@ -60,9 +60,8 @@ export class ParcoursService {
     ).subscribe({
       next: l => {
         // TODO: do something with the accuracy value (skip, or warn)
-        this.trackerLocation = [l.coords.longitude, l.coords.latitude];
-        this.updateProjection(this.trackerLocation);
-        this.trackerCoordinates.next({ lon: l.coords.longitude, lat: l.coords.latitude })
+        this.updateProjection([l.coords.longitude, l.coords.latitude]);
+        this.location.next(l);
       },
       error: e => console.warn(e)
     });

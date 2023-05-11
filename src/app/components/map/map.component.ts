@@ -79,9 +79,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (this.map) {
         this.setParcours(this.map);
         this.setTrace(this.map);
-        this.parcoursService.trackerCoordinates.pipe(takeUntil(this.destroy)).subscribe(loc => {
-          this.map?.setCenter(loc);
-          this.tracker?.setLngLat(loc);
+        this.parcoursService.location.pipe(takeUntil(this.destroy)).subscribe(loc => {
+          const coordinates = { lon: loc.coords.longitude, lat: loc.coords.latitude };
+          this.map?.setCenter(coordinates);
+          this.tracker?.setLngLat(coordinates);
         });
         this.parcoursService.closestPointOnParcours.pipe(takeUntil(this.destroy)).subscribe(pos => {
           const s = <GeoJSONSource>this.map?.getSource('projection');
