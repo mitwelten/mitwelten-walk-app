@@ -65,14 +65,17 @@
   </div>
 </mat-menu>
 
-<ng-container *ngIf="(state.debugView | async)">
-  <div id="progress">
+<div id="info" *ngIf="(state.debugView | async)">
+  <div>
     Progress: {{ parcoursService.progress | async | percent:'1.2-2' }}
   </div>
-  <div id="distance">
+  <div>
     Distance: {{ parcoursService.distanceToPath | async | number:'1.2-2' }} m
   </div>
-</ng-container>
+  <div>
+    Accuracy: {{ (parcoursService.location | async)?.coords?.accuracy | number:'1.2-2' }} m
+  </div>
+</div>
 
 <div id="closeDepoyements" *ngIf="showDeployments">
   <strong>Close deployments</strong>
