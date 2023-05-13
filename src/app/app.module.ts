@@ -1,4 +1,4 @@
-import { NgModule, isDevMode, LOCALE_ID, APP_INITIALIZER } from '@angular/core';
+import { NgModule, isDevMode, LOCALE_ID, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { MapComponent } from './components/map/map.component';
 import { GeolocationService, POSITION_OPTIONS } from '@ng-web-apis/geolocation';
 import { GeolocationMockService } from './testing/geolocation-mock.service';
+import { SentryService } from './services/sentry.service';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { MAP_STYLE_CONFIG } from './shared/configuration';
 import { RecordControlComponent } from './components/record-control/record-control.component';
@@ -107,6 +108,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
       // useValue: 'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte.vt/style.json',
       // useValue: 'https://api.maptiler.com/maps/basic-v2/style.json?key=KvRgWGYbyNZgzbSTt1ga',
     },
+    { provide: ErrorHandler, useClass: SentryService },
     { provide: LOCALE_ID, useValue: 'de-CH' },
     { provide: MAT_DATE_LOCALE, useValue: 'de' },
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [ MAT_DATE_LOCALE ] },

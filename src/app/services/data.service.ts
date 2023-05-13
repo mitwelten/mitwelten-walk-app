@@ -64,4 +64,8 @@ export class DataService {
   public getImageResource(url: string) {
     return this.http.get(`${this.apiUrl}/files/walk/${url}`, {responseType: 'blob'});
   }
+
+  public postError(payload: string) {
+    this.http.post(`${this.apiUrl}/sentry`, { payload: payload }).subscribe();
+  }
 }

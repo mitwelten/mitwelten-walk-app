@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Position } from 'geojson';
-import { BehaviorSubject, ReplaySubject, distinctUntilChanged, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, catchError, distinctUntilChanged, switchMap, tap } from 'rxjs';
 import { CoordinatePoint } from '../shared';
 import { parcours } from '../shared/map.data';
 import { TrackRecorderService } from './track-recorder.service';
@@ -56,6 +56,7 @@ export class ParcoursService {
     this.toggleSource.pipe(
       switchMap(source => source),
       // tap(l => this.audioService.ping()),
+      catchError(error => { throw error }),
       tap(l => this.trackRecorder.addPosition(l))
     ).subscribe({
       next: l => {
@@ -63,7 +64,17 @@ export class ParcoursService {
         this.updateProjection([l.coords.longitude, l.coords.latitude]);
         this.location.next(l);
       },
-      error: e => console.warn(e)
+      error: error => {
+        if (error instanceof GeolocationPositionError) {
+          throw {
+            code: error.code,
+            message: error.message,
+            PERMISSION_DENIED: error.PERMISSION_DENIED,
+            POSITION_UNAVAILABLE: error.POSITION_UNAVAILABLE,
+            TIMEOUT: error.TIMEOUT,
+          }
+        } else { throw error }
+      }
     });
     // switch between geolocation and playback
     this.trackRecorder.playbackOn.subscribe(state => {
