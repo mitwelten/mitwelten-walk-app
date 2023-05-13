@@ -33,6 +33,9 @@ export class ParcoursService {
     private audioService: AudioService,
     public dialog: MatDialog
   ) {
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) this.toggleSource?.next(this.geolocation);
+    });
     this.setParcours();
     this.initGeoLocation();
     this.active.pipe(distinctUntilChanged()).subscribe(active => {
