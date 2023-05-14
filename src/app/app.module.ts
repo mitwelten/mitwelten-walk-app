@@ -100,7 +100,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     // },
     {
       provide: POSITION_OPTIONS,
-      useValue: { enableHighAccuracy: true, timeout: 27000, maximumAge: 30000 },
+      useValue: { enableHighAccuracy: true, timeout: Infinity, maximumAge: 10000 },
     },
     {
       provide: MAP_STYLE_CONFIG,
