@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Position } from 'geojson';
-import { BehaviorSubject, ReplaySubject, catchError, distinctUntilChanged, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, distinctUntilChanged, retry, switchMap, tap } from 'rxjs';
 import { CoordinatePoint } from '../shared';
 import { parcours } from '../shared/map.data';
 import { TrackRecorderService } from './track-recorder.service';
@@ -9,12 +9,14 @@ import distance from '@turf/distance';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DistanceWarningDialogComponent } from '../components/distance-warning-dialog.component';
 import { AudioService } from './audio.service';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ParcoursService {
 
+  private _geolocation: GeolocationService
   private trackerLocation: Position | undefined; /** position of device */
   private toggleSource?: BehaviorSubject<GeolocationService|ReplaySubject<GeolocationPosition>>;
 
@@ -31,10 +33,25 @@ export class ParcoursService {
     private readonly geolocation: GeolocationService,
     private trackRecorder: TrackRecorderService,
     private audioService: AudioService,
+    private dataService: DataService,
     public dialog: MatDialog
   ) {
+    this._geolocation = this.geolocation.pipe(
+      tap({
+        error: error => {
+          this.dataService.postError({
+            code: error.code,
+            message: error.message,
+            PERMISSION_DENIED: error.PERMISSION_DENIED,
+            POSITION_UNAVAILABLE: error.POSITION_UNAVAILABLE,
+            TIMEOUT: error.TIMEOUT,
+          });
+        }
+      }),
+      retry({ delay: 2000 })
+    );
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) this.toggleSource?.next(this.geolocation);
+      if (!document.hidden) this.toggleSource?.next(this._geolocation);
     });
     this.setParcours();
     this.initGeoLocation();
@@ -55,11 +72,10 @@ export class ParcoursService {
   }
 
   private initGeoLocation() {
-    this.toggleSource = new BehaviorSubject(this.geolocation);
+    this.toggleSource = new BehaviorSubject(this._geolocation);
     this.toggleSource.pipe(
       switchMap(source => source),
       // tap(l => this.audioService.ping()),
-      catchError(error => { throw error }),
       tap(l => this.trackRecorder.addPosition(l))
     ).subscribe({
       next: l => {
@@ -82,7 +98,7 @@ export class ParcoursService {
     // switch between geolocation and playback
     this.trackRecorder.playbackOn.subscribe(state => {
       if (state) this.toggleSource?.next(this.trackRecorder.playback);
-      else this.toggleSource?.next(this.geolocation);
+      else this.toggleSource?.next(this._geolocation);
     })
   }
 

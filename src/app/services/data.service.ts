@@ -65,7 +65,7 @@ export class DataService {
     return this.http.get(`${this.apiUrl}/files/walk/${url}`, {responseType: 'blob'});
   }
 
-  public postError(payload: string) {
+  public postError(payload: unknown) {
     this.http.post(`${this.apiUrl}/sentry`, { payload: payload }).subscribe();
   }
 }
