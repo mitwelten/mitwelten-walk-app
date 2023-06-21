@@ -8,6 +8,7 @@ import { TrackRecorderService } from './track-recorder.service';
 import distance from '@turf/distance';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DistanceWarningDialogComponent } from '../components/distance-warning-dialog.component';
+import { ChoosePathComponent } from '../components/choose-path/choose-path.component';
 import { AudioService } from './audio.service';
 import { DataService } from './data.service';
 
@@ -59,6 +60,10 @@ export class ParcoursService {
       if (active) this.dialogRef?.close();
       else this.dialogRef = this.dialog.open(DistanceWarningDialogComponent);
     })
+  }
+
+  public choosePath() {
+    this.dialog.open(ChoosePathComponent);
   }
 
   private setParcours() {

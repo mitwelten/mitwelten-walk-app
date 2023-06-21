@@ -58,6 +58,10 @@
     <mat-icon color="accent" class="material-symbols-outlined">wallpaper_slideshow</mat-icon>
     <em>Stack Fade View</em>
   </div>
+  <div mat-menu-item (click)="parcoursService.choosePath()">
+    <mat-icon color="accent" class="material-symbols-outlined">share</mat-icon>
+    <em>Select Path</em>
+  </div>
   <div mat-menu-item>
     <mat-slide-toggle #toggleAddMarkers>Add markers</mat-slide-toggle>
   </div>

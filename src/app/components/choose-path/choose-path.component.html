@@ -1,0 +1,49 @@
+<h1 mat-dialog-title>
+  <span *ngIf="!addMode">Choose</span><span *ngIf="addMode">Add</span> Walk Path
+</h1>
+
+<div mat-dialog-content>
+
+  <div class="path-list" *ngIf="!addMode">
+    <div><strong>Title</strong></div>
+    <div><strong>Description</strong></div>
+    <div><strong>created</strong></div>
+    <div><strong>updated</strong></div>
+    <div></div>
+
+    <ng-container *ngFor="let walk of walks">
+      <div>{{ walk.title }}</div>
+      <div>{{ walk.description }}</div>
+      <div>{{ walk.created_at | date }}</div>
+      <div>{{ walk.updated_at | date }}</div>
+      <div><button mat-stroked-button color="primary" (click)="select(walk.walk_id)">select</button></div>
+    </ng-container>
+  </div>
+
+  <form *ngIf="addMode" [formGroup]="pathForm" (ngSubmit)="submit()" style="margin-top: 16px;">
+
+    <mat-form-field class="full-width-field" appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput type="text" formControlName="title" name="title" id="title">
+    </mat-form-field>
+
+    <mat-form-field class="full-width-field" appearance="outline">
+      <mat-label>Description</mat-label>
+      <input matInput type="text" formControlName="description" name="description" id="description">
+    </mat-form-field>
+
+    <mat-form-field class="full-width-field" appearance="outline">
+      <mat-label>Path</mat-label>
+      <textarea matInput rows="6" type="text" formControlName="path" name="path" id="path"></textarea>
+      <mat-hint>Paste from <a href="https://geojson.io/" target="_blank">geojson.io</a>, format [[7.6088222688889005, 47.50629940174187], [..., ...], ...</mat-hint>
+
+    </mat-form-field>
+
+  </form>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button color="primary" (click)="addMode = true" *ngIf="!addMode">Add Path</button>
+  <button mat-button color="primary" *ngIf="addMode" (click)="submit()">Save</button>
+</div>

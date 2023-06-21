@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Deployment, Entry, SectionText, StackImage } from '../shared';
+import { Deployment, Entry, SectionText, StackImage, WalkPath } from '../shared';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +55,14 @@ export class DataService {
    */
   public getImageStack() {
     return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack_s3/42`)
+  }
+
+  public getWalk(walk_id?: number) {
+    if (walk_id !== undefined) {
+      return this.http.get<WalkPath[]>(`${this.apiUrl}/walk/${walk_id}`)
+    } else {
+      return this.http.get<WalkPath[]>(`${this.apiUrl}/walk/`)
+    }
   }
 
   public getWalkText(walk_id: number) {
