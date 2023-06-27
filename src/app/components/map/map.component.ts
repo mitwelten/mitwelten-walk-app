@@ -94,6 +94,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               type: 'Point'
           }});
         });
+        this.parcoursService.parcoursPath$.pipe(takeUntil(this.destroy)).subscribe(() => {
+          const p = <GeoJSONSource>this.map?.getSource('parcoursPath');
+          if (p) p.setData({
+            type: 'Feature',
+            properties: {},
+            geometry: { type: 'LineString', coordinates: this.parcoursService.parcoursPath }
+          });
+        });
 
         this.authService.authStateSubject.pipe(
           takeUntil(this.destroy),

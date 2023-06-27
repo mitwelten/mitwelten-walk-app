@@ -33,7 +33,7 @@ export class ChoosePathComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
-    public dialogRef: MatDialogRef<ChoosePathComponent>,
+    public dialogRef: MatDialogRef<ChoosePathComponent, WalkPath>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -48,7 +48,9 @@ export class ChoosePathComponent implements OnInit {
   }
 
   select(walk_id: number) {
-    this.dataService.getWalk(walk_id).subscribe(walk => console.dir(walk));
+    this.dataService.getWalk(walk_id).subscribe(walk => {
+      this.dialogRef.close(walk[0]);
+    });
   }
 
   edit(walk_id: number) {

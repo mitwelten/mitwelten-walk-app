@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Position } from 'geojson';
 import { BehaviorSubject, ReplaySubject, distinctUntilChanged, retry, switchMap, tap } from 'rxjs';
-import { CoordinatePoint } from '../shared';
+import { WalkPath } from '../shared';
 import { parcours } from '../shared/map.data';
 import { TrackRecorderService } from './track-recorder.service';
 import distance from '@turf/distance';
@@ -22,6 +22,7 @@ export class ParcoursService {
   private toggleSource?: BehaviorSubject<GeolocationService|ReplaySubject<GeolocationPosition>>;
 
   public parcoursPath: Position[] = parcours;
+  public parcoursPath$: BehaviorSubject<null> = new BehaviorSubject(null);
   public parcoursLength = 0;
   public closestPointOnParcours = new ReplaySubject<Position>(1);
   public location = new ReplaySubject<GeolocationPosition>(1);
@@ -63,7 +64,14 @@ export class ParcoursService {
   }
 
   public choosePath() {
-    this.dialog.open(ChoosePathComponent);
+    const dialogRef = this.dialog.open<ChoosePathComponent, any, WalkPath>(ChoosePathComponent);
+    dialogRef.afterClosed().subscribe(v => {
+      if (v !== undefined && v.path !== undefined) {
+        this.parcoursPath = v.path;
+        this.parcoursPath$.next(null);
+        this.setParcours();
+      }
+    })
   }
 
   private setParcours() {
