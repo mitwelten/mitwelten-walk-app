@@ -18,7 +18,8 @@
       <div>{{ walk.updated_at | date }}</div>
       <div>
         <button color="primary" mat-icon-button (click)="select(walk.walk_id!)">
-          <mat-icon class="material-symbols-outlined">star</mat-icon>
+          <mat-icon *ngIf="walk.walk_id === parcoursService.selectedPathID; else unselected" class="material-symbols-outlined">stars</mat-icon>
+          <ng-template #unselected><mat-icon  class="material-symbols-outlined">star</mat-icon></ng-template>
         </button>
         <button color="accent" mat-icon-button (click)="edit(walk.walk_id!)">
           <mat-icon class="material-symbols-outlined">edit</mat-icon>

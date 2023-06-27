@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DataService } from 'src/app/services';
+import { DataService, ParcoursService } from 'src/app/services';
 import { WalkPath } from 'src/app/shared/walk-path.type';
 import { FeatureCollection, Feature, LineString } from 'geojson';
 import { Observer, PartialObserver } from 'rxjs';
@@ -14,6 +14,7 @@ import { Observer, PartialObserver } from 'rxjs';
 export class ChoosePathComponent implements OnInit {
 
   walks: WalkPath[] = [];
+  selectedId?: number;
   addMode = false;
 
   public pathForm = new FormGroup({
@@ -33,6 +34,7 @@ export class ChoosePathComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
+    public parcoursService: ParcoursService,
     public dialogRef: MatDialogRef<ChoosePathComponent, WalkPath>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
@@ -48,9 +50,11 @@ export class ChoosePathComponent implements OnInit {
   }
 
   select(walk_id: number) {
-    this.dataService.getWalk(walk_id).subscribe(walk => {
-      this.dialogRef.close(walk[0]);
-    });
+    if (walk_id !== this.parcoursService.selectedPathID) {
+      this.dataService.getWalk(walk_id).subscribe(walk => {
+        this.dialogRef.close(walk[0]);
+      });
+    }
   }
 
   edit(walk_id: number) {

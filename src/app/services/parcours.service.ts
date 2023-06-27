@@ -21,6 +21,7 @@ export class ParcoursService {
   private trackerLocation: Position | undefined; /** position of device */
   private toggleSource?: BehaviorSubject<GeolocationService|ReplaySubject<GeolocationPosition>>;
 
+  public selectedPathID = 1;
   public parcoursPath: Position[] = parcours;
   public parcoursPath$: BehaviorSubject<null> = new BehaviorSubject(null);
   public parcoursLength = 0;
@@ -67,6 +68,7 @@ export class ParcoursService {
     const dialogRef = this.dialog.open<ChoosePathComponent, any, WalkPath>(ChoosePathComponent);
     dialogRef.afterClosed().subscribe(v => {
       if (v !== undefined && v.path !== undefined) {
+        this.selectedPathID = v.walk_id!;
         this.parcoursPath = v.path;
         this.parcoursPath$.next(null);
         this.setParcours();
