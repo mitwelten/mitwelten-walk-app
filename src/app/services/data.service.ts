@@ -65,6 +65,14 @@ export class DataService {
     }
   }
 
+  public putWalk(walk: WalkPath) {
+    return this.http.put<number>(`${this.apiUrl}/walk/`, walk);
+  }
+
+  public deleteWalk(walk_id: number) {
+    return this.http.delete<number>(`${this.apiUrl}/walk/${walk_id}`);
+  }
+
   public getWalkText(walk_id: number) {
     return this.http.get<SectionText[]>(`${this.apiUrl}/walk/text/${walk_id}`)
   }

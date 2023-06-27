@@ -16,7 +16,17 @@
       <div>{{ walk.description }}</div>
       <div>{{ walk.created_at | date }}</div>
       <div>{{ walk.updated_at | date }}</div>
-      <div><button mat-stroked-button color="primary" (click)="select(walk.walk_id)">select</button></div>
+      <div>
+        <button color="primary" mat-icon-button (click)="select(walk.walk_id!)">
+          <mat-icon class="material-symbols-outlined">star</mat-icon>
+        </button>
+        <button color="accent" mat-icon-button (click)="edit(walk.walk_id!)">
+          <mat-icon class="material-symbols-outlined">edit</mat-icon>
+        </button>
+        <button color="warn" mat-icon-button (click)="remove(walk.walk_id!)">
+          <mat-icon class="material-symbols-outlined">delete_forever</mat-icon>
+        </button>
+      </div>
     </ng-container>
   </div>
 
@@ -35,10 +45,9 @@
     <mat-form-field class="full-width-field" appearance="outline">
       <mat-label>Path</mat-label>
       <textarea matInput rows="6" type="text" formControlName="path" name="path" id="path"></textarea>
-      <mat-hint>Paste from <a href="https://geojson.io/#map=17.1/47.509166/7.611619" target="_blank">geojson.io</a>, format [[7.6088222688889005, 47.50629940174187], [..., ...], ...</mat-hint>
-
+      <mat-hint>Paste from <a href="https://geojson.io/#map=17.1/47.509166/7.611619" target="_blank">geojson.io</a></mat-hint>
+      <mat-error *ngIf="pathForm.controls.path.errors?.['invalidGeoJSON']">Invalid GeoJSON</mat-error>
     </mat-form-field>
-
   </form>
 
 </div>
