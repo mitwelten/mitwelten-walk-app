@@ -4,6 +4,7 @@ import { distinctUntilChanged, Observable, Subject, Subscription, switchMap, tak
 import { DataService, ParcoursService, StateService } from 'src/app/services';
 import { SectionText, StackImage } from 'src/app/shared';
 import { AudioService } from 'src/app/services/audio.service';
+import { StackService } from 'src/app/services/stack.service';
 
 const fadeInOutAnimation = trigger('fadeInOut', [
   transition(':enter', [
@@ -53,6 +54,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     private dataService: DataService,
+    private stackService: StackService,
     private audioService: AudioService,
     public state: StateService,
     private cd: ChangeDetectorRef,
@@ -83,10 +85,10 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
     - when position is known (any), preload images
     - initialize gl context / filter (ok)
     */
-
-    this.dataService.getImageStack().subscribe((list: StackImage[]) => {
-      this.imageData = list;
-      this.totalSize = list.reduce((a,b) => a + b.file_size, 0)
+    this.stackService.stack.subscribe(stack => {
+    // this.dataService.getImageStack().subscribe((list: StackImage[]) => {
+      this.imageData = stack.images!;
+      this.totalSize = stack.images!.reduce((a,b) => a + b.file_size, 0)
       this.nImages = this.imageData.length;
 
       this.initTracking();
@@ -119,6 +121,7 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private initTracking() {
+    this.destroy.next(null); // unsubscribe before resubscribing
     this.parcoursService.progress.pipe(
       takeUntil(this.destroy),
       distinctUntilChanged()

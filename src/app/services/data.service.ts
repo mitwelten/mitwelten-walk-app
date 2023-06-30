@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Deployment, Entry, SectionText, StackImage, WalkPath } from '../shared';
+import { Deployment, Entry, ImageStack, SectionText, StackImage, WalkPath } from '../shared';
 
 @Injectable({
   providedIn: 'root'
@@ -53,8 +53,12 @@ export class DataService {
    *       (when moving faster than images can be loaded...)
    * @returns Observable<StackImage[]> A selection of image records
    */
-  public getImageStack() {
-    return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack_s3/42`)
+  public getImageStack(stack_id: number = 42) {
+    return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack_s3/${stack_id}`)
+  }
+
+  public getImageStacks() {
+    return this.http.get<ImageStack[]>(`${this.apiUrl}/walk/imagestacks_s3/`)
   }
 
   public getWalk(walk_id?: number) {

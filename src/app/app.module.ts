@@ -20,6 +20,7 @@ import { InfoComponent } from './components/info/info.component';
 import { StackFadeComponent } from './components/stack-fade/stack-fade.component';
 import { DistanceWarningDialogComponent } from './components/distance-warning-dialog.component';
 import { ChoosePathComponent } from './components/choose-path/choose-path.component';
+import { ChooseStackComponent } from './components/choose-stack/choose-stack.component';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
@@ -65,6 +66,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     InfoComponent,
     StackFadeComponent,
     DistanceWarningDialogComponent,
+    ChooseStackComponent,
     ChoosePathComponent,
   ],
   imports: [

@@ -1,0 +1,32 @@
+<h1 mat-dialog-title>Choose Image Stack</h1>
+
+<div mat-dialog-content>
+
+  <div class="stack-list">
+    <div><strong>Title</strong></div>
+    <div><strong>Description</strong></div>
+    <div><strong>created</strong></div>
+    <div><strong>updated</strong></div>
+    <div></div>
+
+    <ng-container *ngFor="let stack of stacks">
+      <!-- <div>{{ stack.title }}</div> -->
+      <div>{{ stack.stack_id }}</div>
+      <div>{{ stack.path }}</div>
+      <div>{{ stack.created_at | date }}</div>
+      <div>{{ stack.updated_at | date }}</div>
+      <div>
+        <button color="primary" mat-icon-button (click)="select(stack.stack_id!)">
+          <mat-icon *ngIf="stack.stack_id === stackService.selected_id; else unselected" class="material-symbols-outlined">stars</mat-icon>
+          <ng-template #unselected><mat-icon  class="material-symbols-outlined">star</mat-icon></ng-template>
+        </button>
+      </div>
+    </ng-container>
+  </div>
+
+
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+</div>

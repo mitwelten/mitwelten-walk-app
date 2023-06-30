@@ -62,6 +62,10 @@
     <mat-icon color="accent" class="material-symbols-outlined">share</mat-icon>
     <em>Select Path</em>
   </div>
+  <div mat-menu-item (click)="stackService.chooseStack()">
+    <mat-icon color="accent" class="material-symbols-outlined">imagesmode</mat-icon>
+    <em>Select Stack</em>
+  </div>
   <div mat-menu-item>
     <mat-slide-toggle #toggleAddMarkers>Add markers</mat-slide-toggle>
   </div>

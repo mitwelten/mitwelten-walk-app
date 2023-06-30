@@ -13,3 +13,5 @@ export * from './entry.type';
 export * from './section-text.type';
 export * from './stack-image.type';
 export * from './walk-path.type';
+export * from './image-data.type';
+export * from './image-stack.type';

@@ -1,0 +1,15 @@
+.stack-list {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto auto auto;
+  grid-template-rows: repeat(auto-fill, 40px);
+  column-gap: 16px;
+  row-gap: 4px;
+}
+
+.stack-list div {
+  align-self: center;
+}
+
+mat-card-actions button {
+  margin-left: 16px;
+}
