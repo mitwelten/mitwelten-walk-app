@@ -112,7 +112,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
       // useValue: 'https://vectortiles.geo.admin.ch/styles/ch.swisstopo.leichte-basiskarte.vt/style.json',
       // useValue: 'https://api.maptiler.com/maps/basic-v2/style.json?key=KvRgWGYbyNZgzbSTt1ga',
     },
-    { provide: ErrorHandler, useClass: SentryService },
+    // { provide: ErrorHandler, useClass: SentryService },
     { provide: LOCALE_ID, useValue: 'de-CH' },
     { provide: MAT_DATE_LOCALE, useValue: 'de' },
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [ MAT_DATE_LOCALE ] },
