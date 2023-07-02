@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ChooseStackComponent } from '../components/choose-stack/choose-stack.component';
-import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
-import { ImageStack, ImageData } from '../shared';
+import { ReplaySubject, map, tap } from 'rxjs';
+import { ImageStack } from '../shared';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +12,14 @@ export class StackService {
 
   selected_id?: number;
   stacks: { [key: string | number]: ImageStack } = {};
-  stacks$: ReplaySubject<{ [key: string | number]: ImageStack }> = new ReplaySubject<{ [key: string]: ImageStack }>();
   stack: ReplaySubject<ImageStack> = new ReplaySubject<ImageStack>();
 
   constructor(
     private dataService: DataService,
     public dialog: MatDialog
-  ) { }
+  ) {
+    this.init();
+  }
 
   // open dialog
   public chooseStack() {
@@ -30,24 +31,37 @@ export class StackService {
     })
   }
 
-  // load stack records
-  loadStacksMeta(): void {
-    this.dataService.getImageStacks().subscribe(stacks => {
-      stacks.forEach(s => {
-        const stack_id = s.stack_id ?? this.extract_id(s.path!);
-        this.stacks[stack_id] = Object.assign({}, s, { stack_id });
-      });
-      this.stacks$.next(this.stacks);
-    })
+  init() {
+    this.loadStacksMeta().subscribe(stacks => {
+        const defaultStack = ("42" in stacks) ? "42" : Object.keys(stacks)[0];
+        this.loadStack(defaultStack);
+    });
   }
 
-  // load stack image URLs into stack records
-  loadStack(stack_id: number) {
+  // load stack records
+  loadStacksMeta() {
+    return this.dataService.getImageStacks().pipe(
+      map(records => {
+        const stacks: { [key: string]: ImageStack } = {};
+        records.forEach(s => {
+          const stack_id = s.stack_id ?? this.extract_id(s.path!);
+          stacks[stack_id] = Object.assign({}, s, { stack_id });
+        });
+        return stacks;
+      }),
+      tap(stacks => {
+        this.stacks = stacks;
+      })
+    );
+  }
+
+  // load stack image URLs and return with stack record
+  loadStack(stack_id: string) {
     if (Object.keys(this.stacks).length) {
       this.dataService.getImageStack(stack_id).subscribe(stack => {
         if (stack_id in this.stacks) {
-          this.stacks[stack_id].images = stack;
-          this.stack.next(this.stacks[stack_id]);
+          // combine image urls with meta record
+          this.stack.next(Object.assign(this.stacks[stack_id], { images: stack }));
         }
         else throw new Error(`No stack records with ID ${stack_id}`);
       });

@@ -53,7 +53,7 @@ export class DataService {
    *       (when moving faster than images can be loaded...)
    * @returns Observable<StackImage[]> A selection of image records
    */
-  public getImageStack(stack_id: number = 42) {
+  public getImageStack(stack_id: string = "42") {
     return this.http.get<StackImage[]>(`${this.apiUrl}/walk/imagestack_s3/${stack_id}`)
   }
 

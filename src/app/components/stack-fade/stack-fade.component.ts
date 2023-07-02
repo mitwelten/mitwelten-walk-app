@@ -86,7 +86,6 @@ export class StackFadeComponent implements AfterViewInit, OnInit, OnDestroy {
     - initialize gl context / filter (ok)
     */
     this.stackService.stack.subscribe(stack => {
-    // this.dataService.getImageStack().subscribe((list: StackImage[]) => {
       this.imageData = stack.images!;
       this.totalSize = stack.images!.reduce((a,b) => a + b.file_size, 0)
       this.nImages = this.imageData.length;
