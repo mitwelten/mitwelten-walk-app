@@ -8,6 +8,8 @@ export interface Note {
   description?: string;
   location?: CoordinatePoint;
   type?: string;
+  public: boolean;
+  author: string;
   tags?: Tag[];
   files?: string[];
 }
