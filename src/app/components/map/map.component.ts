@@ -121,9 +121,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.noteService.notes.pipe(takeUntil(this.destroy)).subscribe(notes => {
       this.markers.forEach(m => m.remove());
-      notes.forEach(m => {
+      notes.filter(n => n.location !== undefined || n.location !== null)
+        .forEach(m => {
         this.markers.push(new Marker({draggable: true, scale: 0.6})
-          .setLngLat([m.location.lon, m.location.lat])
+          .setLngLat([m.location!.lon, m.location!.lat])
           .on('dragend', event => {
             const update = { note_id: m.note_id,
               location: { lon: event.target._lngLat.lng, lat: event.target._lngLat.lat }
