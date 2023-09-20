@@ -64,11 +64,11 @@ export class NoteFormComponent {
       this.noteForm.patchValue({
         date: data.note.date ?? new Date().toISOString(),
         note_id: data.note.note_id,
-        name: data.note.name,
+        name: data.note.title,
         description: data.note.description,
         type: data.note.type,
-        lng: data.note.location.lon,
-        lat: data.note.location.lat,
+        lng: data.note.location?.lon,
+        lat: data.note.location?.lat,
       });
     }
   }
