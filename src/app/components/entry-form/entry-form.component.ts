@@ -41,7 +41,7 @@ export class NoteFormComponent {
 
   public noteForm = new FormGroup({
     note_id:     new FormControl<number|null>(null, { nonNullable: false}),
-    name:        new FormControl<string>('', { validators: [Validators.required], nonNullable: true}),
+    title:       new FormControl<string>('', { validators: [Validators.required], nonNullable: true}),
     lng:         new FormControl<number>(0,  { validators: [Validators.required], nonNullable: true}),
     lat:         new FormControl<number>(0,  { validators: [Validators.required], nonNullable: true}),
     date:        new FormControl<string|null>(null, { validators: [], nonNullable: false}),
@@ -64,7 +64,7 @@ export class NoteFormComponent {
       this.noteForm.patchValue({
         date: data.note.date ?? new Date().toISOString(),
         note_id: data.note.note_id,
-        name: data.note.title,
+        title: data.note.title,
         description: data.note.description,
         type: data.note.type,
         lng: data.note.location?.lon,
@@ -78,7 +78,7 @@ export class NoteFormComponent {
     const note = {
       note_id: v.note_id ?? undefined,
       date: v.date ?? undefined,
-      name: v.name,
+      title: v.title,
       description: v.description ?? undefined,
       location: {
         lat: v.lat!,
