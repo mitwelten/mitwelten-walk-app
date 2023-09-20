@@ -2,49 +2,49 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MapMouseEvent } from 'maplibre-gl';
 import { BehaviorSubject } from 'rxjs';
-import { EntryFormComponent } from '../components/entry-form/entry-form.component';
+import { NoteFormComponent } from '../components/entry-form/entry-form.component';
 import { DataService } from './data.service';
-import { Entry } from '../shared';
+import { Note } from '../shared';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EntryService {
+export class NoteService {
 
-  private _entries: Entry[] = [];
+  private _notes: Note[] = [];
   public active = new BehaviorSubject(false);
-  public entries = new BehaviorSubject<Entry[]>([]);
+  public notes = new BehaviorSubject<Note[]>([]);
 
   constructor(
     private dialog: MatDialog,
     private dataService: DataService
   ) {
-    this.dataService.listEntries().subscribe(entries => {
-      this._entries = entries;
-      this.entries.next(this._entries);
+    this.dataService.listNotes().subscribe(notes => {
+      this._notes = notes;
+      this.notes.next(this._notes);
     });
   }
 
   public add(event: MapMouseEvent & Object) {
     if (this.active.getValue()) {
-      const dialogRef = this.dialog.open(EntryFormComponent, { data: { event: event } });
-      dialogRef.afterClosed().subscribe((result: { action: 'delete'|'edit', entry: Entry }) => {
-        if (result && result.entry) {
-          this._entries.push(result.entry);
-          this.entries.next(this._entries);
+      const dialogRef = this.dialog.open(NoteFormComponent, { data: { event: event } });
+      dialogRef.afterClosed().subscribe((result: { action: 'delete'|'edit', note: Note }) => {
+        if (result && result.note) {
+          this._notes.push(result.note);
+          this.notes.next(this._notes);
         }
       });
     }
   }
 
-  public edit(entry: Entry) {
+  public edit(note: Note) {
     if (!this.active.getValue()) {
-      const dialogRef = this.dialog.open(EntryFormComponent, { data: { entry: entry } });
-      dialogRef.afterClosed().subscribe((result: { action: 'delete'|'edit', entry: Entry }) => {
+      const dialogRef = this.dialog.open(NoteFormComponent, { data: { note: note } });
+      dialogRef.afterClosed().subscribe((result: { action: 'delete'|'edit', note: Note }) => {
         if (!result) return;
-        this._entries = this._entries.filter(e => e.entry_id !== result.entry.entry_id);
-        if (result.action === 'edit') this._entries.push(result.entry);
-        this.entries.next(this._entries);
+        this._notes = this._notes.filter(e => e.note_id !== result.note.note_id);
+        if (result.action === 'edit') this._notes.push(result.note);
+        this.notes.next(this._notes);
       });
     }
   }

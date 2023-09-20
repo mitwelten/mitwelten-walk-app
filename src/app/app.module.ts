@@ -15,7 +15,7 @@ import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { MAP_STYLE_CONFIG } from './shared/configuration';
 import { RecordControlComponent } from './components/record-control/record-control.component';
 import { LoginComponent } from './components/login/login.component';
-import { EntryFormComponent } from './components/entry-form/entry-form.component';
+import { NoteFormComponent } from './components/entry-form/entry-form.component';
 import { InfoComponent } from './components/info/info.component';
 import { StackFadeComponent } from './components/stack-fade/stack-fade.component';
 import { DistanceWarningDialogComponent } from './components/distance-warning-dialog.component';
@@ -62,7 +62,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MapComponent,
     RecordControlComponent,
     LoginComponent,
-    EntryFormComponent,
+    NoteFormComponent,
     InfoComponent,
     StackFadeComponent,
     DistanceWarningDialogComponent,

@@ -7,7 +7,7 @@ import { MapMouseEvent } from 'maplibre-gl';
 import { delayWhen,  timer, Observable, throwError, of } from 'rxjs';
 import { mergeMap, map, retryWhen, take, tap, catchError } from 'rxjs/operators';
 import { DataService } from 'src/app/services';
-import { Entry } from 'src/app/shared';
+import { Note } from 'src/app/shared';
 
 
 const genericRetryStrategy = ({
@@ -25,11 +25,11 @@ const genericRetryStrategy = ({
 };
 
 @Component({
-  selector: 'app-entry-form',
+  selector: 'app-note-form',
   templateUrl: './entry-form.component.html',
   styleUrls: ['./entry-form.component.css']
 })
-export class EntryFormComponent {
+export class NoteFormComponent {
 
   public locationLoading = false;
 
@@ -39,8 +39,8 @@ export class EntryFormComponent {
     'Other',
   ]
 
-  public entryForm = new FormGroup({
-    entry_id:    new FormControl<number|null>(null, { nonNullable: false}),
+  public noteForm = new FormGroup({
+    note_id:     new FormControl<number|null>(null, { nonNullable: false}),
     name:        new FormControl<string>('', { validators: [Validators.required], nonNullable: true}),
     lng:         new FormControl<number>(0,  { validators: [Validators.required], nonNullable: true}),
     lat:         new FormControl<number>(0,  { validators: [Validators.required], nonNullable: true}),
@@ -51,32 +51,32 @@ export class EntryFormComponent {
   });
 
   constructor(
-    private dialogRef: MatDialogRef<EntryFormComponent, { action: 'delete'|'edit', entry: Entry }>,
-    @Inject(MAT_DIALOG_DATA) public data: { event?: MapMouseEvent & Object, entry?: Entry },
+    private dialogRef: MatDialogRef<NoteFormComponent, { action: 'delete'|'edit', note: Note }>,
+    @Inject(MAT_DIALOG_DATA) public data: { event?: MapMouseEvent & Object, note?: Note },
     private geolocation: GeolocationService,
     private dataService: DataService,
     private snackBar: MatSnackBar,
   ) {
     if (data.event) {
-      this.entryForm.patchValue(data.event.lngLat);
+      this.noteForm.patchValue(data.event.lngLat);
     }
-    if (data.entry) {
-      this.entryForm.patchValue({
-        date: data.entry.date ?? new Date().toISOString(),
-        entry_id: data.entry.entry_id,
-        name: data.entry.name,
-        description: data.entry.description,
-        type: data.entry.type,
-        lng: data.entry.location.lon,
-        lat: data.entry.location.lat,
+    if (data.note) {
+      this.noteForm.patchValue({
+        date: data.note.date ?? new Date().toISOString(),
+        note_id: data.note.note_id,
+        name: data.note.name,
+        description: data.note.description,
+        type: data.note.type,
+        lng: data.note.location.lon,
+        lat: data.note.location.lat,
       });
     }
   }
 
   protected submit() {
-    const v = this.entryForm.value;
-    const entry = {
-      entry_id: v.entry_id ?? undefined,
+    const v = this.noteForm.value;
+    const note = {
+      note_id: v.note_id ?? undefined,
       date: v.date ?? undefined,
       name: v.name,
       description: v.description ?? undefined,
@@ -86,17 +86,17 @@ export class EntryFormComponent {
       },
       type: v.type ?? undefined,
     };
-    const request = v.entry_id ? this.dataService.patchEntry(entry) : this.dataService.postEntry(entry);
-    request.subscribe(entry => {
-      this.entryForm.reset();
-      this.dialogRef.close({ action: 'edit', entry: entry });
+    const request = v.note_id ? this.dataService.patchNote(note) : this.dataService.postNote(note);
+    request.subscribe(note => {
+      this.noteForm.reset();
+      this.dialogRef.close({ action: 'edit', note: note });
     });
   }
 
   protected delete() {
-    const entry_id = this.entryForm.controls.entry_id.value;
-    if (entry_id) this.dataService.deleteEntry(entry_id).subscribe(
-        () => this.dialogRef.close({ action: 'delete', entry: this.data.entry! }));
+    const note_id = this.noteForm.controls.note_id.value;
+    if (note_id) this.dataService.deleteNote(note_id).subscribe(
+        () => this.dialogRef.close({ action: 'delete', note: this.data.note! }));
 
   }
 
@@ -117,7 +117,7 @@ export class EntryFormComponent {
       tap(() => this.locationLoading = false),
       take(1))
       .subscribe((l: GeolocationPosition) => {
-        this.entryForm.patchValue({
+        this.noteForm.patchValue({
           lng: l.coords.longitude,
           lat: l.coords.latitude });
       });

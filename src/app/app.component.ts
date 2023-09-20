@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { KeycloakProfile } from 'keycloak-js';
 import { Deployment } from './shared';
-import { DataService, EntryService, OidcService, ParcoursService, StateService, TrackRecorderService } from './services';
+import { DataService, NoteService, OidcService, ParcoursService, StateService, TrackRecorderService } from './services';
 import pkgJson from '../../package.json';
 import { AudioService } from './services/audio.service';
 import { StackService } from './services/stack.service';
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     public stackService: StackService,
     public trackRecorder: TrackRecorderService,
     public audioService: AudioService,
-    private entryService: EntryService,
+    private noteService: NoteService,
     public dataService: DataService,
     public state: StateService,
     public authService: OidcService,
@@ -44,8 +44,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.entryService.active.subscribe(state => this.toggleAddMarkers.checked = state);
-    this.toggleAddMarkers.change.subscribe(() => this.entryService.toggle());
+    this.noteService.active.subscribe(state => this.toggleAddMarkers.checked = state);
+    this.toggleAddMarkers.change.subscribe(() => this.noteService.toggle());
     this.toggleDebugView.change.subscribe(state => this.state.setDebugView(state.checked));
   }
 

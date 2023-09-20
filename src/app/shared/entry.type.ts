@@ -1,8 +1,8 @@
 import { CoordinatePoint } from "./coordinate-point.type";
 import { Tag } from "./tag.type";
 
-export interface Entry {
-  entry_id?: number;
+export interface Note {
+  note_id?: number;
   date?: string;
   name: string;
   description?: string;
