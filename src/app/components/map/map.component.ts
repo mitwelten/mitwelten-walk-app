@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { Map, Marker, GeoJSONSource, Popup } from 'maplibre-gl';
 import { Feature, Position } from 'geojson';
-import { DataService, EntryService, OidcService, ParcoursService, TrackRecorderService } from 'src/app/services';
+import { DataService, NoteService, OidcService, ParcoursService, TrackRecorderService } from 'src/app/services';
 import { CoordinatePoint, Deployment, MAP_STYLE_CONFIG } from 'src/app/shared';
 import { map, of, Subject, switchMap, takeUntil } from 'rxjs';
 
@@ -37,7 +37,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     private trackRecorder: TrackRecorderService,
     private dataService: DataService,
     private authService: OidcService,
-    private entryService: EntryService) {
+    private noteService: NoteService) {
 
       // draw track
       this.trackRecorder.track.pipe(
@@ -116,21 +116,22 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     this.map.on('click', ev => {
-      this.entryService.add(ev);
+      this.noteService.add(ev);
     })
 
-    this.entryService.entries.pipe(takeUntil(this.destroy)).subscribe(entries => {
+    this.noteService.notes.pipe(takeUntil(this.destroy)).subscribe(notes => {
       this.markers.forEach(m => m.remove());
-      entries.forEach(m => {
+      notes.filter(n => n.location !== undefined || n.location !== null)
+        .forEach(m => {
         this.markers.push(new Marker({draggable: true, scale: 0.6})
-          .setLngLat([m.location.lon, m.location.lat])
+          .setLngLat([m.location!.lon, m.location!.lat])
           .on('dragend', event => {
-            const update = { entry_id: m.entry_id,
+            const update = { note_id: m.note_id,
               location: { lon: event.target._lngLat.lng, lat: event.target._lngLat.lat }
             };
-            this.dataService.patchEntry(update).subscribe(() => m.location = update.location);
+            this.dataService.patchNote(update).subscribe(() => m.location = update.location);
           })
-          .setPopup(new Popup().on('open', () => this.entryService.edit(m)))
+          .setPopup(new Popup().on('open', () => this.noteService.edit(m)))
           .addTo(this.map!));
       })
     });

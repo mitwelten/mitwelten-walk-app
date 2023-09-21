@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Deployment, Entry, ImageStack, SectionText, StackImage, WalkPath } from '../shared';
+import { Deployment, Note, ImageStack, SectionText, StackImage, WalkPath } from '../shared';
 
 @Injectable({
   providedIn: 'root'
@@ -22,28 +22,28 @@ export class DataService {
     return this.http.get<Array<Deployment>>(`${this.apiUrl}/deployments${queryParams}`);
   }
 
-  public listEntries(from?: Date, to?: Date): Observable<Array<Entry>> {
+  public listNotes(from?: Date, to?: Date): Observable<Array<Note>> {
     let params = new HttpParams()
     if (from) params = params.set('from', from?.toISOString());
     if (to) params = params.set('to', to?.toISOString());
-    return this.http.get<Array<Entry>>(`${this.apiUrl}/entries`, { params });
+    return this.http.get<Array<Note>>(`${this.apiUrl}/notes`, { params });
   }
 
-  public getEntryById(id: number): Observable<Entry> {
-    return this.http.get<Entry>(`${this.apiUrl}/entry/${id}`);
+  public getNoteById(id: number): Observable<Note> {
+    return this.http.get<Note>(`${this.apiUrl}/note/${id}`);
   }
 
-  public postEntry(entry: Partial<Entry>): Observable<Entry> {
-    return this.http.post<Entry>(`${this.apiUrl}/entries`, entry);
+  public postNote(note: Partial<Note>): Observable<Note> {
+    return this.http.post<Note>(`${this.apiUrl}/notes`, note);
 
   }
-  public patchEntry(entry: Partial<Entry>): Observable<Entry> {
-    if (entry.entry_id) return this.http.patch<Entry>(`${this.apiUrl}/entry/${entry.entry_id}`, entry);
-    else throw new Error('entry is missing an ID');
+  public patchNote(note: Partial<Note>): Observable<Note> {
+    if (note.note_id) return this.http.patch<Note>(`${this.apiUrl}/note/${note.note_id}`, note);
+    else throw new Error('note is missing an ID');
   }
 
-  public deleteEntry(id: number): Observable<boolean> {
-    return this.http.delete<boolean>(`${this.apiUrl}/entry/${id}`);
+  public deleteNote(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}/note/${id}`);
   }
 
   /**
