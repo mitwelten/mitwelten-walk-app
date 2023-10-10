@@ -7,28 +7,28 @@
   <span class="mat-h3" style="margin: 0;">{{ title }}</span>
   <span class="spacer"></span>
   <button mat-icon-button aria-label="Toggle Audio" (click)="audioService.toggle()">
-    <mat-icon *ngIf="!(audioService.running | async)" class="material-symbols-outlined">volume_off</mat-icon>
-    <mat-icon *ngIf="(audioService.running | async)" class="material-symbols-outlined">volume_up</mat-icon>
+    <mat-icon *ngIf="!(audioService.running | async)" class="material-symbols-outlined">notifications_off</mat-icon>
+    <mat-icon *ngIf="(audioService.running | async)" class="material-symbols-outlined">notifications_active</mat-icon>
   </button>
   <button mat-icon-button aria-label="Info / How to use" [routerLink]="['/info']">
-    <mat-icon class="material-symbols-outlined">info</mat-icon>
+    <mat-icon class="material-symbols-outlined">route</mat-icon>
   </button>
   <button mat-icon-button [matMenuTriggerFor]="gpsRecordMenu" aria-label="Open GPS recording menu">
     <mat-icon class="material-symbols-outlined">location_on</mat-icon>
   </button>
   <button mat-icon-button [matMenuTriggerFor]="parcoursMenu" aria-label="Open Parcours menu" [style.display]="(authService.authStateSubject | async) ? 'initial':'none'">
-    <mat-icon class="material-symbols-outlined">share</mat-icon>
+    <mat-icon class="material-symbols-outlined">footprint</mat-icon>
   </button>
 </mat-toolbar>
 
 <mat-menu #mainMenu="matMenu">
   <a mat-menu-item [routerLink]="['/info']">
-    <mat-icon color="accent" class="material-symbols-outlined">info</mat-icon>
-    Info / How to use
+    <mat-icon color="accent" class="material-symbols-outlined">settings</mat-icon>
+      Anleitung zum Einrichten
   </a>
   <a mat-menu-item href="https://mitwelten.org" target="_blank">
-    <mat-icon color="accent" class="material-symbols-outlined">link</mat-icon>
-    https://mitwelten.org
+    <mat-icon color="accent" class="material-symbols-outlined">linked_services</mat-icon>
+    Tools / weiterführende Infos
   </a>
   <button *ngIf="!isLoggedIn" mat-menu-item (click)="login()">
     <mat-icon color="accent" class="material-symbols-outlined">login</mat-icon>
