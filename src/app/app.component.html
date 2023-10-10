@@ -16,7 +16,7 @@
   <button mat-icon-button [matMenuTriggerFor]="parcoursMenu" aria-label="Open Parcours Options" [style.display]="(authService.authStateSubject | async) ? 'initial':'none'">
     <mat-icon class="material-symbols-outlined">settings</mat-icon>
   </button>
-  <button mat-icon-button aria-label="Select Path">
+  <button mat-icon-button aria-label="Select Path" (click)="channelService.chooseChannel()">
     <mat-icon class="material-symbols-outlined">footprint</mat-icon>
   </button>
 </mat-toolbar>

@@ -1,0 +1,43 @@
+<h1 mat-dialog-title>
+  Pfad-Auswahl
+</h1>
+
+<div mat-dialog-content>
+  <ul class="mat-body">
+    <li class="channel-option" >
+      <h3>Guided Tour</h3>
+      <p>Entdecke Erkenntnisse und Daten unseres Projektes entlang des Spaziergangs</p>
+      <button (click)="select(1)" mat-raised-button color="accent">
+        <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
+      </button>
+    </li>
+    <li class="channel-option">
+      <h3>Walk - Stop Motion Film</h3>
+      <p>Beobachte einen Stop Motion Film dessen Schnitt du durch deine Wanderung entlang des Pfades beeinflusst</p>
+      <button (click)="select(2)" mat-raised-button color="accent">
+        <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
+      </button>
+    </li>
+    <li class="channel-option">
+      <h3>Citizen Science</h3>
+      <p>Fotos via SWILD, gleiche Elemente wie Guided Tour: Bild od. Bildserie, inkl. Credits, jedoch mit links zu Beobachtung und Artenportrait statt Titel und Beschreibung</p>
+      <button (click)="select(3)" mat-raised-button color="accent">
+        <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
+      </button>
+    </li>
+    <li *ngIf="isLoggedIn" class="channel-option">
+      <h3><mat-icon class="material-symbols-outlined">lock</mat-icon>Map View</h3>
+      <p>Anzeige des Parcours auf der Karte, inkl. GPS-Track</p>
+      <button (click)="select(4)" mat-raised-button color="accent">
+        <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
+      </button>
+    </li>
+    <li *ngIf="!isLoggedIn" class="channel-option">
+      <p>für mehr bzw. privilegierte Kanäle</p>
+      <button mat-raised-button color="accent" (click)="authService.login()">
+        <mat-icon class="material-symbols-outlined">login</mat-icon>
+        <span>Sign in</span>
+      </button>
+    </li>
+  </ul>
+</div>

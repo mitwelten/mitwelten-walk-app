@@ -6,6 +6,7 @@ import { DataService, NoteService, OidcService, ParcoursService, StateService, T
 import pkgJson from '../../package.json';
 import { AudioService } from './services/audio.service';
 import { StackService } from './services/stack.service';
+import { ChannelService } from './services/channel.service';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     public parcoursService: ParcoursService,
     public stackService: StackService,
+    public channelService: ChannelService,
     public trackRecorder: TrackRecorderService,
     public audioService: AudioService,
     private noteService: NoteService,

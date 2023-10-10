@@ -21,6 +21,7 @@ import { StackFadeComponent } from './components/stack-fade/stack-fade.component
 import { DistanceWarningDialogComponent } from './components/distance-warning-dialog.component';
 import { ChoosePathComponent } from './components/choose-path/choose-path.component';
 import { ChooseStackComponent } from './components/choose-stack/choose-stack.component';
+import { ChooseChannelComponent } from './components/choose-channel/choose-channel.component';
 import { OverviewComponent } from './components/overview/overview.component';
 import { WalkComponent } from './components/walk/walk.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
@@ -71,6 +72,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     DistanceWarningDialogComponent,
     ChooseStackComponent,
     ChoosePathComponent,
+    ChooseChannelComponent,
     OverviewComponent,
     WalkComponent,
     CarouselComponent,
