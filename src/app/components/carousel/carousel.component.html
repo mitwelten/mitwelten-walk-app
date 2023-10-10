@@ -1,0 +1,11 @@
+<div class="carousel-container">
+  <div class="carousel-wrapper" #wrapper>
+    <img  *ngFor="let img of images; index as i" [src]="img" [id]="'img-'+i" class="carousel-image">
+  </div>
+  <span class="material-symbols-outlined carousel-arrow left" (click)="swipeTransition('left')">
+    keyboard_arrow_left
+  </span>
+  <span class="material-symbols-outlined carousel-arrow right" (click)="swipeTransition('right')">
+    keyboard_arrow_right
+  </span>
+</div>

@@ -22,6 +22,8 @@ import { DistanceWarningDialogComponent } from './components/distance-warning-di
 import { ChoosePathComponent } from './components/choose-path/choose-path.component';
 import { ChooseStackComponent } from './components/choose-stack/choose-stack.component';
 import { OverviewComponent } from './components/overview/overview.component';
+import { WalkComponent } from './components/walk/walk.component';
+import { CarouselComponent } from './components/carousel/carousel.component';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
@@ -70,6 +72,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     ChooseStackComponent,
     ChoosePathComponent,
     OverviewComponent,
+    WalkComponent,
+    CarouselComponent,
   ],
   imports: [
     BrowserModule,

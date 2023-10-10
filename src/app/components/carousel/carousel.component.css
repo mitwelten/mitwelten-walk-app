@@ -1,0 +1,39 @@
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px; /* adjust as needed */
+  overflow: hidden;
+}
+
+.carousel-wrapper {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+}
+
+.carousel-image {
+  width: 100%;
+  display: block;
+  scroll-snap-align: center;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  /* font-size: 2rem; */
+  color: white;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.carousel-arrow.left {
+  left: 10px;
+}
+
+.carousel-arrow.right {
+  right: 10px;
+}
