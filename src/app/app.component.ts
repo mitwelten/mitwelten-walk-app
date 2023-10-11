@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { KeycloakProfile } from 'keycloak-js';
 import { Deployment } from './shared';
@@ -7,6 +7,7 @@ import pkgJson from '../../package.json';
 import { AudioService } from './services/audio.service';
 import { StackService } from './services/stack.service';
 import { ChannelService } from './services/channel.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('toggleDebugView')
   private toggleDebugView!: MatSlideToggle;
 
+  @ViewChild('instructionsDialog')
+  private instructionsDialog?: TemplateRef<any>;
+
   constructor(
     public parcoursService: ParcoursService,
     public stackService: StackService,
@@ -37,6 +41,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     public dataService: DataService,
     public state: StateService,
     public authService: OidcService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -57,6 +62,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  openInstructions() {
+    this.dialog.open(this.instructionsDialog!, {
+      maxWidth: '90vw'
+    });
   }
 
 }

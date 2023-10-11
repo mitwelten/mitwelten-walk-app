@@ -22,7 +22,7 @@
 </mat-toolbar>
 
 <mat-menu #mainMenu="matMenu">
-  <a mat-menu-item [routerLink]="['/info']">
+  <a mat-menu-item (click)="openInstructions()">
     <mat-icon color="accent" class="material-symbols-outlined">settings</mat-icon>
       Anleitung zum Einrichten
   </a>
@@ -95,3 +95,13 @@
     </li>
   </ul>
 </div>
+
+<ng-template #instructionsDialog>
+  <h2 mat-dialog-title>Anleitung für die Grundeinstellungen</h2>
+  <div mat-dialog-content>
+    <app-instructions></app-instructions>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close cdkFocusInitial>Danke</button>
+  </div>
+</ng-template>

@@ -25,6 +25,7 @@ import { ChooseChannelComponent } from './components/choose-channel/choose-chann
 import { OverviewComponent } from './components/overview/overview.component';
 import { WalkComponent } from './components/walk/walk.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
+import { InstructionsComponent } from './components/instructions.component';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
@@ -76,6 +77,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     OverviewComponent,
     WalkComponent,
     CarouselComponent,
+    InstructionsComponent,
   ],
   imports: [
     BrowserModule,
