@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>
-  Pfad-Auswahl
+  Auswahl des Erlebnismodus
 </h1>
 
 <div mat-dialog-content>
@@ -12,14 +12,14 @@
       </button>
     </li>
     <li class="channel-option">
-      <h3>Walk - Stop Motion Film</h3>
+      <h3>Stop Motion Movie</h3>
       <p>Beobachte einen Stop Motion Film dessen Schnitt du durch deine Wanderung entlang des Pfades beeinflusst</p>
       <button (click)="select(2)" mat-raised-button color="accent">
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
       </button>
     </li>
     <li class="channel-option">
-      <h3>Citizen Science</h3>
+      <h3>Beiträge aus der Community</h3>
       <p>Fotos via SWILD, gleiche Elemente wie Guided Tour: Bild od. Bildserie, inkl. Credits, jedoch mit links zu Beobachtung und Artenportrait statt Titel und Beschreibung</p>
       <button (click)="select(3)" mat-raised-button color="accent">
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
@@ -33,7 +33,7 @@
       </button>
     </li>
     <li *ngIf="!isLoggedIn" class="channel-option">
-      <p>für mehr bzw. privilegierte Kanäle</p>
+      <p>für mehr bzw. privilegierte Inhalte:</p>
       <button mat-raised-button color="accent" (click)="authService.login()">
         <mat-icon class="material-symbols-outlined">login</mat-icon>
         <span>Sign in</span>
