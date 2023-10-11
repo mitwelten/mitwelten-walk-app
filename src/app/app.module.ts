@@ -19,6 +19,7 @@ import { NoteFormComponent } from './components/entry-form/entry-form.component'
 import { InfoComponent } from './components/info/info.component';
 import { StackFadeComponent } from './components/stack-fade/stack-fade.component';
 import { DistanceWarningDialogComponent } from './components/distance-warning-dialog.component';
+import { TriggerHotspotDialogComponent } from './components/trigger-hotspot-dialog.component';
 import { ChoosePathComponent } from './components/choose-path/choose-path.component';
 import { ChooseStackComponent } from './components/choose-stack/choose-stack.component';
 import { ChooseChannelComponent } from './components/choose-channel/choose-channel.component';
@@ -71,6 +72,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     InfoComponent,
     StackFadeComponent,
     DistanceWarningDialogComponent,
+    TriggerHotspotDialogComponent,
     ChooseStackComponent,
     ChoosePathComponent,
     ChooseChannelComponent,

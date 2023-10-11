@@ -8,6 +8,7 @@ import { AudioService } from './services/audio.service';
 import { StackService } from './services/stack.service';
 import { ChannelService } from './services/channel.service';
 import { MatDialog } from '@angular/material/dialog';
+import { HotspotService } from './services/hotspot.service';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     public state: StateService,
     public authService: OidcService,
     private dialog: MatDialog,
+    public hotspotService: HotspotService,
   ) { }
 
   ngOnInit(): void {

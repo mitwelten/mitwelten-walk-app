@@ -1,0 +1,91 @@
+import { Component, Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { TriggerHotspotDialogComponent } from '../components/trigger-hotspot-dialog.component';
+import { CoordinatePoint } from '../shared';
+import { BehaviorSubject } from 'rxjs';
+
+interface Hotspot {
+  coordinates: CoordinatePoint;
+  id: number;
+  type: number;
+}
+interface HotspotImage extends Hotspot {
+  title: string;
+  description: string;
+}
+interface HotspotImageSingle extends HotspotImage {
+  type: 1;
+  url: string;
+  credits: string;
+}
+interface HotspotImageSequence extends HotspotImage {
+  type: 2;
+  sequence: Array<{
+    url: string;
+    credits: string;
+  }>;
+}
+interface HotspotInfotext extends Hotspot {
+  type: 3;
+  title: string;
+  text: string;
+}
+interface HotspotAudiotext extends Hotspot {
+  type: 4;
+  portraitUrl: string;
+  audioUrl: string;
+}
+interface HotspotCommunity extends Hotspot {
+  type: 5;
+  dataUrl: string;
+}
+interface HotspotData extends Hotspot {
+  type: 6;
+  endpoint: string;
+  title: string;
+  text: string;
+}
+export type HotspotType = HotspotImageSingle|HotspotImageSequence|HotspotInfotext|HotspotAudiotext|HotspotData;
+
+@Injectable({
+  providedIn: 'root'
+})
+export class HotspotService {
+
+  private hotspots: Array<HotspotType> = [];
+
+  public trigger: BehaviorSubject<HotspotType|false>;
+
+  constructor(private dialog: MatDialog) {
+    this.trigger = new BehaviorSubject<HotspotType|false>(false);
+    this.hotspots.push({
+      id: 42,
+      coordinates: { lat: 1, lon: 4},
+      type: 3,
+      text: 'Lorem dolor sit amet. Lorem dolor sit amet. Lorem dolor sit amet. Lorem dolor sit amet.',
+      title: 'Infotext Hotspot'
+    });
+  }
+
+  chooseHotspot() {
+    this.dialog.open(TriggerHotspotDialogComponent).afterClosed().subscribe(
+      (type: number) => {
+        switch (type) {
+          case 2:
+            this.trigger.next({
+              id: 42, type,
+              coordinates: { lat: 1, lon: 4},
+              title: 'Image Sequence',
+              description: 'description',
+              sequence: [{url: 'asdf', credits: 'asdf'}, {url: 'asdf', credits: 'asdf'}]
+            })
+            break;
+
+            default:
+            this.trigger.next(false);
+            break;
+        }
+      }
+    )
+  }
+}

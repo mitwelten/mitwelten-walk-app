@@ -1,4 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { filter } from 'rxjs';
+import { HotspotService, HotspotType } from 'src/app/services/hotspot.service';
 
 @Component({
   selector: 'app-carousel',
@@ -6,6 +8,8 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
   styleUrls: ['./carousel.component.css']
 })
 export class CarouselComponent {
+
+  hotspot?: HotspotType;
 
   images = [
     '/assets/img1.jpg',
@@ -18,6 +22,15 @@ export class CarouselComponent {
 
   @ViewChild('wrapper')
   wrapper?: ElementRef<HTMLDivElement>;
+
+  constructor(private hotspotService: HotspotService) {
+    this.hotspotService.trigger
+      .pipe(filter(h => h !== false && h.type === 2))
+      .subscribe(hotspot => {
+        if (hotspot) this.hotspot = hotspot;
+        console.dir(hotspot);
+      })
+  }
 
   swipeTransition(direction: 'left'|'right') {
     if (this.wrapper) {
