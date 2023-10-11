@@ -10,7 +10,9 @@ export class ChannelService {
   constructor(public dialog: MatDialog) { }
 
   public chooseChannel() {
-    const dialogRef = this.dialog.open<ChooseChannelComponent, any>(ChooseChannelComponent);
+    const dialogRef = this.dialog.open<ChooseChannelComponent, any>(ChooseChannelComponent, {
+      maxWidth: '90vw'
+    });
     dialogRef.afterClosed().subscribe(v => {
       console.log('ChooseChannelComponent closed', v);
       if (v !== undefined && v.path !== undefined) {
