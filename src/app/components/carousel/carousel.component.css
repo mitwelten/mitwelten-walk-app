@@ -59,3 +59,21 @@
 .carousel-arrow.right {
   right: 10px;
 }
+
+#text {
+  display: grid;
+  grid-template-rows: 36px calc(100% - 36px);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 33%;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 2px solid #888;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+#text p {
+  overflow-y: scroll;
+}

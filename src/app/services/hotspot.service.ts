@@ -13,33 +13,33 @@ interface HotspotImage extends Hotspot {
   title: string;
   description: string;
 }
-interface HotspotImageSingle extends HotspotImage {
+export interface HotspotImageSingle extends HotspotImage {
   type: 1;
   url: string;
   credits: string;
 }
-interface HotspotImageSequence extends HotspotImage {
+export interface HotspotImageSequence extends HotspotImage {
   type: 2;
   sequence: Array<{
     url: string;
     credits: string;
   }>;
 }
-interface HotspotInfotext extends Hotspot {
+export interface HotspotInfotext extends Hotspot {
   type: 3;
   title: string;
   text: string;
 }
-interface HotspotAudiotext extends Hotspot {
+export interface HotspotAudiotext extends Hotspot {
   type: 4;
   portraitUrl: string;
   audioUrl: string;
 }
-interface HotspotCommunity extends Hotspot {
+export interface HotspotCommunity extends Hotspot {
   type: 5;
   dataUrl: string;
 }
-interface HotspotData extends Hotspot {
+export interface HotspotData extends Hotspot {
   type: 6;
   endpoint: string;
   title: string;
@@ -77,7 +77,13 @@ export class HotspotService {
               coordinates: { lat: 1, lon: 4},
               title: 'Image Sequence',
               description: 'description',
-              sequence: [{url: 'asdf', credits: 'asdf'}, {url: 'asdf', credits: 'asdf'}]
+              sequence: [
+                { url: '/assets/img1.jpg', credits: 'asdf' },
+                { url: '/assets/img2.jpg', credits: 'asdf' },
+                { url: '/assets/img3.jpg', credits: 'asdf' },
+                { url: '/assets/img4.jpg', credits: 'asdf' },
+                { url: '/assets/img5.jpg', credits: 'asdf' },
+              ]
             })
             break;
 

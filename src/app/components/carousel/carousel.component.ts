@@ -1,24 +1,26 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { trigger, style, transition, animate } from '@angular/animations';
 import { filter } from 'rxjs';
-import { HotspotService, HotspotType } from 'src/app/services/hotspot.service';
+import { HotspotImageSequence, HotspotService } from 'src/app/services/hotspot.service';
 
+const fadeInOutAnimation = trigger('fadeInOut', [
+  transition(':enter', [
+    style({ bottom: '-33%', opacity: 0 }),
+    animate('1s ease-in-out', style({ bottom: '0%', opacity: 1 }))
+  ]),
+  transition(':leave', [
+    animate('1s ease-in-out', style({ opacity: 0 }))
+  ])
+]);
 @Component({
   selector: 'app-carousel',
   templateUrl: './carousel.component.html',
-  styleUrls: ['./carousel.component.css']
+  styleUrls: ['./carousel.component.css'],
+  animations: [fadeInOutAnimation]
 })
 export class CarouselComponent {
 
-  hotspot?: HotspotType;
-
-  images = [
-    '/assets/img1.jpg',
-    '/assets/img2.jpg',
-    '/assets/img3.jpg',
-    '/assets/img4.jpg',
-    '/assets/img5.jpg',
-    // ... add more image paths
-  ];
+  hotspot?: HotspotImageSequence;
 
   @ViewChild('wrapper')
   wrapper?: ElementRef<HTMLDivElement>;
@@ -27,8 +29,7 @@ export class CarouselComponent {
     this.hotspotService.trigger
       .pipe(filter(h => h !== false && h.type === 2))
       .subscribe(hotspot => {
-        if (hotspot) this.hotspot = hotspot;
-        console.dir(hotspot);
+        if (hotspot && hotspot.type === 2) this.hotspot = hotspot;
       })
   }
 
