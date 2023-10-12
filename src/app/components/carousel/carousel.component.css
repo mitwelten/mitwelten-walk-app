@@ -77,3 +77,10 @@
 #text p {
   overflow-y: scroll;
 }
+
+app-copyright {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 999;
+}
