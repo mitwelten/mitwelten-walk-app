@@ -1,21 +1,43 @@
 
 .carousel-container {
-  position: relative;
-  width: 100%;
-  max-width: 600px; /* adjust as needed */
-  overflow: hidden;
+  position: fixed;
+  top: calc(48px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .carousel-wrapper {
-  display: flex;
+  height: 100%;
+  width: 100%;
+
+  /* display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center; */
+  white-space: nowrap;
+
   overflow-x: scroll;
+  overflow-y: hidden;
   scroll-snap-type: x mandatory;
 }
 
 .carousel-image {
   width: 100%;
-  display: block;
+  height: 100%;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
   scroll-snap-align: center;
+}
+
+.carousel-image img {
+  object-fit: cover;
+  object-position: center;
+  height: 100%;
+  width: 100%;
 }
 
 .carousel-arrow {
