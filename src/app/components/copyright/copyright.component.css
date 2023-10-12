@@ -1,6 +1,6 @@
 :host {
   display: flex;
-  max-width: 90vw;
+  max-width: calc(100vw - 32px);
 }
 
 mat-icon {
@@ -17,6 +17,6 @@ mat-icon {
   padding: 3px 8px 3px 32px;
   line-height: 20px;
   z-index: -2;
-  max-width: 80vw;
   white-space: break-spaces;
+  flex: 1 1 auto;
 }
