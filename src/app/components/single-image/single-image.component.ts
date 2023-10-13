@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { fadeInOutAnimation } from '../carousel/carousel.component';
-import { HotspotImageSingle, HotspotService } from 'src/app/services/hotspot.service';
 import { filter } from 'rxjs';
+import { HotspotImageSingle, HotspotService } from 'src/app/services/hotspot.service';
+import { fadeInOutAnimation } from 'src/app/shared';
 
 @Component({
   selector: 'app-single-image',
