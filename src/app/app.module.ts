@@ -26,6 +26,7 @@ import { ChooseChannelComponent } from './components/choose-channel/choose-chann
 import { OverviewComponent } from './components/overview/overview.component';
 import { WalkComponent } from './components/walk/walk.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
+import { SingleImageComponent } from './components/single-image/single-image.component';
 import { InstructionsComponent } from './components/instructions.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
 
@@ -80,6 +81,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     OverviewComponent,
     WalkComponent,
     CarouselComponent,
+    SingleImageComponent,
     InstructionsComponent,
     CopyrightComponent,
   ],

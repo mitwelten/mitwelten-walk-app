@@ -71,6 +71,16 @@ export class HotspotService {
     this.dialog.open(TriggerHotspotDialogComponent).afterClosed().subscribe(
       (type: number) => {
         switch (type) {
+          case 1:
+            this.trigger.next({
+              id: 43, type,
+              coordinates: { lat: 1, lon: 4},
+              title: 'Single Image',
+              description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+              url: '/assets/2990-0522_2023-05-15T11-00-08Z.jpg',
+              credits: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod'
+            })
+            break;
           case 2:
             this.trigger.next({
               id: 42, type,
