@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { filter } from 'rxjs';
 import { HotspotImageSingle, HotspotService } from 'src/app/services/hotspot.service';
-import { fadeInOutAnimation } from 'src/app/shared';
+import { slideUpDownAnimation } from 'src/app/shared';
 
 @Component({
   selector: 'app-single-image',
   templateUrl: './single-image.component.html',
   styleUrls: ['./single-image.component.css'],
-  animations: [fadeInOutAnimation]
+  animations: [slideUpDownAnimation]
 })
 export class SingleImageComponent {
 

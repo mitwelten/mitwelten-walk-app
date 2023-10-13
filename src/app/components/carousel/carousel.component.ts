@@ -1,13 +1,13 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { filter } from 'rxjs';
 import { HotspotImageSequence, HotspotService } from 'src/app/services/hotspot.service';
-import { fadeInOutAnimation } from 'src/app/shared';
+import { slideUpDownAnimation } from 'src/app/shared';
 
 @Component({
   selector: 'app-carousel',
   templateUrl: './carousel.component.html',
   styleUrls: ['./carousel.component.css'],
-  animations: [fadeInOutAnimation]
+  animations: [slideUpDownAnimation]
 })
 export class CarouselComponent {
 
