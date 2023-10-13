@@ -10,7 +10,7 @@ export const fadeInOutAnimation = trigger('fadeInOut', [
   ])
 ]);
 
-export const hotspotAppearAnimation = trigger('hotspotAppear', [
+export const hotspotCrossfadeAnimation = trigger('hotspotCrossfade', [
   transition(':enter', [
     style({ opacity: 0 }),
     animate('1s ease-in-out', style({ opacity: 1 }))

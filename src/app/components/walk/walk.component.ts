@@ -1,10 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HotspotService, HotspotType } from 'src/app/services/hotspot.service';
+import { hotspotCrossfadeAnimation } from 'src/app/shared';
 
 @Component({
   selector: 'app-walk',
   templateUrl: './walk.component.html',
   styleUrls: ['./walk.component.css'],
+  animations: [hotspotCrossfadeAnimation],
+})
 export class WalkComponent implements OnInit {
 
   hotspot?: HotspotType|false;

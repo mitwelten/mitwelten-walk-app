@@ -1,7 +1,7 @@
 <div class="container">
 
-  <app-single-image *ngIf="hotspot && hotspot?.type === 1"></app-single-image>
+  <app-single-image *ngIf="hotspot && hotspot?.type === 1" [@hotspotCrossfade]></app-single-image>
 
-  <app-carousel *ngIf="hotspot && hotspot?.type === 2"></app-carousel>
+  <app-carousel *ngIf="hotspot && hotspot?.type === 2" [@hotspotCrossfade]></app-carousel>
 
 </div>
