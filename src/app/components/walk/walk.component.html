@@ -1,4 +1,7 @@
 <div class="container">
-  <app-carousel *ngIf="hotspot && hotspot?.type === 2"></app-carousel>
-</div>
 
+  <app-single-image *ngIf="hotspot && hotspot?.type === 1"></app-single-image>
+
+  <app-carousel *ngIf="hotspot && hotspot?.type === 2"></app-carousel>
+
+</div>
