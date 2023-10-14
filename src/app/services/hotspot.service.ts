@@ -52,6 +52,16 @@ export type HotspotType = HotspotImageSingle|HotspotImageSequence|HotspotInfotex
 })
 export class HotspotService {
 
+  /* hotspot types
+  0   reset / no type
+  1   single image
+  2   image sequence
+  3   info text
+  4   audio text
+  5   data
+  6   community image record
+  */
+
   private hotspots: Array<HotspotType> = [];
 
   public trigger: BehaviorSubject<HotspotType|false>;
@@ -94,6 +104,14 @@ export class HotspotService {
                 { url: '/assets/img4.jpg', credits: 'asdf' },
                 { url: '/assets/img5.jpg', credits: 'asdf' },
               ]
+            })
+            break;
+          case 3:
+            this.trigger.next({
+              id: 44, type,
+              coordinates: { lat: 1, lon: 4},
+              title: 'Aufbau eines Auenwald-Ufers',
+              text: 'Auenwälder befinden sich an Flussläufen und sind durch periodische Wasserstandschwankungen charakterisiert. Zudem kann man einen Auenwald in verschiedene Vegetationszonen einteilen - abhängig von der jeweiligen Entfernung zum Flussufer. Unmittelbar am Ufer befindet sich der Spülsaum mit sich kurzfristig ansiedelnden Pionierpflanzen. Landeinwärts folgt dann eine Zone mit niedrigen Weidengebüschen, die den mechanischen Belastungen des regelmässigen Hochwassers standhalten. Anschliessend beginnt der eigentliche Auenwald: Die Weichholz-Aue, welche regelmässig überschwemmt wird, beherbergt viele Weide- und Pappelarten. Die Hartholz-Aue, die nur noch selten überschwemmt wird, wird durch Baumarten mit hartem Holz charakterisiert, wie beispielsweise Ulmen, Eichen und Eschen. Zudem verleien viele Lianen der Hartholzaue eine Urwald-Charakter.',
             })
             break;
 
