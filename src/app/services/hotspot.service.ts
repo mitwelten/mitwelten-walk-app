@@ -114,6 +114,14 @@ export class HotspotService {
               text: 'Auenwälder befinden sich an Flussläufen und sind durch periodische Wasserstandschwankungen charakterisiert. Zudem kann man einen Auenwald in verschiedene Vegetationszonen einteilen - abhängig von der jeweiligen Entfernung zum Flussufer. Unmittelbar am Ufer befindet sich der Spülsaum mit sich kurzfristig ansiedelnden Pionierpflanzen. Landeinwärts folgt dann eine Zone mit niedrigen Weidengebüschen, die den mechanischen Belastungen des regelmässigen Hochwassers standhalten. Anschliessend beginnt der eigentliche Auenwald: Die Weichholz-Aue, welche regelmässig überschwemmt wird, beherbergt viele Weide- und Pappelarten. Die Hartholz-Aue, die nur noch selten überschwemmt wird, wird durch Baumarten mit hartem Holz charakterisiert, wie beispielsweise Ulmen, Eichen und Eschen. Zudem verleien viele Lianen der Hartholzaue eine Urwald-Charakter.',
             })
             break;
+          case 4:
+            this.trigger.next({
+              id: 45, type,
+              coordinates: { lat: 1, lon: 4},
+              portraitUrl: '',
+              audioUrl: '',
+            })
+            break;
 
             default:
             this.trigger.next(false);

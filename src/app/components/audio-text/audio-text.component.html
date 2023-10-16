@@ -1,0 +1,32 @@
+<img src="/assets/audiotext-portrait-ai.jpg" alt="Placeholder Portrait" id="portrait">
+
+<mat-toolbar class="footer">
+
+  <mat-toolbar-row class="actions">
+    <button mat-icon-button (click)="rewind()">
+      <mat-icon class="material-symbols-outlined">skip_previous</mat-icon>
+    </button>
+    <button mat-icon-button (click)="play()" [disabled]="state?.error" *ngIf="!state?.playing">
+      <mat-icon class="material-symbols-outlined">play_arrow</mat-icon>
+    </button>
+    <button mat-icon-button (click)="pause()" *ngIf="state?.playing">
+      <mat-icon class="material-symbols-outlined">pause</mat-icon>
+    </button>
+    <button  mat-icon-button (click)="skip(-1)">
+      <mat-icon class="material-symbols-outlined">replay_30</mat-icon>
+    </button>
+    <button  mat-icon-button (click)="skip(1)">
+      <mat-icon class="material-symbols-outlined">forward_30</mat-icon>
+    </button>
+  </mat-toolbar-row>
+  <mat-toolbar-row class="volume">
+    <!-- <span class="mat-body-1">{{ state.readableCurrentTime }}</span> -->
+    <!-- <mat-icon class="material-symbols-outlined">volume_down</mat-icon>
+    <mat-slider class="time-slider" min="0" [max]="state?.duration" step="1" [disabled]="state?.error">
+      <input matSliderThumb [value]="state?.currentTime" (valueChange)="onSliderChangeEnd($event)" >
+    </mat-slider>
+    <mat-icon class="material-symbols-outlined">volume_up</mat-icon> -->
+    <!-- <span class="mat-body-1">{{ state.readableDuration }}</span> -->
+    <mat-progress-bar mode="determinate" [value]="state?.progress"></mat-progress-bar>
+ </mat-toolbar-row>
+</mat-toolbar>

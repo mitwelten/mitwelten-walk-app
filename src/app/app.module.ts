@@ -28,6 +28,7 @@ import { WalkComponent } from './components/walk/walk.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
 import { SingleImageComponent } from './components/single-image/single-image.component';
 import { InfoTextComponent } from './components/info-text/info-text.component';
+import { AudioTextComponent } from './components/audio-text/audio-text.component';
 import { InstructionsComponent } from './components/instructions.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
 
@@ -45,7 +46,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSliderModule } from '@angular/material/slider';
 
 import '@angular/common/locales/global/de';
 
@@ -84,6 +87,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     CarouselComponent,
     SingleImageComponent,
     InfoTextComponent,
+    AudioTextComponent,
     InstructionsComponent,
     CopyrightComponent,
   ],
@@ -113,7 +117,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatDatepickerModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatSnackBarModule,
+    MatSliderModule,
   ],
   providers: [
     // {
