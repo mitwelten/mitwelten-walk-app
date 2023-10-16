@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { filter } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, filter, takeUntil } from 'rxjs';
 import { AudioPlayerService } from 'src/app/services/audio-player.service';
 import { HotspotAudiotext, HotspotService } from 'src/app/services/hotspot.service';
 import { StreamState } from 'src/app/shared';
@@ -9,8 +9,9 @@ import { StreamState } from 'src/app/shared';
   templateUrl: './audio-text.component.html',
   styleUrls: ['./audio-text.component.css']
 })
-export class AudioTextComponent implements OnInit {
+export class AudioTextComponent implements OnInit, OnDestroy {
 
+  private destroy = new Subject();
   hotspot?: HotspotAudiotext;
   state?: StreamState;
 
@@ -30,7 +31,14 @@ export class AudioTextComponent implements OnInit {
 
   ngOnInit() {
     this.audioPlayerService.stop();
-    this.audioPlayerService.playStream('/assets/ice-crackling-loop-02.m4a').subscribe();
+    this.audioPlayerService.playStream('/assets/ice-crackling-loop-02.m4a')
+      .pipe(takeUntil(this.destroy)).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.audioPlayerService.stop();
+    this.destroy.next(null);
+    this.destroy.complete();
   }
 
   play() {
