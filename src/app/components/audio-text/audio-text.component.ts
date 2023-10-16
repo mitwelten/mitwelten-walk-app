@@ -9,7 +9,7 @@ import { StreamState } from 'src/app/shared';
   templateUrl: './audio-text.component.html',
   styleUrls: ['./audio-text.component.css']
 })
-export class AudioTextComponent implements OnInit, OnDestroy {
+export class AudioTextComponent implements OnDestroy {
 
   private destroy = new Subject();
   hotspot?: HotspotAudiotext;
@@ -19,20 +19,20 @@ export class AudioTextComponent implements OnInit, OnDestroy {
     private hotspotService: HotspotService,
     private audioPlayerService: AudioPlayerService
   ) {
-    this.hotspotService.trigger
-      .pipe(filter(h => h !== false && h.type === 4))
-      .subscribe(hotspot => {
-        if (hotspot && hotspot.type === 4) this.hotspot = hotspot;
-      });
+    // maybe move all to ngOnInit()
     this.audioPlayerService.getState().subscribe(state => {
       this.state = state;
     });
-  }
-
-  ngOnInit() {
-    this.audioPlayerService.stop();
-    this.audioPlayerService.playStream('/assets/ice-crackling-loop-02.m4a')
-      .pipe(takeUntil(this.destroy)).subscribe();
+    this.hotspotService.trigger
+      .pipe(filter(h => h !== false && h.type === 4))
+      .subscribe(hotspot => {
+        if (hotspot && hotspot.type === 4) {
+          this.hotspot = hotspot;
+          // maybe check if the same file is playing, otherwhis this.audioPlayerService.stop();
+          this.audioPlayerService.playStream(this.hotspot.audioUrl)
+            .pipe(takeUntil(this.destroy)).subscribe();
+        };
+      });
   }
 
   ngOnDestroy(): void {

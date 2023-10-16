@@ -118,8 +118,8 @@ export class HotspotService {
             this.trigger.next({
               id: 45, type,
               coordinates: { lat: 1, lon: 4},
-              portraitUrl: '',
-              audioUrl: '',
+              portraitUrl: '/assets/audiotext-portrait-ai.jpg',
+              audioUrl: '/assets/ice-crackling-loop-02.m4a',
             })
             break;
 
