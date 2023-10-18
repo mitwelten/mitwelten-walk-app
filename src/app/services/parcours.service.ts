@@ -17,8 +17,11 @@ import { DataService } from './data.service';
 })
 export class ParcoursService {
 
+  /** GeolocationService, with error handling pipe */
   private _geolocation: GeolocationService
-  private trackerLocation: Position | undefined; /** position of device */
+
+  /** Position of device */
+  private trackerLocation: Position | undefined;
   private toggleSource?: BehaviorSubject<GeolocationService|ReplaySubject<GeolocationPosition>>;
 
   public selectedPathID = 1;
@@ -76,6 +79,11 @@ export class ParcoursService {
     })
   }
 
+  /**
+   * Estimate length of path by summing length of all segments in `this.parcoursPath`
+   *
+   * Ouput to `this.parcoursLength`
+   */
   private setParcours() {
     // get length of path
     this.parcoursLength = 0;
@@ -86,6 +94,13 @@ export class ParcoursService {
     }
   }
 
+  /**
+   * Create Observable that allows for the Location Service to be toggeled
+   * between GeolocationService and TrackRecorder playback
+   *
+   * - Output: Location (`this.location`)
+   * - Side-Effect: `this.updateProjection`, calculate progress along path
+   */
   private initGeoLocation() {
     this.toggleSource = new BehaviorSubject(this._geolocation);
     this.toggleSource.pipe(
@@ -121,6 +136,18 @@ export class ParcoursService {
     this.updateProjection(location);
   }
 
+  /**
+   * Estimate parcours progress and distance to path by projecting the current
+   * geolocation of the device onto the path.
+   *
+   * Observable Outputs:
+   * - `this.distanceToPath`: Distance to path in meters
+   * - `this.progress`: Normalised progress
+   * - `this.closestPointOnParcours`: Progress in meters
+   * - `this.active`: Device geolocation in or out of focus of parcours
+   *
+   * @param location Current geolocation of device
+   */
   private updateProjection(location: Position) {
     // Find the closest point on the path to the object
     let closestPoint: Position | undefined;
@@ -169,6 +196,13 @@ export class ParcoursService {
     }
   }
 
+  /**
+   * Euclidian (planar) distance between A and B
+   *
+   * @param a Geolocation A
+   * @param b Geolocation B
+   * @returns Planar distance between A and B
+   */
   private distance(a: Position, b: Position): number {
     const dx = a[0] - b[0];
     const dy = a[1] - b[1];
