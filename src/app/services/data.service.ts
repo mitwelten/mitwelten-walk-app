@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Deployment, Note, ImageStack, SectionText, StackImage, WalkPath } from '../shared';
+import { HotspotType } from './hotspot.service';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +80,10 @@ export class DataService {
 
   public getWalkText(walk_id: number) {
     return this.http.get<SectionText[]>(`${this.apiUrl}/walk/text/${walk_id}`)
+  }
+
+  public getWalkHotspots(walk_id: number) {
+    return this.http.get<HotspotType[]>(`${this.apiUrl}/walk/hotspots/${walk_id}`)
   }
 
   public getImageResource(url: string) {
