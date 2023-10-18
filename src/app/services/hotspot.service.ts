@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 
 interface Hotspot {
   coordinates: CoordinatePoint;
+  subject?: string;
   id: number;
   type: number;
 }
