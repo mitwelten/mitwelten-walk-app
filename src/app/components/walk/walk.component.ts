@@ -13,12 +13,13 @@ export class WalkComponent implements OnInit {
   hotspot?: HotspotType|false;
 
   constructor(
-    private hotspotService: HotspotService
+    public hotspotService: HotspotService
   ) { }
 
   ngOnInit(): void {
     // "false" could be triggering a side effect to fade out audio, wait, then continue delivering "false"
     this.hotspotService.trigger.subscribe(hotspot => this.hotspot = hotspot);
+    this.hotspotService.loadHotspots();
   }
 
 }

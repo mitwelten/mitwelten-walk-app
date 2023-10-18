@@ -3,6 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { TriggerHotspotDialogComponent } from '../components/trigger-hotspot-dialog.component';
 import { CoordinatePoint } from '../shared';
 import { BehaviorSubject } from 'rxjs';
+import { ParcoursService } from './parcours.service';
+import { DataService } from './data.service';
+import distance from '@turf/distance';
 
 interface Hotspot {
   location: CoordinatePoint;
@@ -64,18 +67,41 @@ export class HotspotService {
   */
 
   private hotspots: Array<HotspotType> = [];
+  private currentHotspot: HotspotType | null = null;
 
   public trigger: BehaviorSubject<HotspotType|false>;
+  public closeHotspots: BehaviorSubject<Array<HotspotType & { distance: number }>>;
 
-  constructor(private dialog: MatDialog) {
+  constructor(
+    private dialog: MatDialog,
+    private dataService: DataService,
+    private parcoursService: ParcoursService,
+  ) {
     this.trigger = new BehaviorSubject<HotspotType|false>(false);
-    this.hotspots.push({
-      id: 42,
-      coordinates: { lat: 1, lon: 4},
-      type: 3,
-      text: 'Lorem dolor sit amet. Lorem dolor sit amet. Lorem dolor sit amet. Lorem dolor sit amet.',
-      title: 'Infotext Hotspot'
-    });
+    this.closeHotspots = new BehaviorSubject<Array<HotspotType & { distance: number }>>([]);
+    this.parcoursService.location.subscribe(location => {
+      if (this.hotspots.length > 0) {
+        const c = this.hotspots.map(hotspot => Object.assign(hotspot, { distance: distance(
+          [hotspot.location.lon, hotspot.location.lat],
+          [location.coords.longitude, location.coords.latitude],
+          { units: 'meters' })
+        })).sort((a,b) => a.distance - b.distance).slice(0, 3);
+        if (c[0].distance <= 20.) {
+          if (this.currentHotspot?.id !== c[0].id) {
+            this.currentHotspot = c[0];
+            this.trigger.next(c[0]);
+          }
+        } else {
+          this.trigger.next(false);
+          this.currentHotspot = null;
+        }
+        this.closeHotspots.next(c);
+      }
+    })
+  }
+
+  loadHotspots() {
+    this.dataService.getWalkHotspots(1).subscribe(hotspots => this.hotspots = hotspots);
   }
 
   chooseHotspot() {
