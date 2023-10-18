@@ -5,6 +5,7 @@ import { CoordinatePoint } from '../shared';
 import { BehaviorSubject } from 'rxjs';
 import { ParcoursService } from './parcours.service';
 import { DataService } from './data.service';
+import { AudioService } from './audio.service';
 import distance from '@turf/distance';
 
 interface Hotspot {
@@ -76,6 +77,7 @@ export class HotspotService {
     private dialog: MatDialog,
     private dataService: DataService,
     private parcoursService: ParcoursService,
+    private audioService: AudioService,
   ) {
     this.trigger = new BehaviorSubject<HotspotType|false>(false);
     this.closeHotspots = new BehaviorSubject<Array<HotspotType & { distance: number }>>([]);
@@ -90,6 +92,7 @@ export class HotspotService {
           if (this.currentHotspot?.id !== c[0].id) {
             this.currentHotspot = c[0];
             this.trigger.next(c[0]);
+            this.audioService.ping();
           }
         } else {
           this.trigger.next(false);
