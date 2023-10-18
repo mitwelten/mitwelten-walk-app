@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Deployment, Note, ImageStack, SectionText, StackImage, WalkPath } from '../shared';
 import { HotspotType } from './hotspot.service';
 
@@ -84,6 +84,17 @@ export class DataService {
 
   public getWalkHotspots(walk_id: number) {
     return this.http.get<HotspotType[]>(`${this.apiUrl}/walk/hotspots/${walk_id}`)
+      .pipe(map(hotspots => {
+        return hotspots.map(h => {
+          if (h.type === 1) h.url = this.apiUrl+h.url
+          else if (h.type === 2) h.sequence.forEach(s => s.url = this.apiUrl+s.url)
+          else if (h.type === 4) {
+            h.portraitUrl = this.apiUrl+h.portraitUrl
+            h.audioUrl = this.apiUrl+h.audioUrl
+          }
+          return h;
+        })
+      }))
   }
 
   public getImageResource(url: string) {
