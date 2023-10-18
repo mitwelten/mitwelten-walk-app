@@ -1,0 +1,46 @@
+:host {
+  position: fixed;
+  top: calc(48px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+}
+
+#portrait {
+  flex: 0 0 auto;
+  width: 80vw;
+  height: 80vw;
+  max-height: 80vh;
+  max-width: 80vh;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #555;
+  margin-bottom: 20vh;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  /* width: 100%; */
+}
+
+.volume mat-icon {
+  flex: 1 0 max-content;
+}
+
+.actions {
+  justify-content: center;
+  gap: 10%;
+}
+
+.time-slider {
+  width: 100%;
+  margin-left: 20px;
+  margin-right: 20px;
+}

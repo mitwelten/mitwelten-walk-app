@@ -19,8 +19,18 @@ import { NoteFormComponent } from './components/entry-form/entry-form.component'
 import { InfoComponent } from './components/info/info.component';
 import { StackFadeComponent } from './components/stack-fade/stack-fade.component';
 import { DistanceWarningDialogComponent } from './components/distance-warning-dialog.component';
+import { TriggerHotspotDialogComponent } from './components/trigger-hotspot-dialog.component';
 import { ChoosePathComponent } from './components/choose-path/choose-path.component';
 import { ChooseStackComponent } from './components/choose-stack/choose-stack.component';
+import { ChooseChannelComponent } from './components/choose-channel/choose-channel.component';
+import { OverviewComponent } from './components/overview/overview.component';
+import { WalkComponent } from './components/walk/walk.component';
+import { CarouselComponent } from './components/carousel/carousel.component';
+import { SingleImageComponent } from './components/single-image/single-image.component';
+import { InfoTextComponent } from './components/info-text/info-text.component';
+import { AudioTextComponent } from './components/audio-text/audio-text.component';
+import { InstructionsComponent } from './components/instructions.component';
+import { CopyrightComponent } from './components/copyright/copyright.component';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
@@ -36,7 +46,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSliderModule } from '@angular/material/slider';
 
 import '@angular/common/locales/global/de';
 
@@ -66,8 +78,18 @@ function initializeKeycloak(keycloak: KeycloakService) {
     InfoComponent,
     StackFadeComponent,
     DistanceWarningDialogComponent,
+    TriggerHotspotDialogComponent,
     ChooseStackComponent,
     ChoosePathComponent,
+    ChooseChannelComponent,
+    OverviewComponent,
+    WalkComponent,
+    CarouselComponent,
+    SingleImageComponent,
+    InfoTextComponent,
+    AudioTextComponent,
+    InstructionsComponent,
+    CopyrightComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,7 +117,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatDatepickerModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatSnackBarModule,
+    MatSliderModule,
   ],
   providers: [
     // {

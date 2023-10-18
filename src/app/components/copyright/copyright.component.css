@@ -1,0 +1,22 @@
+:host {
+  display: flex;
+  max-width: calc(100vw - 32px);
+}
+
+mat-icon {
+  background-color: #ffffffaa;
+  border: 1px solid white;
+  border-radius: 13px;
+  flex: 0 0 24px;
+}
+
+.credits {
+  background: #ffffffaa;
+  border-radius: 13px;
+  margin-left: -26px;
+  padding: 3px 8px 3px 32px;
+  line-height: 20px;
+  z-index: -2;
+  white-space: break-spaces;
+  flex: 1 1 auto;
+}

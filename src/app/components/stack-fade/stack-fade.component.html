@@ -10,7 +10,7 @@
 
 <div id="dbgimg" [style.visibility]="debug?'visible':'hidden'"></div>
 
-<div id="text" *ngIf="textDisplay" [@fadeInOut]>
+<div id="text" *ngIf="textDisplay" [@slideUpDown]>
   <h2>{{ textDisplay.title }}</h2>
   <p>{{ textDisplay.text }}</p>
 </div>

@@ -1,0 +1,19 @@
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li.channel-option {
+  background-color: #8ec990dd;
+  border-radius: 5px;
+  padding: 12px;
+  display: block;
+  margin: 0 0 16px 0;
+}
+
+li.channel-option h3 mat-icon {
+  line-height: 28px;
+  scale: 0.8;
+  margin-bottom: -5px;
+  margin-left: -4px;
+}

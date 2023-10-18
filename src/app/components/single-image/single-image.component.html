@@ -1,0 +1,11 @@
+<div class="single-image-container">
+  <div class="single-image">
+    <img [src]="hotspot?.url">
+    <app-copyright class="copyright" [credits]="hotspot?.credits"></app-copyright>
+  </div>
+</div>
+
+<div id="text" *ngIf="hotspot" [@slideUpDown]>
+  <h2>{{ hotspot.title }}</h2>
+  <p>{{ hotspot.description }}</p>
+</div>
