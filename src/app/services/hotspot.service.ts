@@ -5,7 +5,7 @@ import { CoordinatePoint } from '../shared';
 import { BehaviorSubject } from 'rxjs';
 
 interface Hotspot {
-  coordinates: CoordinatePoint;
+  location: CoordinatePoint;
   subject?: string;
   id: number;
   type: number;
@@ -85,7 +85,7 @@ export class HotspotService {
           case 1:
             this.trigger.next({
               id: 43, type,
-              coordinates: { lat: 1, lon: 4},
+              location: { lat: 1, lon: 4},
               title: 'Single Image',
               description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
               url: '/assets/2990-0522_2023-05-15T11-00-08Z.jpg',
@@ -95,7 +95,7 @@ export class HotspotService {
           case 2:
             this.trigger.next({
               id: 42, type,
-              coordinates: { lat: 1, lon: 4},
+              location: { lat: 1, lon: 4},
               title: 'Image Sequence',
               description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
               sequence: [
@@ -110,7 +110,7 @@ export class HotspotService {
           case 3:
             this.trigger.next({
               id: 44, type,
-              coordinates: { lat: 1, lon: 4},
+              location: { lat: 1, lon: 4},
               title: 'Aufbau eines Auenwald-Ufers',
               text: 'Auenwälder befinden sich an Flussläufen und sind durch periodische Wasserstandschwankungen charakterisiert. Zudem kann man einen Auenwald in verschiedene Vegetationszonen einteilen - abhängig von der jeweiligen Entfernung zum Flussufer. Unmittelbar am Ufer befindet sich der Spülsaum mit sich kurzfristig ansiedelnden Pionierpflanzen. Landeinwärts folgt dann eine Zone mit niedrigen Weidengebüschen, die den mechanischen Belastungen des regelmässigen Hochwassers standhalten. Anschliessend beginnt der eigentliche Auenwald: Die Weichholz-Aue, welche regelmässig überschwemmt wird, beherbergt viele Weide- und Pappelarten. Die Hartholz-Aue, die nur noch selten überschwemmt wird, wird durch Baumarten mit hartem Holz charakterisiert, wie beispielsweise Ulmen, Eichen und Eschen. Zudem verleien viele Lianen der Hartholzaue eine Urwald-Charakter.',
             })
@@ -118,7 +118,7 @@ export class HotspotService {
           case 4:
             this.trigger.next({
               id: 45, type,
-              coordinates: { lat: 1, lon: 4},
+              location: { lat: 1, lon: 4},
               portraitUrl: '/assets/audiotext-portrait-ai.jpg',
               audioUrl: '/assets/ice-crackling-loop-02.m4a',
             })
