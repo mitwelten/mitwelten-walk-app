@@ -32,41 +32,39 @@ mat-toolbar {
 #info {
   display: grid;
   position: fixed;
-  top: 72px;
-  left: 10px;
-  width: 132px;
-  font-size: 14px;
+  top: 20%;
+  left: 4%;
+  right: 4%;
+  font-size: 12px;
   row-gap: 8px;
   grid-template-columns: 100%;
 }
 
-#info div {
-  background-color: rgba(255, 255, 255, 0.67);
+#info div,
+#info ul {
+  background-color: rgba(255, 255, 255, 0.82);
   padding: 4px;
   border-radius: 4px;
+  width: fit-content;
+  border: 1px solid #aaa;
 }
 
-#closeDepoyements {
-  position: absolute;
-  overflow: scroll;
-  max-width: calc(100% - 34px);
-  white-space: nowrap;
-  bottom: 8px;
-  font-size: 12px;
-  left: 8px;
-  background-color: rgba(255,255,255,0.7);
-  border: 2px solid #888;
-  border-radius: 4px;
-  padding: 8px;
-}
-
-#closeDepoyements ul {
+#info ul {
+  margin: 0;
   list-style-type: none;
-  padding: 0;
-  margin: 0;
 }
 
-#closeDepoyements li {
-  padding: 0;
-  margin: 0;
+#info #debug-hotspots li {
+  display: grid;
+  grid-template-columns: 20px 20px 64px auto;
+  column-gap: 8px;
+}
+
+#info #debug-deployments {
+  overflow: scroll;
+  max-width: -webkit-fill-available;
+}
+
+#info #debug-deployments li {
+  white-space: nowrap;
 }

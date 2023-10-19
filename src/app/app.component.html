@@ -88,12 +88,26 @@
   <div>
     Accuracy: {{ (parcoursService.location | async)?.coords?.accuracy | number:'1.2-2' }} m
   </div>
-</div>
 
-<div id="closeDepoyements" *ngIf="showDeployments">
-  <strong>Close deployments</strong>
-  <ul>
-    <li *ngFor="let d of deployments">
+  <!-- hotspots -->
+  <ul id="debug-hotspots">
+    <li>
+      <span><strong>id</strong></span>
+      <span><strong>tp</strong></span>
+      <span><strong>distance</strong></span>
+      <span><strong>info</strong></span>
+    </li>
+    <li *ngFor="let hotspot of hotspotService.closeHotspots | async">
+      <span>{{ hotspot.id }}</span>
+      <span>{{ hotspot.type }}</span>
+      <span>{{ hotspot.distance | number:'1.1-1'}}m</span>
+      <span>{{ hotspot.subject }}</span>
+    </li>
+  </ul>
+
+  <!-- deployments -->
+  <ul id="debug-deployments">
+    <li *ngFor="let d of parcoursService.closeDeployments | async | slice:0:3 ">
       {{ d.node.node_label }}, {{ d.node.type }}:
       {{d.description}} ({{d.distance | number:'1.1-1'}}m)
     </li>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Position } from 'geojson';
 import { BehaviorSubject, ReplaySubject, distinctUntilChanged, retry, switchMap, tap } from 'rxjs';
-import { WalkPath } from '../shared';
+import { Deployment, WalkPath } from '../shared';
 import { parcours } from '../shared/map.data';
 import { TrackRecorderService } from './track-recorder.service';
 import distance from '@turf/distance';
@@ -33,6 +33,7 @@ export class ParcoursService {
   public progress = new ReplaySubject<number>(1);
   public distanceToPath = new ReplaySubject<number>(1);
   public active = new ReplaySubject<boolean>(1);
+  public closeDeployments = new BehaviorSubject<(Deployment & { distance: number })[]>([]);
   private dialogRef?: MatDialogRef<DistanceWarningDialogComponent>;
 
   constructor(
@@ -99,7 +100,9 @@ export class ParcoursService {
    * between GeolocationService and TrackRecorder playback
    *
    * - Output: Location (`this.location`)
-   * - Side-Effect: `this.updateProjection`, calculate progress along path
+   * - Side-Effects:
+   *   - `this.updateProjection`, calculate progress along path
+   *   - `findCloseDeployments`, make a list of closest deployments
    */
   private initGeoLocation() {
     this.toggleSource = new BehaviorSubject(this._geolocation);
@@ -111,6 +114,7 @@ export class ParcoursService {
       next: l => {
         // TODO: do something with the accuracy value (skip, or warn)
         this.updateProjection([l.coords.longitude, l.coords.latitude]);
+        this.findCloseDeployments([l.coords.longitude, l.coords.latitude]); // TODO: check if logged in
         this.location.next(l);
       },
       error: error => {
@@ -163,11 +167,6 @@ export class ParcoursService {
         minDistance = p_dist;
       }
     }
-    /* const closeDeployments = this.deployments
-      .map(d => Object.assign(d, { distance: distance([d.location.lon, d.location.lat], location, { units: 'meters' })}))
-      .sort((a,b) => a.distance - b.distance)
-      .slice(0, 10);
-    this.closeDeployments.emit(closeDeployments); */
     const distantceSphericalMeters = distance(location, closestPoint!) * 1000;
     this.distanceToPath.next(distantceSphericalMeters);
 
@@ -218,5 +217,13 @@ export class ParcoursService {
     const projectionX = start[0] + t * dx;
     const projectionY = start[1] + t * dy;
     return [this.distance(point, [projectionX, projectionY]), [projectionX, projectionY]];
+  }
+
+  private findCloseDeployments(location: Position) {
+    const closeDeployments = this.dataService.deployments.getValue()
+      .map(d => Object.assign(d, { distance: distance([d.location.lon, d.location.lat], location, { units: 'meters' })}))
+      .sort((a,b) => a.distance - b.distance)
+      .slice(0, 10);
+    this.closeDeployments.next(closeDeployments);
   }
 }

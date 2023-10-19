@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Deployment, Note, ImageStack, SectionText, StackImage, WalkPath } from '../shared';
 import { HotspotType } from './hotspot.service';
 
@@ -12,6 +12,8 @@ export class DataService {
   private apiUrl = 'https://data.mitwelten.org/api/v3';
   // private apiUrl = 'http://localhost:8000';
 
+  public deployments = new BehaviorSubject<Array<Deployment>>([]);
+
   constructor(public readonly http: HttpClient) { }
 
   public login(): Observable<{authenticated: boolean}> {
@@ -20,7 +22,8 @@ export class DataService {
 
   public listDeployments(node_id?: number): Observable<Array<Deployment>> {
     const queryParams = node_id !== undefined ? `?node_id=${node_id}` : '';
-    return this.http.get<Array<Deployment>>(`${this.apiUrl}/deployments${queryParams}`);
+    return this.http.get<Array<Deployment>>(`${this.apiUrl}/deployments${queryParams}`)
+      .pipe(tap(deployments => this.deployments.next(deployments)));
   }
 
   public listNotes(from?: Date, to?: Date): Observable<Array<Note>> {

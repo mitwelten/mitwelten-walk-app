@@ -21,9 +21,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private deployments: Deployment[] = [];
   private destroy = new Subject();
 
-  @Output()
-  public closeDeployments = new EventEmitter<(Deployment & { distance: number })[]>;
-
   /** Initial coordinates to center the map on */
   @Input()
   coordinates?: CoordinatePoint;
