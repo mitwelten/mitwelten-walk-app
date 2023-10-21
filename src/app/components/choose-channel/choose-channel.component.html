@@ -3,24 +3,27 @@
 </h1>
 
 <div mat-dialog-content>
+  <p>
+    Hier können Sie verschiedene Erlebnismodi wählen, die Ihren Spaziergang durch die Reinacher Heide auf unterschiedliche Art und Weise bereichern. Sie wählen dabei keine unterschiedlichen Routen aus, sondern unterschiedliche Arten der medialen Bespielung und der präsentierten Informationen. Da die WalkApp weiss, wo Sie sich befinden, beziehen sich diese Informationen auf Ihren jeweiligen Standort (location-sensitive information).
+  </p>
   <ul class="mat-body">
     <li class="channel-option" >
       <h3>Guided Tour</h3>
-      <p>Entdecke Erkenntnisse und Daten unseres Projektes entlang des Spaziergangs</p>
+      <p>In diesem Erlebnismodus werden Sie beim Spaziergang durch die Reinacher Heide auf verborgene Schätze und Besonderheiten des Naherholungs- und Naturschutzgebietes aufmerksam gemacht. Mittels Fotos, Infotexten, Datenvisualisierungen und Tondokumenten, werden Ihnen Informationen zur Tier- und Pflanzenwelt sowie zur Entwicklung und Nutzungsproblematik der Reinacher Heide angeboten. Durch einen Klingelton werden Sie jeweils auf einen neuen Inhalt aufmerksam gemacht, der einen Bezug zu Ihrem Standort herstellt.</p>
       <button (click)="select(1)" mat-raised-button color="accent">
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
       </button>
     </li>
     <li class="channel-option">
       <h3>Stop Motion Movie</h3>
-      <p>Beobachte einen Stop Motion Film dessen Schnitt du durch deine Wanderung entlang des Pfades beeinflusst</p>
+      <p>In diesem Erlebnismodus wird Ihnen eine durchgehende Animation von Bildern der ansässigen Tier- und Pflanzenwelt sowie historischer Bilder angeboten. Sie nehmen Bezug zu Ihrem jeweiligen Standort und werden als Bildstrecke durch Überblendungen nahtlos aneinander gereiht. Sie können die Abspielgeschwindigkeit dabei durch Ihre Gehgeschwindigkeit regulieren.</p>
       <button (click)="select(2)" mat-raised-button color="accent">
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
       </button>
     </li>
     <li class="channel-option">
-      <h3>Beiträge aus der Community</h3>
-      <p>Fotos via SWILD, gleiche Elemente wie Guided Tour: Bild od. Bildserie, inkl. Credits, jedoch mit links zu Beobachtung und Artenportrait statt Titel und Beschreibung</p>
+      <h3>Besucher*innenfotos</h3>
+      <p>In diesem Erlebnismodus werden Fotos von Besucher*innen der Reinacher Heide präsentiert, die mittels der Meldeplattform www.wildenachbarn.ch hochgeladen wurden. Sie können auf diese Art und Weise selber Bilder der Reinacher Heide hochladen, die nach einem Selektionsverfahren auf der WalkApp veröffentlicht werden. Bitte vergessen Sie dabei nicht, dass die Wege in der Reinacher Heide nicht verlassen werden dürfen.</p>
       <button (click)="select(3)" mat-raised-button color="accent">
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
       </button>
