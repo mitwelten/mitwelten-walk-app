@@ -30,6 +30,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('instructionsDialog')
   private instructionsDialog?: TemplateRef<any>;
 
+  @ViewChild('toolsDialog')
+  private toolsDialog?: TemplateRef<any>;
+
   constructor(
     public parcoursService: ParcoursService,
     public stackService: StackService,
@@ -66,6 +69,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   openInstructions() {
     this.dialog.open(this.instructionsDialog!, {
+      maxWidth: '90vw'
+    });
+  }
+
+  openTools() {
+    this.dialog.open(this.toolsDialog!, {
       maxWidth: '90vw'
     });
   }

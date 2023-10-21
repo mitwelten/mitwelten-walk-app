@@ -26,7 +26,7 @@
     <mat-icon color="accent" class="material-symbols-outlined">settings</mat-icon>
       Anleitung zum Einrichten
   </a>
-  <a mat-menu-item href="https://mitwelten.org" target="_blank">
+  <a mat-menu-item (click)="openTools()">
     <mat-icon color="accent" class="material-symbols-outlined">linked_services</mat-icon>
     Dienste und<br>weiterführende Infos
   </a>
@@ -121,5 +121,15 @@
   </div>
   <div mat-dialog-actions>
     <button mat-button mat-dialog-close cdkFocusInitial>Danke</button>
+  </div>
+</ng-template>
+
+<ng-template #toolsDialog>
+  <h2 mat-dialog-title>Dienste und weiterführende Infos</h2>
+  <div mat-dialog-content>
+    <app-tools></app-tools>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close cdkFocusInitial>Schliessen</button>
   </div>
 </ng-template>
