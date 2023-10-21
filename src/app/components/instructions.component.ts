@@ -4,8 +4,17 @@ import { Component } from '@angular/core';
   selector: 'app-instructions',
   template: `
 <p>
-  Installieren Sie die WalkApp auf Ihrem Home-Screen.
+  Für eine optimierte Bildschirmdarstellung installieren Sie die WalkApp bitte auf Ihrem Home-Screen (progressive Web-App). Eine Benutzung direkt im Browser ist möglich, aber die folgenden Einstellungen verbessern Ihr Ergebnis.
 </p>
+
+<ul>
+  <li>öffnen Sie walk.mitwelten.org in Ihrem Browser</li>
+  <li>klicken sie im Menu am unteren Bildschirmrand auf
+    <mat-icon inline="true" class="material-symbols-outlined">ios_share</mat-icon>, um ein neues Menu zu öffnen</li>
+  <li>scrollen Sie im Menu nach unten und wählen Sie “zum Home-Bildschirm hinzufügen” </li>
+  <li>es erscheint ein neues Mitwelten-Icon (rosarot mit einer Spirale) unter Ihren Apps</li>
+  <li>öffnen Sie die WalkApp mit diesem Icon </li>
+</ul>
 
 <p>
   Erlauben Sie der WalkApp bitte den Zugriff auf Ihre Positionsdaten (es werden keine persönlichen Daten erfasst).
@@ -30,10 +39,16 @@ import { Component } from '@angular/core';
 </p>
 
 <p>
+  Um später wieder zu dieser Anleitung zu gelangen, bitten wir sie das Zahnrad-Icon
+  <mat-icon inline="true" color="accent" class="material-symbols-outlined">settings</mat-icon> im Hauptmenü anzuklicken.
+</p>
+
+<p>
   <em>Wir wünschen Ihnen viel Spass!</em>
 </p>
   `,
   styles: [
+    `mat-icon.mat-icon.mat-icon-inline { line-height: 1; }`
   ]
 })
 export class InstructionsComponent {

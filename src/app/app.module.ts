@@ -30,6 +30,7 @@ import { SingleImageComponent } from './components/single-image/single-image.com
 import { InfoTextComponent } from './components/info-text/info-text.component';
 import { AudioTextComponent } from './components/audio-text/audio-text.component';
 import { InstructionsComponent } from './components/instructions.component';
+import { ToolsComponent } from './components/tools.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -90,6 +91,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     AudioTextComponent,
     InstructionsComponent,
     CopyrightComponent,
+    ToolsComponent,
   ],
   imports: [
     BrowserModule,
