@@ -32,13 +32,13 @@
   </a>
   <button *ngIf="!isLoggedIn" mat-menu-item (click)="login()">
     <mat-icon color="accent" class="material-symbols-outlined">login</mat-icon>
-    <span>Sign in</span>
+    <span>Anmelden</span>
   </button>
   <button *ngIf="isLoggedIn" mat-menu-item (click)="logout()">
     <mat-icon color="accent" class="material-symbols-outlined">logout</mat-icon>
-    <span>Sign out</span>
+    <span>Abmelden</span>
   </button>
-  <span *ngIf="userData" mat-menu-item disabled>Signed in as {{ userData.firstName }} {{ userData.lastName }}</span>
+  <span *ngIf="userData" mat-menu-item disabled>Angemeldet als {{ userData.firstName }} {{ userData.lastName }}</span>
   <span mat-menu-item disabled>Version {{version}}</span>
 </mat-menu>
 
