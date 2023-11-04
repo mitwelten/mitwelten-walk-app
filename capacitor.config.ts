@@ -6,7 +6,12 @@ const config: CapacitorConfig = {
   webDir: 'dist/mitwelten-datawalk',
   server: {
     androidScheme: 'https'
-  }
+  },
+  plugins: {
+    CapacitorCookies: {
+      enabled: true,
+    },
+  },
 };
 
 export default config;

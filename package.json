@@ -25,6 +25,8 @@
     "@capacitor/cli": "^5.5.1",
     "@capacitor/core": "^5.5.1",
     "@capacitor/ios": "^5.5.1",
+    "@capacitor/local-notifications": "^5.0.6",
+    "@capacitor/status-bar": "^5.0.6",
     "@ng-web-apis/common": "^2.1.0",
     "@ng-web-apis/geolocation": "^2.0.0",
     "@turf/distance": "^6.5.0",
