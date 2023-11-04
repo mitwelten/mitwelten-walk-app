@@ -62,6 +62,17 @@ function initializeKeycloak(keycloak: KeycloakService) {
         clientId: 'walk'
       },
       initOptions: {
+        /*
+        when using capacitor, iOS will refuse to deal with
+        the keycloak 3rd party cookies. There might be a workaround
+        using the cordova adapter:
+        // adapter: 'cordova-native',
+        // checkLoginIframe: false,
+        // silentCheckSsoFallback: true,
+        // redirectUri: window.location.origin + '/assets/silent-check-sso.html',
+        */
+        enableLogging: true,
+        adapter: 'default',
         onLoad: 'check-sso',
         silentCheckSsoRedirectUri:
           window.location.origin + '/assets/silent-check-sso.html'
