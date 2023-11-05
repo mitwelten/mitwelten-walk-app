@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
-import { Gain } from 'tone';
-import { context, start, Oscillator, Filter, Distortion, Reverb, AmplitudeEnvelope} from 'tone';
+import { context, start, Gain, Oscillator, Filter, Distortion, Reverb, AmplitudeEnvelope} from 'tone';
 
 @Injectable({
   providedIn: 'root'
