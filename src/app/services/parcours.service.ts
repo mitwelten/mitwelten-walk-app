@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Position } from 'geojson';
-import { BehaviorSubject, ReplaySubject, distinctUntilChanged, retry, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, distinctUntilChanged, filter, map, retry, switchMap, tap, withLatestFrom } from 'rxjs';
 import { Deployment, WalkPath } from '../shared';
 import { parcours } from '../shared/map.data';
 import { TrackRecorderService } from './track-recorder.service';
@@ -33,6 +33,7 @@ export class ParcoursService {
   public progress = new ReplaySubject<number>(1);
   public distanceToPath = new ReplaySubject<number>(1);
   public active = new ReplaySubject<boolean>(1);
+  public geolocationPaused = new BehaviorSubject<boolean>(false);
   public closeDeployments = new BehaviorSubject<(Deployment & { distance: number })[]>([]);
   private dialogRef?: MatDialogRef<DistanceWarningDialogComponent>;
 
@@ -108,6 +109,9 @@ export class ParcoursService {
     this.toggleSource = new BehaviorSubject(this._geolocation);
     this.toggleSource.pipe(
       switchMap(source => source),
+      withLatestFrom(this.geolocationPaused),
+      filter(([_, paused]) => !paused),
+      map(([l, _]) => l),
       // tap(l => this.audioService.ping()),
       tap(l => this.trackRecorder.addPosition(l))
     ).subscribe({

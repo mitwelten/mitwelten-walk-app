@@ -1,9 +1,14 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { TrackRecorderService } from 'src/app/services';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { ParcoursService, TrackRecorderService } from 'src/app/services';
 
 @Component({
   selector: 'app-record-control',
   template: `
+    <div mat-menu-item>
+      <mat-slide-toggle #toggleLocationUpdate></mat-slide-toggle>
+      <span>Update Location</span>
+    </div>
     <div mat-menu-item disabled>GPS coordinates recorded: {{ elems }}</div>
     <button mat-menu-item (click)="trackRecorder.storeTrack()">
       <mat-icon color="accent" class="material-symbols-outlined">download</mat-icon>
@@ -36,12 +41,24 @@ export class RecordControlComponent implements OnInit {
   @ViewChild('fileInput')
   fileInput?: ElementRef<HTMLInputElement>;
 
+  @ViewChild('toggleLocationUpdate', { static: true })
+  toggleLocationUpdate?: MatSlideToggle;
+
   constructor(
-    public trackRecorder: TrackRecorderService
+    public trackRecorder: TrackRecorderService,
+    public parcoursService: ParcoursService,
   ) {}
 
   ngOnInit(): void {
     this.trackRecorder.track.subscribe(track => this.elems = track.length);
+    this.parcoursService.geolocationPaused.subscribe(paused => {
+      if (this.toggleLocationUpdate) {
+        this.toggleLocationUpdate.checked = !paused;
+      }
+    });
+    this.toggleLocationUpdate?.change.subscribe(checked => {
+      this.parcoursService.geolocationPaused.next(!checked.checked);
+    });
   }
 
   handleFile(){
