@@ -70,11 +70,13 @@
     <mat-icon color="accent" class="material-symbols-outlined">imagesmode</mat-icon>
     <em>Select Stack</em>
   </div>
-  <div mat-menu-item>
-    <mat-slide-toggle #toggleAddMarkers>Add markers</mat-slide-toggle>
+  <div mat-menu-item (click)="onMenuSlideToggle(toggleAddMarkers); $event.stopPropagation()">
+    <mat-slide-toggle #toggleAddMarkers (click)="$event.stopPropagation()"></mat-slide-toggle>
+    <span>Add markers</span>
   </div>
-  <div mat-menu-item>
-    <mat-slide-toggle #toggleDebugView>Debug</mat-slide-toggle>
+  <div mat-menu-item (click)="onMenuSlideToggle(toggleDebugView); $event.stopPropagation()">
+    <mat-slide-toggle #toggleDebugView (click)="$event.stopPropagation()"></mat-slide-toggle>
+    <span>Debug</span>
   </div>
 </mat-menu>
 

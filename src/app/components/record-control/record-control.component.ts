@@ -1,12 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ParcoursService, TrackRecorderService } from 'src/app/services';
+import { onMenuSlideToggle } from 'src/app/shared';
 
 @Component({
   selector: 'app-record-control',
   template: `
-    <div mat-menu-item>
-      <mat-slide-toggle #toggleLocationUpdate></mat-slide-toggle>
+    <div mat-menu-item (click)="onMenuSlideToggle(toggleLocationUpdate); $event.stopPropagation()">
+      <mat-slide-toggle #toggleLocationUpdate (click)="$event.stopPropagation()"></mat-slide-toggle>
       <span>Update Location</span>
     </div>
     <div mat-menu-item disabled>GPS coordinates recorded: {{ elems }}</div>
@@ -78,5 +79,9 @@ export class RecordControlComponent implements OnInit {
 
   stopPlayback() {
     this.trackRecorder.stopPlayback();
+  }
+
+  onMenuSlideToggle(slideToggle: MatSlideToggle) {
+    onMenuSlideToggle(slideToggle);
   }
 }

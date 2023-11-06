@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { KeycloakProfile } from 'keycloak-js';
-import { Deployment } from './shared';
+import { onMenuSlideToggle } from './shared';
 import { DataService, NoteService, OidcService, ParcoursService, StateService, TrackRecorderService } from './services';
 import pkgJson from '../../package.json';
 import { AudioService } from './services/audio.service';
@@ -77,6 +77,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.dialog.open(this.toolsDialog!, {
       maxWidth: '90vw'
     });
+  }
+
+  onMenuSlideToggle(slideToggle: MatSlideToggle) {
+    onMenuSlideToggle(slideToggle);
   }
 
 }

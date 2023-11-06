@@ -19,3 +19,6 @@ export * from './stream-state.type';
 
 // animations
 export * from './animations';
+
+// utils
+export * from './utils';
