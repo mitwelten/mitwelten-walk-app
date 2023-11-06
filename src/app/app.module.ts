@@ -12,6 +12,7 @@ import { GeolocationService, POSITION_OPTIONS } from '@ng-web-apis/geolocation';
 import { GeolocationMockService } from './testing/geolocation-mock.service';
 import { SentryService } from './services/sentry.service';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { NgxEchartsModule } from 'ngx-echarts';
 import { MAP_STYLE_CONFIG } from './shared/configuration';
 import { RecordControlComponent } from './components/record-control/record-control.component';
 import { LoginComponent } from './components/login/login.component';
@@ -29,6 +30,7 @@ import { CarouselComponent } from './components/carousel/carousel.component';
 import { SingleImageComponent } from './components/single-image/single-image.component';
 import { InfoTextComponent } from './components/info-text/info-text.component';
 import { AudioTextComponent } from './components/audio-text/audio-text.component';
+import { DataHotspotComponent } from './components/data-hotspot/data-hotspot.component';
 import { InstructionsComponent } from './components/instructions.component';
 import { ToolsComponent } from './components/tools.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
@@ -50,6 +52,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import '@angular/common/locales/global/de';
 
@@ -89,6 +92,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     SingleImageComponent,
     InfoTextComponent,
     AudioTextComponent,
+    DataHotspotComponent,
     InstructionsComponent,
     CopyrightComponent,
     ToolsComponent,
@@ -106,6 +110,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts')
+    }),
     MomentDateModule,
     MatButtonModule,
     MatMenuModule,
@@ -122,6 +129,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatProgressBarModule,
     MatSnackBarModule,
     MatSliderModule,
+    MatButtonToggleModule,
   ],
   providers: [
     // {

@@ -29,7 +29,7 @@
       </button>
     </li>
     <li *ngIf="isLoggedIn" class="channel-option">
-      <h3><mat-icon class="material-symbols-outlined">lock</mat-icon>Map View</h3>
+      <h3><mat-icon class="material-symbols-outlined">lock</mat-icon>Kartenansicht</h3>
       <p>Anzeige des Parcours auf der Karte, inkl. GPS-Track</p>
       <button (click)="select(4)" mat-raised-button color="accent">
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
@@ -39,7 +39,7 @@
       <p>für mehr bzw. privilegierte Inhalte:</p>
       <button mat-raised-button color="accent" (click)="authService.login()">
         <mat-icon class="material-symbols-outlined">login</mat-icon>
-        <span>Sign in</span>
+        <span>Anmelden</span>
       </button>
     </li>
   </ul>

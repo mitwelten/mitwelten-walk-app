@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { AudioPlayerService } from 'src/app/services/audio-player.service';
 import { HotspotAudiotext, HotspotService } from 'src/app/services/hotspot.service';

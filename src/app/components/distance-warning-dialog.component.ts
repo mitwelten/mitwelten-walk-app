@@ -13,7 +13,7 @@ import { Component } from '@angular/core';
       </p>
     </div>
     <div mat-dialog-actions>
-      <button mat-button mat-dialog-close>Close</button>
+      <button mat-button mat-dialog-close>Schliessen</button>
     </div>
   `,
 })
