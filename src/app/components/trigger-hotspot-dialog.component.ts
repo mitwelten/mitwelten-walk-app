@@ -11,8 +11,8 @@ import { MatDialogRef } from '@angular/material/dialog';
         <li><button mat-stroked-button color="primary" (click)="select(2)">Bildserie</button></li>
         <li><button mat-stroked-button color="primary" (click)="select(3)">Infotext</button></li>
         <li><button mat-stroked-button color="primary" (click)="select(4)">Audiotext</button></li>
-        <li><button mat-stroked-button color="primary" (click)="select(5)">Data</button></li>
-        <li><button mat-stroked-button color="primary" (click)="select(6)">SWILD</button></li>
+        <li><button mat-stroked-button color="primary" (click)="select(5)">SWILD</button></li>
+        <li><button mat-stroked-button color="primary" (click)="select(6)">Data</button></li>
         <li><button mat-stroked-button color="accent" (click)="select(0)">close hotspot</button></li>
       </ul>
     </div>

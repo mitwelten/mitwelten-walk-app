@@ -52,6 +52,15 @@ export interface HotspotData extends Hotspot {
 }
 export type HotspotType = HotspotImageSingle|HotspotImageSequence|HotspotInfotext|HotspotAudiotext|HotspotData;
 
+export interface HotspotDataPayload {
+  datapoints: Array<number>;
+  summaryOptions: Array<{
+    label: string;
+    value: number;
+    checked: boolean;
+  }>
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -150,6 +159,17 @@ export class HotspotService {
               location: { lat: 1, lon: 4},
               portraitUrl: '/assets/audiotext-portrait-ai.jpg',
               audioUrl: '/assets/ice-crackling-loop-02.m4a',
+            })
+            break;
+          case 6:
+            this.trigger.next({
+              location: { lon: 0, lat: 0 },
+              subject: 'test datahotspot',
+              id: 123,
+              type: 6,
+              endpoint: 'pax?tag=136&tag=137',
+              title: 'Anzahl Besucher:innen im Vergleich',
+              text: 'Vergleiche den Tagesdurchschnitt der Anzahl Besucher:innen über drei Zeiträume am Erlebnisweiher und an der Trockenwiese.'
             })
             break;
 

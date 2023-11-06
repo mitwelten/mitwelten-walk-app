@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Deployment, Note, ImageStack, SectionText, StackImage, WalkPath } from '../shared';
-import { HotspotType } from './hotspot.service';
+import { HotspotDataPayload, HotspotType } from './hotspot.service';
 
 @Injectable({
   providedIn: 'root'
@@ -106,5 +106,9 @@ export class DataService {
 
   public postError(payload: unknown) {
     this.http.post(`${this.apiUrl}/sentry`, { payload: payload }).subscribe();
+  }
+
+  public queryDataHotspots(endpoint: string, summaryOption?: number) {
+    return this.http.get<HotspotDataPayload>(`${this.apiUrl}/walk/data-hotspots/${endpoint}${summaryOption ? `&summary=${summaryOption}` : ''}`);
   }
 }

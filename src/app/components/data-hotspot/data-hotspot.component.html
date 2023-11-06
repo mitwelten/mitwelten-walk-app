@@ -1,0 +1,13 @@
+<h2 *ngIf="hotspot">{{ hotspot.title }}</h2>
+
+<div *ngIf="options" echarts [ngStyle]="{height: chartAutoHeight ? 'auto':'400px'}"
+  (chartInit)="onChartInit($event)" [options]="options" [merge]="updateOptions"></div>
+
+<div class="content">
+  <mat-button-toggle-group *ngIf="hotspotPayload" name="summaryOption" [formControl]="summarySelection">
+    <mat-button-toggle *ngFor="let option of hotspotPayload.summaryOptions;"
+      [value]="option.value">{{option.label}}</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <p *ngIf="hotspot">{{ hotspot.text }}</p>
+</div>
