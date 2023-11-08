@@ -52,14 +52,40 @@ export interface HotspotData extends Hotspot {
 }
 export type HotspotType = HotspotImageSingle|HotspotImageSequence|HotspotInfotext|HotspotAudiotext|HotspotData;
 
-export interface HotspotDataPayload {
-  datapoints: Array<number>;
+export interface HotspotBarchartData {
+  tag: string
+  pax_avg: number
+  pax_sdev: number
+  pax_min: number
+  pax_max: number
+}
+
+export interface HotspotHeatmapData {
+  class: string;
+  month: number;
+  count: number;
+}
+
+export interface HotspotDataPayloadBase {
+  chart: 'bar'|'heatmap';
   summaryOptions: Array<{
     label: string;
     value: number;
     checked: boolean;
-  }>
+}>
 }
+
+export interface HotspotDataBarPayload extends HotspotDataPayloadBase {
+  chart: 'bar';
+  datapoints: Array<HotspotBarchartData>;
+}
+
+export interface HotspotDataHeatmapPayload extends HotspotDataPayloadBase {
+  chart: 'heatmap';
+  datapoints: Array<HotspotHeatmapData>;
+}
+
+export type HotspotDataPayload = HotspotDataBarPayload | HotspotDataHeatmapPayload;
 
 @Injectable({
   providedIn: 'root'
@@ -164,14 +190,25 @@ export class HotspotService {
           case 6:
             this.trigger.next({
               location: { lon: 0, lat: 0 },
-              subject: 'test datahotspot',
+              subject: 'test datahotspot heatmap',
+              id: 124,
+              type: 6,
+              endpoint: 'pollinators?tag=136',
+              title: 'Jahreszyklus der Morphospezies',
+              text: 'Hier ist zwischen Standorten zu vergleichen wie sich das Vorkommen jeder Morphospezies über die Monate verteilt.'
+            })
+            break;
+          /* case 6:
+            this.trigger.next({
+              location: { lon: 0, lat: 0 },
+              subject: 'test datahotspot barchart',
               id: 123,
               type: 6,
               endpoint: 'pax?tag=136&tag=137',
               title: 'Anzahl Besucher:innen im Vergleich',
               text: 'Vergleiche den Tagesdurchschnitt der Anzahl Besucher:innen über drei Zeiträume am Erlebnisweiher und an der Trockenwiese.'
             })
-            break;
+            break; */
 
             default:
             this.trigger.next(false);
