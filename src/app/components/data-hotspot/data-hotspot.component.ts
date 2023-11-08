@@ -1,6 +1,6 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { EChartsOption } from 'echarts';
+import { EChartsOption, DefaultLabelFormatterCallbackParams } from 'echarts';
 import { filter } from 'rxjs';
 import { DataService } from 'src/app/services';
 import { HotspotData, HotspotDataPayload, HotspotService } from 'src/app/services/hotspot.service';
@@ -40,24 +40,23 @@ export class DataHotspotComponent {
     this.options = {
       grid: {
         top: 20,
-        bottom: 60,
+        bottom: 100,
       },
       color: ['#ff4081cc'],
       xAxis: {
         type: 'category',
-        data: [],
         axisLabel: {
           interval: 0,
           formatter: (value: string) => {
             let label = ''; // Returned string
-            const maxLength = 5; // Maximum number of characters per line
+            const maxLength = 10; // Maximum number of characters per line
             const words = value.split(' '); // Split the label into words
             let lineLength = 0; // Current line length
-            for (var i = 0; i < words.length; i++) {
-              var word = words[i];
+            for (let i = 0; i < words.length; i++) {
+              const word = words[i];
               // If adding the new word to the current line would be too long,
               // then put the word on the next line
-              if (lineLength + word.length > maxLength) {
+              if (lineLength + word.length > maxLength && i > 0) {
                 label += '\n';
                 lineLength = 0;
               }
@@ -69,6 +68,7 @@ export class DataHotspotComponent {
               label += word;
               lineLength += word.length;
             }
+            label = label[0].toUpperCase() + label.slice(1);
             return label;
           }
         }
@@ -82,8 +82,7 @@ export class DataHotspotComponent {
           type: 'bar',
           label: {
             show: true,
-            position: 'top',
-            fontSize: 16,
+            color: '#000',
           },
         }
       ]
@@ -111,16 +110,104 @@ export class DataHotspotComponent {
   private queryDataHotspots(summaryOption?: number) {
     if (this.hotspot !== undefined) {;
       this.dataService.queryDataHotspots(this.hotspot.endpoint, summaryOption).subscribe(data => {
-        if (this.hotspotPayload === undefined) this.hotspotPayload = data;
-        else this.hotspotPayload.datapoints = data.datapoints;
-        this.updateOptions = {
-          xAxis: {
-            data: data.datapoints.map((d: any) => d.tag)
-          },
-          series: [
-            { data: data.datapoints.map((d: any) => d.pax_avg) }
-          ]
-        };
+        if (data.chart === 'bar') {
+          if (this.hotspotPayload === undefined) this.hotspotPayload = data;
+          else this.hotspotPayload.datapoints = data.datapoints;
+          this.updateOptions = {
+            grid: {
+              bottom: 60,
+            },
+            xAxis: {
+              data: data.datapoints.map(d => d.tag)
+            },
+            yAxis: {
+              type: 'value'
+            },
+            series: [
+              {
+                type: 'bar',
+                data: data.datapoints.map(d => d.pax_avg),
+                label: {
+                  position: 'top',
+                  fontSize: 16,
+                }
+              }
+            ]
+          };
+        } else if (data.chart === 'heatmap') {
+          // const max = Math.max(...data.datapoints.map(d => d.count));
+          const classes = [...(new Set(data.datapoints.map(d => d.class)))];
+          const months = [...(new Set(data.datapoints.map(d => d.month)))];
+          const minMonth = Math.min(...months);
+          const maxMonth = Math.max(...months);
+
+          // get all records for each class
+          const records = [...(new Set(data.datapoints.map(d => d.class)))].map(c => data.datapoints.filter(d => d.class === c));
+
+          // fill in the missing months
+          records.forEach(r => {
+            const months = r.map(d => d.month);
+            for (let i = minMonth; i <= maxMonth; i++) {
+              if (!months.includes(i)) r.push({ class: r[0].class, month: i, count: 0. });
+            }
+            r.sort((a, b) => a.month - b.month);
+          });
+
+          // normalise the counts for each class
+          records.forEach(r => {
+            //const max = Math.max(...r.map(d => d.count));
+            const sum = r.reduce((a, b) => a + b.count, 0);
+            r.forEach(d => d.count = d.count / sum);
+          });
+
+          // reduce the array of arrays to a single array
+          data.datapoints = records.reduce((a, b) => a.concat(b), []);
+
+          // TODO: replace the whole hotspotPayload with the new data also if the hotspot id changes!
+          if (this.hotspotPayload === undefined) this.hotspotPayload = data;
+          else this.hotspotPayload.datapoints = data.datapoints;
+          this.updateOptions = {
+            grid: {
+              bottom: 100,
+            },
+            xAxis: {
+              type: 'category',
+              axisLabel: {
+                rotate: 90,
+                verticalAlign: 'middle',
+                lineHeight: 0,
+              }
+            },
+            yAxis: {
+              type: 'category',
+              name: 'Monat',
+              nameLocation: 'middle',
+              nameRotate: 90,
+            },
+            visualMap: {
+              min: 0,
+              max: 1,
+              calculable: true,
+              orient: 'horizontal',
+              show: false,
+              left: 'center',
+              inRange: {
+                color: ['#ffffffaa', '#ff4081aa'],
+              }
+            },
+            series: [
+              {
+                type: 'heatmap',
+                data: data.datapoints.map(d => [d.class, d.month, d.count]),
+                label: {
+                  color: '#000',
+                  show: true,
+                  formatter: (p: DefaultLabelFormatterCallbackParams) => (Array.isArray(p.data) ? (100 * +p.data[2]).toFixed(1) : 0) + '%'
+                }
+              }
+            ]
+          };
+        }
       });
     }
   }
