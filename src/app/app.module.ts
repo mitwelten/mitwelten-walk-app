@@ -53,6 +53,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import '@angular/common/locales/global/de';
 
@@ -130,6 +131,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatSnackBarModule,
     MatSliderModule,
     MatButtonToggleModule,
+    MatExpansionModule,
   ],
   providers: [
     // {

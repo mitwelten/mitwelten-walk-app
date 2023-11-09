@@ -1,15 +1,21 @@
 <img [src]="hotspot?.portraitUrl" alt="Audio Text Portrait" id="portrait">
 
+<div class="info">
+  <span *ngIf="hotspot?.speakerName" class="speaker">{{hotspot?.speakerName}}</span>
+  <span *ngIf="hotspot?.speakerFunction" class="function">{{hotspot?.speakerFunction}}</span>
+  <span *ngIf="hotspot?.contentSubject" class="subject">{{hotspot?.contentSubject}}</span>
+</div>
+
 <mat-toolbar class="footer">
 
   <mat-toolbar-row class="actions">
     <button mat-icon-button (click)="rewind()">
       <mat-icon class="material-symbols-outlined">skip_previous</mat-icon>
     </button>
-    <button mat-icon-button (click)="play()" [disabled]="state?.error" *ngIf="!state?.playing">
+    <button mat-icon-button (click)="play()" color="accent" [disabled]="state?.error" *ngIf="!state?.playing">
       <mat-icon class="material-symbols-outlined">play_arrow</mat-icon>
     </button>
-    <button mat-icon-button (click)="pause()" *ngIf="state?.playing">
+    <button mat-icon-button (click)="pause()" color="accent" *ngIf="state?.playing">
       <mat-icon class="material-symbols-outlined">pause</mat-icon>
     </button>
     <button  mat-icon-button (click)="skip(-1)">

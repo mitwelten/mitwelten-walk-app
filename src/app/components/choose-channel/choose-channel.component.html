@@ -9,21 +9,51 @@
   <ul class="mat-body">
     <li class="channel-option" >
       <h3>Guided Tour</h3>
-      <p>In diesem Erlebnismodus werden Sie beim Spaziergang durch die Reinacher Heide auf verborgene Schätze und Besonderheiten des Naherholungs- und Naturschutzgebietes aufmerksam gemacht. Mittels Fotos, Infotexten, Datenvisualisierungen und Tondokumenten, werden Ihnen Informationen zur Tier- und Pflanzenwelt sowie zur Entwicklung und Nutzungsproblematik der Reinacher Heide angeboten. Durch einen Klingelton werden Sie jeweils auf einen neuen Inhalt aufmerksam gemacht, der einen Bezug zu Ihrem Standort herstellt.</p>
+      <p>Kurzer Beschreibungstext</p>
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Details
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>In diesem Erlebnismodus werden Sie beim Spaziergang durch die Reinacher Heide auf verborgene Schätze und Besonderheiten des Naherholungs- und Naturschutzgebietes aufmerksam gemacht. Mittels Fotos, Infotexten, Datenvisualisierungen und Tondokumenten, werden Ihnen Informationen zur Tier- und Pflanzenwelt sowie zur Entwicklung und Nutzungsproblematik der Reinacher Heide angeboten. Durch einen Klingelton werden Sie jeweils auf einen neuen Inhalt aufmerksam gemacht, der einen Bezug zu Ihrem Standort herstellt.</p>
+        </mat-expansion-panel>
+      </mat-accordion>
       <button (click)="select(1)" mat-raised-button color="accent">
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
       </button>
     </li>
-    <li class="channel-option">
+    <li *ngIf="isLoggedIn"  class="channel-option">
       <h3>Stop Motion Movie</h3>
-      <p>In diesem Erlebnismodus wird Ihnen eine durchgehende Animation von Bildern der ansässigen Tier- und Pflanzenwelt sowie historischer Bilder angeboten. Sie nehmen Bezug zu Ihrem jeweiligen Standort und werden als Bildstrecke durch Überblendungen nahtlos aneinander gereiht. Sie können die Abspielgeschwindigkeit dabei durch Ihre Gehgeschwindigkeit regulieren.</p>
+      <p>Kurzer Beschreibungstext</p>
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Details
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>In diesem Erlebnismodus wird Ihnen eine durchgehende Animation von Bildern der ansässigen Tier- und Pflanzenwelt sowie historischer Bilder angeboten. Sie nehmen Bezug zu Ihrem jeweiligen Standort und werden als Bildstrecke durch Überblendungen nahtlos aneinander gereiht. Sie können die Abspielgeschwindigkeit dabei durch Ihre Gehgeschwindigkeit regulieren.</p>
+        </mat-expansion-panel>
+      </mat-accordion>
       <button (click)="select(2)" mat-raised-button color="accent">
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
       </button>
     </li>
-    <li class="channel-option">
+    <li *ngIf="isLoggedIn"  class="channel-option">
       <h3>Besucher*innenfotos</h3>
-      <p>In diesem Erlebnismodus werden Fotos von Besucher*innen der Reinacher Heide präsentiert, die mittels der Meldeplattform www.wildenachbarn.ch hochgeladen wurden. Sie können auf diese Art und Weise selber Bilder der Reinacher Heide hochladen, die nach einem Selektionsverfahren auf der WalkApp veröffentlicht werden. Bitte vergessen Sie dabei nicht, dass die Wege in der Reinacher Heide nicht verlassen werden dürfen.</p>
+      <p>Kurzer Beschreibungstext</p>
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Details
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>In diesem Erlebnismodus werden Fotos von Besucher*innen der Reinacher Heide präsentiert, die mittels der Meldeplattform www.wildenachbarn.ch hochgeladen wurden. Sie können auf diese Art und Weise selber Bilder der Reinacher Heide hochladen, die nach einem Selektionsverfahren auf der WalkApp veröffentlicht werden. Bitte vergessen Sie dabei nicht, dass die Wege in der Reinacher Heide nicht verlassen werden dürfen.</p>
+        </mat-expansion-panel>
+      </mat-accordion>
       <button (click)="select(3)" mat-raised-button color="accent">
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
       </button>

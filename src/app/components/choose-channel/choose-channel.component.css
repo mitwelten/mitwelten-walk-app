@@ -17,3 +17,19 @@ li.channel-option h3 mat-icon {
   margin-bottom: -5px;
   margin-left: -4px;
 }
+
+.mat-expansion-panel {
+  background-color: #ffffff7d;
+  margin: 0 0 16px 0;
+}
+
+.mat-accordion > .mat-expansion-panel-spacing:last-child,
+.mat-accordion > *:last-child:not(.mat-expansion-panel) .mat-expansion-panel-spacing {
+  margin-bottom: 16px;
+}
+
+@media (hover: none) {
+  .mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) .mat-expansion-panel-header:hover {
+    background-color: #ffffff7d;
+  }
+}
