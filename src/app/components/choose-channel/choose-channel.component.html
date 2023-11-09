@@ -14,14 +14,14 @@
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
       </button>
     </li>
-    <li class="channel-option">
+    <li *ngIf="isLoggedIn"  class="channel-option">
       <h3>Stop Motion Movie</h3>
       <p>In diesem Erlebnismodus wird Ihnen eine durchgehende Animation von Bildern der ansässigen Tier- und Pflanzenwelt sowie historischer Bilder angeboten. Sie nehmen Bezug zu Ihrem jeweiligen Standort und werden als Bildstrecke durch Überblendungen nahtlos aneinander gereiht. Sie können die Abspielgeschwindigkeit dabei durch Ihre Gehgeschwindigkeit regulieren.</p>
       <button (click)="select(2)" mat-raised-button color="accent">
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
       </button>
     </li>
-    <li class="channel-option">
+    <li *ngIf="isLoggedIn"  class="channel-option">
       <h3>Besucher*innenfotos</h3>
       <p>In diesem Erlebnismodus werden Fotos von Besucher*innen der Reinacher Heide präsentiert, die mittels der Meldeplattform www.wildenachbarn.ch hochgeladen wurden. Sie können auf diese Art und Weise selber Bilder der Reinacher Heide hochladen, die nach einem Selektionsverfahren auf der WalkApp veröffentlicht werden. Bitte vergessen Sie dabei nicht, dass die Wege in der Reinacher Heide nicht verlassen werden dürfen.</p>
       <button (click)="select(3)" mat-raised-button color="accent">
