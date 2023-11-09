@@ -17,8 +17,8 @@ export class ChooseChannelComponent implements OnInit {
   pathMap = [
     '',
     'walk',
-    'walk',
-    'walk',
+    'walk', // TODO: change to 'stopmotion' when ready (add to routes)
+    'walk', // TODO: change to 'community' when ready (add to routes)
     'map',
   ]
 
