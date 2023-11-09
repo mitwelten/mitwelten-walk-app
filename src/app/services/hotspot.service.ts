@@ -39,6 +39,9 @@ export interface HotspotAudiotext extends Hotspot {
   type: 4;
   portraitUrl: string;
   audioUrl: string;
+  speakerName?: string;
+  speakerFunction?: string;
+  contentSubject?: string;
 }
 export interface HotspotCommunity extends Hotspot {
   type: 5;
@@ -185,6 +188,9 @@ export class HotspotService {
               location: { lat: 1, lon: 4},
               portraitUrl: '/assets/audiotext-portrait-ai.jpg',
               audioUrl: '/assets/ice-crackling-loop-02.m4a',
+              speakerName: 'Dr. Anna Ionescu',
+              speakerFunction: 'Leiterin Forschung',
+              contentSubject: 'Untersuchung der Auswirkungen von Klimawandel auf Biodiversität',
             })
             break;
           case 6:

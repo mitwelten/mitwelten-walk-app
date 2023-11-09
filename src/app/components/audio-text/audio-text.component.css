@@ -10,6 +10,7 @@
   align-items: center;
   justify-content: center;
   background-color: #fff;
+  flex-direction: column;
 }
 
 #portrait {
@@ -21,7 +22,7 @@
   object-fit: cover;
   border-radius: 50%;
   border: 3px solid #555;
-  margin-bottom: 20vh;
+
 }
 
 .footer {
@@ -43,4 +44,53 @@
   width: 100%;
   margin-left: 20px;
   margin-right: 20px;
+}
+
+.info {
+  flex: 0 0 auto;
+  margin-bottom: 20vh;
+  margin-top: 17px;
+  text-align: center;
+  margin-bottom: 20vh;
+  max-width: calc(100% - 32px);
+}
+
+.speaker {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.function {
+  font-size: 1.2rem;
+  color: #777;
+}
+.function::before {
+  content: "(";
+  margin-left: 10px;
+}
+.function::after {
+  content: ")";
+}
+
+.subject {
+  display: block;
+  max-width: 100%;
+  padding: 0 16px;
+  margin-top: 16px;
+}
+
+@media (orientation: landscape) {
+  :host {
+    flex-direction: row;
+    padding-bottom: 20vh;
+  }
+
+  #portrait {
+    margin-right: 20px;
+  }
+
+  .info {
+    margin-top: 0;
+    margin-bottom: 0;
+    max-width: 40%;
+  }
 }
