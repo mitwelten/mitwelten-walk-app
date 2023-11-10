@@ -8,7 +8,7 @@
   grid-template-rows: min-content auto;
 }
 
-p {
+div.content {
   overflow-y: scroll;
   line-height: 24px;
   font-size: 16px;

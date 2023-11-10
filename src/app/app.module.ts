@@ -35,6 +35,7 @@ import { InstructionsComponent } from './components/instructions.component';
 import { ToolsComponent } from './components/tools.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
 import { MoreTextComponent } from './components/more-text.component';
+import { ParagraphPipe } from './shared/paragraph.pipe';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
@@ -99,6 +100,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     CopyrightComponent,
     ToolsComponent,
     MoreTextComponent,
+    ParagraphPipe,
   ],
   imports: [
     BrowserModule,
