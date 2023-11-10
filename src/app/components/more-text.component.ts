@@ -24,7 +24,8 @@ import { Component, Input } from '@angular/core';
       overflow: hidden;
     }
     .content.expanded {
-      max-height: 500px;
+      max-height: 1000px;
+      overflow-y: scroll;
       transition: max-height 0.25s ease-in;
     }
     .material-symbols-outlined {
