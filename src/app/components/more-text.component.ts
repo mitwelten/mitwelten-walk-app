@@ -28,7 +28,8 @@ import { Component, Input } from '@angular/core';
       transition: max-height 0.25s ease-in;
     }
     .material-symbols-outlined {
-      margin-left: -6px;
+      margin-left: -4px;
+      font-size: 18px;
     }
     `
   ]
