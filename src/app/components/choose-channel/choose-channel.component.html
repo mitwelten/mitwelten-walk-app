@@ -19,6 +19,16 @@
         <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
       </button>
     </li>
+    <li *ngIf="isLoggedIn" class="channel-option" >
+      <h3>Perspektiven</h3>
+      <p>Hören Sie sich Interviewauszüge von Expert*innen zu kritischen Themen an.</p>
+      <app-more-text>
+        <p>In diesem Erlebnismodus werden Ihnen Tondokumente angeboten, die sie abspielen, stoppen und vor oder zurückspulen können. Es handelt sich um Auszüge von Interviews die mit Expert*innen geführt wurden: Wissenschaftler*innen, Bewirtschafter*innen und Betreiber*innen. Die Aussagen nehmen weitestgehend Bezug zu Ihrem jeweiligen Standort. Bitte gehen Sie langsam oder pausieren Sie, um die Interviews vollständig anhören zu können.</p>
+      </app-more-text>
+      <button (click)="select(5)" mat-raised-button color="accent">
+        <mat-icon class="material-symbols-outlined">footprint</mat-icon>los!
+      </button>
+    </li>
     <li *ngIf="isLoggedIn"  class="channel-option">
       <h3>Stop Motion Movie</h3>
       <p>Geniessen Sie eine Bildanimation.</p>
