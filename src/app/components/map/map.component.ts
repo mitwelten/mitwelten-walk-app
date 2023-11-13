@@ -109,6 +109,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this.deployments = deployments;
           this.drawDepoyments(this.map!);
         });
+
+        this.drawHotspots(this.map);
       };
     });
 
@@ -141,6 +143,103 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       const ll = this.tracker?.getLngLat();
       if (ll !== undefined) {
         this.parcoursService.overrideLocation([ll.lng, ll.lat]);
+      }
+    });
+  }
+
+  private drawHotspots(map: Map) {
+    this.dataService.getWalkHotspots(1).subscribe(hotspots => {
+      const radius = 20; // hotspot radius in meters
+      const metersToPixelsAtMaxZoom = (meters:number, latitude:number) => meters / 0.075 / Math.cos(latitude * Math.PI / 180);
+      const features = hotspots.map(h => {
+        return <Feature>{
+          type: 'Feature',
+            properties: {
+              description: h.subject,
+              icon: 'music',
+              type: h.type,
+              // radius: metersToPixelsAtMaxZoom(20, 47.504038)
+            },
+            geometry: {
+              type: 'Point',
+              coordinates: [h.location.lon, h.location.lat]
+            }
+          }
+      });
+      const source = <GeoJSONSource>this.map?.getSource('hotspots');
+      if (source) {
+        source.setData({
+            type: 'FeatureCollection',
+            features: features
+        });
+      } else {
+        map.addSource('hotspots', {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: features
+          }
+        });
+        map.addLayer({
+          id: 'hotspot-boundaries',
+          type: 'circle',
+          source: 'hotspots',
+          paint: {
+            'circle-radius': [
+              // 'let', 'radius',
+              // [
+                'interpolate',
+                ['exponential', 2],
+                ['zoom'],
+                // TODO: use radius from feature, find a way of making the below expression work
+                0, 0, 20, metersToPixelsAtMaxZoom(radius, 47.504038)
+                // according to docs, the below should work, but it doesn't
+                // 0, 0, 20, ['var', 'radius']
+              // ]
+            ],
+            'circle-color': '#f88',
+            'circle-opacity': 0.2,
+            'circle-stroke-color': '#f00',
+            'circle-stroke-opacity': 0.5,
+            'circle-stroke-width': 1
+          }
+        });
+        map.addLayer({
+          id: 'hotspots',
+          type: 'symbol',
+          source: 'hotspots',
+          layout: {
+            'icon-image': 'dot_circle_black_12',
+            'icon-size': 1,
+            'icon-allow-overlap': true,
+            'icon-offset': [0, 0],
+            'icon-rotate': 0,
+            'icon-padding': 2,
+            'icon-optional': false,
+            'text-optional': false,
+            'text-field': '{description}',
+            'text-offset': [0.8, 0.1],
+            'text-anchor': 'left',
+            'text-font': ['Frutiger Neue Regular'],
+            'text-justify': 'left',
+            'text-size': 15,
+          },
+          paint: {
+            'icon-color': '#ff0000',
+            "icon-opacity": 0.8,
+            'text-color': ['match', ['get', 'type'],
+              1, '#ee8686', // 1 single image
+              2, '#eab093', // 2 image sequence
+              3, '#93c4f2', // 3 text
+              4, '#a8c17c', // 4 audio
+              5, '#f3e496', // 5 community
+              6, '#b4a5f8', // 6 data
+              '#000000'],
+            'text-halo-color': '#000',
+            'text-halo-width': 1,
+            'text-halo-blur': 1,
+          }
+        });
       }
     });
   }
