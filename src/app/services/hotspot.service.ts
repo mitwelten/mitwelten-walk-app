@@ -161,7 +161,13 @@ export class HotspotService {
   }
 
   loadHotspots() {
-    this.dataService.getWalkHotspots(1).subscribe(hotspots => this.hotspots = hotspots);
+    this.dataService.getWalkHotspots(1).pipe(
+      switchMap(hotspots => {
+        return this.dataService.getCommunityHotspots().pipe(
+          map(communityHotspots => {
+            this.hotspots = hotspots.concat(communityHotspots);
+        }))
+    })).subscribe();
   }
 
   chooseHotspot() {

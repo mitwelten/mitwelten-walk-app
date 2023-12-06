@@ -2,7 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Deployment, Note, ImageStack, SectionText, StackImage, WalkPath } from '../shared';
-import { HotspotDataPayload, HotspotType } from './hotspot.service';
+import { HotspotCommunity, HotspotDataPayload, HotspotType, WildeNachbarnProperties } from './hotspot.service';
+import { Feature, FeatureCollection, Point } from 'geojson';
 
 @Injectable({
   providedIn: 'root'
@@ -98,6 +99,32 @@ export class DataService {
           return h;
         })
       }))
+  }
+
+  public getCommunityHotspots(): Observable<HotspotCommunity[]> {
+    const url = `${this.apiUrl}/walk/community-hotspots`;
+    return this.http.get<FeatureCollection>(url).pipe(map(fc => {
+      return fc.features.map((f: Feature) => {
+        const p = (f.properties as WildeNachbarnProperties);
+        const hotspot: HotspotCommunity = {
+          type: 5,
+          location: {
+            lat: (f.geometry as Point).coordinates[1],
+            lon: (f.geometry as Point).coordinates[0]
+          },
+          subject: `WN: ${p.Art}`,
+          id: p.ID,
+          species: p.Art,
+          date: p.Datum,
+          time_range: p.Zeitraum,
+          post_url: p.Meldung,
+          portrait_url: p.Artenportraet,
+          weight: p.weight,
+          media: p.media
+        }
+        return hotspot;
+      })
+    }));
   }
 
   public getImageResource(url: string) {
