@@ -160,14 +160,24 @@ export class HotspotService {
     })
   }
 
-  loadHotspots() {
-    this.dataService.getWalkHotspots(1).pipe(
-      switchMap(hotspots => {
-        return this.dataService.getCommunityHotspots().pipe(
-          map(communityHotspots => {
-            this.hotspots = hotspots.concat(communityHotspots);
-        }))
-    })).subscribe();
+  loadHotspots(mode: 'walk'|'community'|'audiowalk' = 'walk') {
+    if (mode === 'walk') {
+      this.dataService.getWalkHotspots(1).subscribe(hotspots => {
+        this.hotspots = hotspots;
+      });
+      /* // if we want to load community hotspots as well
+      this.dataService.getWalkHotspots(1).pipe(
+        switchMap(hotspots => {
+          return this.dataService.getCommunityHotspots().pipe(
+            map(communityHotspots => {
+              this.hotspots = hotspots.concat(communityHotspots);
+          }))
+      })).subscribe(); */
+    } else if (mode === 'community') {
+      this.dataService.getCommunityHotspots().subscribe(hotspots => {
+        this.hotspots = hotspots;
+      });
+    }
   }
 
   chooseHotspot() {
