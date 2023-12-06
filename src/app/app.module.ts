@@ -31,6 +31,7 @@ import { SingleImageComponent } from './components/single-image/single-image.com
 import { InfoTextComponent } from './components/info-text/info-text.component';
 import { AudioTextComponent } from './components/audio-text/audio-text.component';
 import { DataHotspotComponent } from './components/data-hotspot/data-hotspot.component';
+import { CommunityHotspotComponent } from './components/community-hotspot/community-hotspot.component';
 import { InstructionsComponent } from './components/instructions.component';
 import { ToolsComponent } from './components/tools.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
@@ -96,6 +97,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     InfoTextComponent,
     AudioTextComponent,
     DataHotspotComponent,
+    CommunityHotspotComponent,
     InstructionsComponent,
     CopyrightComponent,
     ToolsComponent,

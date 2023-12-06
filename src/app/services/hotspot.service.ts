@@ -43,17 +43,36 @@ export interface HotspotAudiotext extends Hotspot {
   speakerFunction?: string;
   contentSubject?: string;
 }
+
+export interface WildeNachbarnProperties {
+  ID: number;
+  Art: string;
+  Datum: string;
+  Zeitraum: string;
+  Meldung: string;
+  Artenportraet?: string;
+  weight: number;
+  media: string[];
+}
 export interface HotspotCommunity extends Hotspot {
   type: 5;
-  dataUrl: string;
+  id: number;
+  species: string;
+  date: string;
+  time_range: string;
+  post_url: string;
+  portrait_url?: string;
+  weight: number;
+  media: string[];
 }
+
 export interface HotspotData extends Hotspot {
   type: 6;
   endpoint: string;
   title: string;
   text: string;
 }
-export type HotspotType = HotspotImageSingle|HotspotImageSequence|HotspotInfotext|HotspotAudiotext|HotspotData;
+export type HotspotType = HotspotImageSingle|HotspotImageSequence|HotspotInfotext|HotspotAudiotext|HotspotData|HotspotCommunity;
 
 export interface HotspotBarchartData {
   tag: string
@@ -191,6 +210,23 @@ export class HotspotService {
               speakerName: 'Dr. Anna Ionescu',
               speakerFunction: 'Leiterin Forschung',
               contentSubject: 'Untersuchung der Auswirkungen von Klimawandel auf Biodiversität',
+            })
+            break;
+          case 5:
+            this.trigger.next({
+              id: 87, type,
+              location: { lat: 1, lon: 4},
+              species: 'Biber',
+              date: '03.12.2016',
+              time_range: '14.00 - 14.59',
+              post_url: 'https://beidebasel.wildenachbarn.ch/beobachtung/50451',
+              portrait_url: 'https://beidebasel.wildenachbarn.ch/artportraet/biber',
+              weight: 1,
+              media: [
+                'https://beidebasel.wildenachbarn.ch/system/files/styles/beobachtungcolorbox_large/private/medien_zu_meldungen/7051/2018-09/DSCN1128%20-%20Arbeitskopie%202.jpg?itok=O5sTokIp',
+                'https://beidebasel.wildenachbarn.ch/system/files/styles/beobachtungcolorbox_large/private/medien_zu_meldungen/7051/2018-09/DSCN1133.jpg?itok=kBf3rZ93',
+                'https://beidebasel.wildenachbarn.ch/system/files/styles/beobachtungcolorbox_large/private/medien_zu_meldungen/7051/2018-09/DSCN1115.jpg?itok=dzRKC9tJ',
+              ]
             })
             break;
           case 6:
