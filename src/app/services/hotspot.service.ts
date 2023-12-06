@@ -2,7 +2,7 @@ import { Component, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TriggerHotspotDialogComponent } from '../components/trigger-hotspot-dialog.component';
 import { CoordinatePoint } from '../shared';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
 import { ParcoursService } from './parcours.service';
 import { DataService } from './data.service';
 import { AudioService } from './audio.service';
@@ -126,6 +126,7 @@ export class HotspotService {
 
   private hotspots: Array<HotspotType> = [];
   private currentHotspot: HotspotType | null = null;
+  private typeFilter = new BehaviorSubject<number[]>([1,2,3,4,6]);
 
   public trigger: BehaviorSubject<HotspotType|false>;
   public closeHotspots: BehaviorSubject<Array<HotspotType & { distance: number }>>;
@@ -138,9 +139,13 @@ export class HotspotService {
   ) {
     this.trigger = new BehaviorSubject<HotspotType|false>(false);
     this.closeHotspots = new BehaviorSubject<Array<HotspotType & { distance: number }>>([]);
-    this.parcoursService.location.subscribe(location => {
+
+    combineLatest([this.parcoursService.location, this.typeFilter])
+      .subscribe(([location, typeFilter]) => {
       if (this.hotspots.length > 0) {
-        const c = this.hotspots.map(hotspot => Object.assign(hotspot, { distance: distance(
+        const c = this.hotspots.filter(hotspot => {
+          return typeFilter.includes(hotspot.type);
+        }).map(hotspot => Object.assign(hotspot, { distance: distance(
           [hotspot.location.lon, hotspot.location.lat],
           [location.coords.longitude, location.coords.latitude],
           { units: 'meters' })
@@ -160,10 +165,15 @@ export class HotspotService {
     })
   }
 
+  set typeFilterValue(value: number[]) {
+    this.typeFilter.next(value);
+  }
+
   loadHotspots(mode: 'walk'|'community'|'audiowalk' = 'walk') {
     if (mode === 'walk') {
       this.dataService.getWalkHotspots(1).subscribe(hotspots => {
         this.hotspots = hotspots;
+        this.typeFilter.next([1, 2, 3, 4, 6]);
       });
       /* // if we want to load community hotspots as well
       this.dataService.getWalkHotspots(1).pipe(
@@ -176,6 +186,7 @@ export class HotspotService {
     } else if (mode === 'community') {
       this.dataService.getCommunityHotspots().subscribe(hotspots => {
         this.hotspots = hotspots;
+        this.typeFilter.next([5]);
       });
     }
   }
