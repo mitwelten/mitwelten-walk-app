@@ -2,7 +2,7 @@
   <div class="carousel-wrapper" #wrapper>
     <div *ngFor="let img of hotspot?.media; index as i" [id]="'img-'+i" class="carousel-image">
       <img [src]="img">
-      <app-copyright class="copyright" credits="Wilde Nachbarn"></app-copyright>
+      <app-copyright class="copyright" credits="Wilde Nachbarn (wildenachbarn.ch)"></app-copyright>
     </div>
   </div>
   <span class="material-symbols-outlined carousel-arrow left" (click)="swipeTransition('left')">
@@ -17,8 +17,7 @@
   <h2>{{ hotspot.species }}</h2>
   <div>
     <div class="infotable">
-      <strong>Datum:</strong><span>{{ hotspot.date }}</span>
-      <strong>Beobachuntszeitraum:</strong><span>{{ hotspot.time_range }}</span>
+      <strong>Beobachungsdatum:</strong><span>{{ hotspot.date }}, {{ hotspot.time_range }}</span>
     </div>
     <a mat-stroked-button color="primary" [href]="hotspot.post_url" target="_blank" rel="noopener noreferrer" style="margin-right: 16px;" >Meldung</a>
     <a mat-stroked-button color="primary" [href]="hotspot.portrait_url" target="_blank" rel="noopener noreferrer">Artenportrait</a>
