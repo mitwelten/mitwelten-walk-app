@@ -18,6 +18,10 @@ li.channel-option h3 mat-icon {
   margin-left: -4px;
 }
 
+a {
+  color: #ff4081;
+}
+
 .mat-expansion-panel {
   background-color: #ffffff7d;
   margin: 0 0 16px 0;
