@@ -183,6 +183,11 @@ export class HotspotService {
               this.hotspots = hotspots.concat(communityHotspots);
           }))
       })).subscribe(); */
+    } else if (mode === 'audiowalk') {
+      this.dataService.getWalkHotspots(2).subscribe(hotspots => {
+        this.hotspots = hotspots;
+        this.typeFilter.next([4]);
+      });
     } else if (mode === 'community') {
       this.dataService.getCommunityHotspots().subscribe(hotspots => {
         this.hotspots = hotspots;
