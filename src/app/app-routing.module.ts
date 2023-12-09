@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'info', component: InfoComponent },
   { path: 'map', component: MapComponent },
   { path: 'walk', component: WalkComponent },
+  { path: 'community', component: WalkComponent },
   { path: 'stack-fade', component: StackFadeComponent },
   { path: '', component: OverviewComponent, children: [] }
 ];

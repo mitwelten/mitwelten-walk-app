@@ -8,6 +8,8 @@
 
   <app-audio-text *ngIf="hotspot && hotspot?.type === 4" [@hotspotCrossfade]></app-audio-text>
 
+  <app-community-hotspot *ngIf="hotspot && hotspot?.type === 5" [@hotspotCrossfade]></app-community-hotspot>
+
   <app-data-hotspot *ngIf="hotspot && hotspot?.type === 6" [@hotspotCrossfade]></app-data-hotspot>
 
 </div>

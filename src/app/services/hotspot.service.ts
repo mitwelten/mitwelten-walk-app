@@ -2,7 +2,7 @@ import { Component, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TriggerHotspotDialogComponent } from '../components/trigger-hotspot-dialog.component';
 import { CoordinatePoint } from '../shared';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
 import { ParcoursService } from './parcours.service';
 import { DataService } from './data.service';
 import { AudioService } from './audio.service';
@@ -43,17 +43,36 @@ export interface HotspotAudiotext extends Hotspot {
   speakerFunction?: string;
   contentSubject?: string;
 }
+
+export interface WildeNachbarnProperties {
+  ID: number;
+  Art: string;
+  Datum: string;
+  Zeitraum: string;
+  Meldung: string;
+  Artenportraet?: string;
+  weight: number;
+  media: string[];
+}
 export interface HotspotCommunity extends Hotspot {
   type: 5;
-  dataUrl: string;
+  id: number;
+  species: string;
+  date: string;
+  time_range: string;
+  post_url: string;
+  portrait_url?: string;
+  weight: number;
+  media: string[];
 }
+
 export interface HotspotData extends Hotspot {
   type: 6;
   endpoint: string;
   title: string;
   text: string;
 }
-export type HotspotType = HotspotImageSingle|HotspotImageSequence|HotspotInfotext|HotspotAudiotext|HotspotData;
+export type HotspotType = HotspotImageSingle|HotspotImageSequence|HotspotInfotext|HotspotAudiotext|HotspotData|HotspotCommunity;
 
 export interface HotspotBarchartData {
   tag: string
@@ -107,6 +126,7 @@ export class HotspotService {
 
   private hotspots: Array<HotspotType> = [];
   private currentHotspot: HotspotType | null = null;
+  private typeFilter = new BehaviorSubject<number[]>([1,2,3,4,6]);
 
   public trigger: BehaviorSubject<HotspotType|false>;
   public closeHotspots: BehaviorSubject<Array<HotspotType & { distance: number }>>;
@@ -119,9 +139,13 @@ export class HotspotService {
   ) {
     this.trigger = new BehaviorSubject<HotspotType|false>(false);
     this.closeHotspots = new BehaviorSubject<Array<HotspotType & { distance: number }>>([]);
-    this.parcoursService.location.subscribe(location => {
+
+    combineLatest([this.parcoursService.location, this.typeFilter])
+      .subscribe(([location, typeFilter]) => {
       if (this.hotspots.length > 0) {
-        const c = this.hotspots.map(hotspot => Object.assign(hotspot, { distance: distance(
+        const c = this.hotspots.filter(hotspot => {
+          return typeFilter.includes(hotspot.type);
+        }).map(hotspot => Object.assign(hotspot, { distance: distance(
           [hotspot.location.lon, hotspot.location.lat],
           [location.coords.longitude, location.coords.latitude],
           { units: 'meters' })
@@ -141,8 +165,30 @@ export class HotspotService {
     })
   }
 
-  loadHotspots() {
-    this.dataService.getWalkHotspots(1).subscribe(hotspots => this.hotspots = hotspots);
+  set typeFilterValue(value: number[]) {
+    this.typeFilter.next(value);
+  }
+
+  loadHotspots(mode: 'walk'|'community'|'audiowalk' = 'walk') {
+    if (mode === 'walk') {
+      this.dataService.getWalkHotspots(1).subscribe(hotspots => {
+        this.hotspots = hotspots;
+        this.typeFilter.next([1, 2, 3, 4, 6]);
+      });
+      /* // if we want to load community hotspots as well
+      this.dataService.getWalkHotspots(1).pipe(
+        switchMap(hotspots => {
+          return this.dataService.getCommunityHotspots().pipe(
+            map(communityHotspots => {
+              this.hotspots = hotspots.concat(communityHotspots);
+          }))
+      })).subscribe(); */
+    } else if (mode === 'community') {
+      this.dataService.getCommunityHotspots().subscribe(hotspots => {
+        this.hotspots = hotspots;
+        this.typeFilter.next([5]);
+      });
+    }
   }
 
   chooseHotspot() {
@@ -191,6 +237,23 @@ export class HotspotService {
               speakerName: 'Dr. Anna Ionescu',
               speakerFunction: 'Leiterin Forschung',
               contentSubject: 'Untersuchung der Auswirkungen von Klimawandel auf Biodiversität',
+            })
+            break;
+          case 5:
+            this.trigger.next({
+              id: 87, type,
+              location: { lat: 1, lon: 4},
+              species: 'Biber',
+              date: '03.12.2016',
+              time_range: '14.00 - 14.59',
+              post_url: 'https://beidebasel.wildenachbarn.ch/beobachtung/50451',
+              portrait_url: 'https://beidebasel.wildenachbarn.ch/artportraet/biber',
+              weight: 1,
+              media: [
+                'https://beidebasel.wildenachbarn.ch/system/files/styles/beobachtungcolorbox_large/private/medien_zu_meldungen/7051/2018-09/DSCN1128%20-%20Arbeitskopie%202.jpg?itok=O5sTokIp',
+                'https://beidebasel.wildenachbarn.ch/system/files/styles/beobachtungcolorbox_large/private/medien_zu_meldungen/7051/2018-09/DSCN1133.jpg?itok=kBf3rZ93',
+                'https://beidebasel.wildenachbarn.ch/system/files/styles/beobachtungcolorbox_large/private/medien_zu_meldungen/7051/2018-09/DSCN1115.jpg?itok=dzRKC9tJ',
+              ]
             })
             break;
           case 6:

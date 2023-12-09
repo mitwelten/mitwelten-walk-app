@@ -6,7 +6,7 @@ import { Map, Marker, GeoJSONSource, Popup } from 'maplibre-gl';
 import { Feature, Position } from 'geojson';
 import { DataService, NoteService, OidcService, ParcoursService, TrackRecorderService } from 'src/app/services';
 import { CoordinatePoint, Deployment, MAP_STYLE_CONFIG } from 'src/app/shared';
-import { map, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { map as rxjsMap, of, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -39,7 +39,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       // draw track
       this.trackRecorder.track.pipe(
         takeUntil(this.destroy),
-        map(track => track.map(p => <Position>[p.coords.longitude, p.coords.latitude])))
+        rxjsMap(track => track.map(p => <Position>[p.coords.longitude, p.coords.latitude])))
       .subscribe(track => {
         const s = <GeoJSONSource>this.map?.getSource('route');
         if (s) s.setData({
@@ -148,7 +148,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   private drawHotspots(map: Map) {
-    this.dataService.getWalkHotspots(1).subscribe(hotspots => {
+    this.dataService.getWalkHotspots(1).pipe(
+      switchMap(hotspots => {
+        return this.dataService.getCommunityHotspots().pipe(
+          rxjsMap(communityHotspots => {
+            return hotspots.concat(communityHotspots);
+        }));
+    })).subscribe(hotspots => {
       const radius = 20; // hotspot radius in meters
       const metersToPixelsAtMaxZoom = (meters:number, latitude:number) => meters / 0.075 / Math.cos(latitude * Math.PI / 180);
       const features = hotspots.map(h => {

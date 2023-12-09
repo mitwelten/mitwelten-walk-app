@@ -18,7 +18,7 @@ export class ChooseChannelComponent implements OnInit {
     '',
     'walk',
     'walk', // TODO: change to 'stopmotion' when ready (add to routes)
-    'walk', // TODO: change to 'community' when ready (add to routes)
+    'community', // TODO: change to 'community' when ready (add to routes)
     'map',
     'walk', // TODO: change to 'audiowalk' when ready (add to routes)
   ]
