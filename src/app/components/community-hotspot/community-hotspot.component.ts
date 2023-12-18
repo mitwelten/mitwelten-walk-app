@@ -20,7 +20,6 @@ export class CommunityHotspotComponent {
     this.hotspotService.trigger
       .pipe(filter(h => h !== false && h.type === 5))
       .subscribe(hotspot => {
-        console.log(hotspot);
         if (hotspot && hotspot.type === 5) this.hotspot = hotspot;
       })
   }
