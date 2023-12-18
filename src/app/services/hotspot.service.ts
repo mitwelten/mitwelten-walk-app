@@ -47,6 +47,9 @@ export interface HotspotAudiotext extends Hotspot {
 export interface WildeNachbarnProperties {
   ID: number;
   Art: string;
+  Beobachtungsart: string;
+  Bemerkungen: string;
+  Copyright: string;
   Datum: string;
   Zeitraum: string;
   Meldung: string;
@@ -58,6 +61,9 @@ export interface HotspotCommunity extends Hotspot {
   type: 5;
   id: number;
   species: string;
+  observation_type: string;
+  comment: string;
+  copyright: string;
   date: string;
   time_range: string;
   post_url: string;
@@ -249,6 +255,9 @@ export class HotspotService {
               id: 87, type,
               location: { lat: 1, lon: 4},
               species: 'Biber',
+              observation_type: 'Frasspur',
+              comment: 'in der Nähe auch viele weitere neue Frassspuren',
+              copyright: 'Wilde Nachbarn (wildenachbarn.ch)',
               date: '03.12.2016',
               time_range: '14.00 - 14.59',
               post_url: 'https://beidebasel.wildenachbarn.ch/beobachtung/50451',

@@ -2,7 +2,7 @@
   <div class="carousel-wrapper" #wrapper>
     <div *ngFor="let img of hotspot?.media; index as i" [id]="'img-'+i" class="carousel-image">
       <img [src]="img">
-      <app-copyright class="copyright" credits="Wilde Nachbarn (wildenachbarn.ch)"></app-copyright>
+      <app-copyright class="copyright" [credits]="hotspot?.copyright"></app-copyright>
     </div>
   </div>
   <span class="material-symbols-outlined carousel-arrow left" (click)="swipeTransition('left')">
@@ -17,9 +17,15 @@
   <h2>{{ hotspot.species }}</h2>
   <div>
     <div class="infotable">
+      <strong>Beobachungsart:</strong><span>{{ hotspot.observation_type }}</span>
       <strong>Beobachungsdatum:</strong><span>{{ hotspot.date }}, {{ hotspot.time_range }}</span>
     </div>
-    <a mat-stroked-button color="primary" [href]="hotspot.post_url" target="_blank" rel="noopener noreferrer" style="margin-right: 16px;" >Meldung</a>
-    <a mat-stroked-button color="primary" [href]="hotspot.portrait_url" target="_blank" rel="noopener noreferrer">Artenportrait</a>
+    <a mat-stroked-button color="primary" [href]="hotspot.post_url" target="_blank" rel="noopener noreferrer" style="margin-right: 16px;" >
+      <mat-icon class="material-symbols-outlined">open_in_new</mat-icon>Meldung</a>
+    <a mat-stroked-button color="primary" [href]="hotspot.portrait_url" target="_blank" rel="noopener noreferrer">
+      <mat-icon class="material-symbols-outlined">open_in_new</mat-icon>Artenportrait</a>
+    <p *ngIf="hotspot.comment">
+      {{ hotspot.comment }}
+    </p>
   </div>
 </div>
