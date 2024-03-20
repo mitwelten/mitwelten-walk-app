@@ -1,9 +1,9 @@
 <img [src]="hotspot?.portraitUrl" alt="Audio Text Portrait" id="portrait">
 
 <div class="info">
-  <span *ngIf="hotspot?.contentSubject" class="subject">{{hotspot?.contentSubject}}</span>
   <span *ngIf="hotspot?.speakerName" class="speaker">{{hotspot?.speakerName}}</span>
   <span *ngIf="hotspot?.speakerFunction" class="function">{{hotspot?.speakerFunction}}</span>
+  <span *ngIf="hotspot?.contentSubject" class="subject">{{hotspot?.contentSubject}}</span>
 </div>
 
 <mat-toolbar class="footer">

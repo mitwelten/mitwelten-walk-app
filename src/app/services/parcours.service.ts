@@ -47,13 +47,14 @@ export class ParcoursService {
     this._geolocation = this.geolocation.pipe(
       tap({
         error: error => {
-          this.dataService.postError({
+          console.error(error);
+          /* this.dataService.postError({
             code: error.code,
             message: error.message,
             PERMISSION_DENIED: error.PERMISSION_DENIED,
             POSITION_UNAVAILABLE: error.POSITION_UNAVAILABLE,
             TIMEOUT: error.TIMEOUT,
-          });
+          }); */
         }
       }),
       retry({ delay: 2000 })

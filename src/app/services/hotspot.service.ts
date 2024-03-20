@@ -133,6 +133,7 @@ export class HotspotService {
   private hotspots: Array<HotspotType> = [];
   private currentHotspot: HotspotType | null = null;
   private typeFilter = new BehaviorSubject<number[]>([1,2,3,4,6]);
+  private radius = new BehaviorSubject<number>(20.0);
 
   public trigger: BehaviorSubject<HotspotType|false>;
   public closeHotspots: BehaviorSubject<Array<HotspotType & { distance: number }>>;
@@ -146,8 +147,8 @@ export class HotspotService {
     this.trigger = new BehaviorSubject<HotspotType|false>(false);
     this.closeHotspots = new BehaviorSubject<Array<HotspotType & { distance: number }>>([]);
 
-    combineLatest([this.parcoursService.location, this.typeFilter])
-      .subscribe(([location, typeFilter]) => {
+    combineLatest([this.parcoursService.location, this.typeFilter, this.radius])
+      .subscribe(([location, typeFilter, radius]) => {
       if (this.hotspots.length > 0) {
         const c = this.hotspots.filter(hotspot => {
           return typeFilter.includes(hotspot.type);
@@ -156,7 +157,7 @@ export class HotspotService {
           [location.coords.longitude, location.coords.latitude],
           { units: 'meters' })
         })).sort((a,b) => a.distance - b.distance).slice(0, 3);
-        if (c[0].distance <= 20.) {
+        if (c[0].distance <= radius) {
           if (this.currentHotspot?.id !== c[0].id) {
             this.currentHotspot = c[0];
             this.trigger.next(c[0]);
@@ -175,11 +176,16 @@ export class HotspotService {
     this.typeFilter.next(value);
   }
 
+  set radiusValue(value: number) {
+    this.radius.next(value);
+  }
+
   loadHotspots(mode: 'walk'|'community'|'audiowalk' = 'walk') {
     if (mode === 'walk') {
       this.dataService.getWalkHotspots(1).subscribe(hotspots => {
         this.hotspots = hotspots;
         this.typeFilter.next([1, 2, 3, 4, 6]);
+        this.radius.next(20.0);
       });
       /* // if we want to load community hotspots as well
       this.dataService.getWalkHotspots(1).pipe(
@@ -193,11 +199,13 @@ export class HotspotService {
       this.dataService.getWalkHotspots(2).subscribe(hotspots => {
         this.hotspots = hotspots;
         this.typeFilter.next([4]);
+        this.radius.next(40.0);
       });
     } else if (mode === 'community') {
       this.dataService.getCommunityHotspots().subscribe(hotspots => {
         this.hotspots = hotspots;
         this.typeFilter.next([5]);
+        this.radius.next(20.0);
       });
     }
   }

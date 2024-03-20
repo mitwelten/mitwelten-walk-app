@@ -39,6 +39,11 @@ import { Component } from '@angular/core';
 </p>
 
 <p>
+  Diese WalkApp ist eine prototypische Umsetzung des Forschungsprojektes MITWELTEN. Sollten Sie Probleme feststellen,
+  lohnt es sich die App zu schliessen und wieder zu öffnen.
+</p>
+
+<p>
   Um später wieder zu dieser Anleitung zu gelangen, bitten wir sie das Zahnrad-Icon
   <mat-icon inline="true" color="accent" class="material-symbols-outlined">settings</mat-icon> im Hauptmenü anzuklicken.
 </p>
