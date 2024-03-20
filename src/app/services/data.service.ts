@@ -134,9 +134,9 @@ export class DataService {
     return this.http.get(`${this.apiUrl}/files/walk/${url}`, {responseType: 'blob'});
   }
 
-  public postError(payload: unknown) {
+  /* public postError(payload: unknown) {
     this.http.post(`${this.apiUrl}/sentry`, { payload: payload }).subscribe();
-  }
+  } */
 
   public queryDataHotspots(endpoint: string, summaryOption?: number) {
     return this.http.get<HotspotDataPayload>(`${this.apiUrl}/walk/data-hotspots/${endpoint}${summaryOption ? `&summary=${summaryOption}` : ''}`);

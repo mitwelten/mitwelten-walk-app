@@ -12,7 +12,7 @@ export class SentryService extends ErrorHandler {
 
   override handleError(error: any) {
     if (error) {
-      this.dataService.postError(error);
+      // this.dataService.postError(error);
       super.handleError(error);
     }
   }
