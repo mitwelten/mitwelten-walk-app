@@ -61,7 +61,7 @@ export interface HotspotCommunity extends Hotspot {
   type: 5;
   id: number;
   species: string;
-  observation_type: string;
+  observation: string;
   comment: string;
   copyright: string;
   date: string;
