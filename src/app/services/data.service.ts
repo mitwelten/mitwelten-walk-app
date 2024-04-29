@@ -121,7 +121,7 @@ export class DataService {
           date: p.Datum,
           time_range: p.Zeitraum,
           post_url: p.Meldung,
-          portrait_url: p.Artenportraet,
+          portrait_url: p.Artportraet,
           weight: p.weight,
           media: p.media
         }

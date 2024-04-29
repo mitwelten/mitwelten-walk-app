@@ -53,7 +53,7 @@ export interface WildeNachbarnProperties {
   Datum: string;
   Zeitraum: string;
   Meldung: string;
-  Artenportraet?: string;
+  Artportraet?: string;
   weight: number;
   media: string[];
 }
