@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { HotspotService } from '../services/hotspot.service';
 
 @Component({
   selector: 'app-trigger-hotspot-dialog',
   template: `
     <h2 mat-dialog-title>Trigger Hotspots</h2>
     <div mat-dialog-content>
+      <mat-form-field>
+        <input matInput placeholder="Hotspot ID" #hotspotId (keyup.enter)="trigger(hotspotId.value)">
+      </mat-form-field>
+
       <ul>
         <li><button mat-stroked-button color="primary" (click)="select(1)">Bild</button></li>
         <li><button mat-stroked-button color="primary" (click)="select(2)">Bildserie</button></li>
@@ -34,9 +39,15 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class TriggerHotspotDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<TriggerHotspotDialogComponent>,
+    private hotspotService: HotspotService,
   ) { }
 
   select(type: number) {
     this.dialogRef.close(type);
+  }
+
+  trigger(hotspotId: string) {
+    this.hotspotService.triggerById(+hotspotId);
+    this.dialogRef.close();
   }
 }

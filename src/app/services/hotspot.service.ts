@@ -180,6 +180,13 @@ export class HotspotService {
     this.radius.next(value);
   }
 
+  triggerById(id: number) {
+    const hotspot = this.hotspots.find(h => h.id === id);
+    if (hotspot) {
+      this.trigger.next(hotspot);
+    }
+  }
+
   loadHotspots(mode: 'walk'|'community'|'audiowalk' = 'walk') {
     if (mode === 'walk') {
       this.dataService.getWalkHotspots(1).subscribe(hotspots => {
@@ -214,6 +221,9 @@ export class HotspotService {
     this.dialog.open(TriggerHotspotDialogComponent).afterClosed().subscribe(
       (type: number) => {
         switch (type) {
+          case 0:
+            this.trigger.next(false);
+            break;
           case 1:
             this.trigger.next({
               id: 43, type,
@@ -301,9 +311,6 @@ export class HotspotService {
             })
             break; */
 
-            default:
-            this.trigger.next(false);
-            break;
         }
       }
     )
