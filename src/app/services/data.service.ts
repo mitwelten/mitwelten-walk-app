@@ -116,6 +116,7 @@ export class DataService {
           id: p.ID,
           species: p.Art,
           observation: p.Beobachtungsart,
+          observation_type: p.Beobachtungstyp,
           comment: p.Bemerkungen,
           copyright: p.Copyright,
           date: p.Datum,

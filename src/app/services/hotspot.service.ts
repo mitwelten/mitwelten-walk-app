@@ -48,6 +48,7 @@ export interface WildeNachbarnProperties {
   ID: number;
   Art: string;
   Beobachtungsart: string;
+  Beobachtungstyp: string;
   Bemerkungen: string;
   Copyright: string;
   Datum: string;
@@ -62,6 +63,7 @@ export interface HotspotCommunity extends Hotspot {
   id: number;
   species: string;
   observation: string;
+  observation_type: string;
   comment: string;
   copyright: string;
   date: string;
@@ -273,7 +275,8 @@ export class HotspotService {
               id: 87, type,
               location: { lat: 1, lon: 4},
               species: 'Biber',
-              observation_type: 'Frasspur',
+              observation: 'Frasspur',
+              observation_type: 'Zufallsbegegnung',
               comment: 'in der Nähe auch viele weitere neue Frassspuren',
               copyright: 'Wilde Nachbarn (wildenachbarn.ch)',
               date: '03.12.2016',
