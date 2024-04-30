@@ -17,7 +17,7 @@ export class DataHotspotComponent {
   options?: EChartsOption;
   chartInstance?: echarts.ECharts;
   updateOptions: EChartsOption = {};
-  summarySelection = new FormControl<number>(1);
+  summarySelection = new FormControl<number>(0);
   chartAutoHeight = false;
 
   constructor(
@@ -30,6 +30,7 @@ export class DataHotspotComponent {
         if (hotspot && hotspot.type === 6) {
           if (hotspot.id !== this.hotspot?.id) {
             this.hotspotPayload = undefined;
+            this.summarySelection.setValue(0, { emitEvent: false });
             // reset the echarts instance
             this.chartInstance?.clear();
             this.chartInstance?.setOption(this.options!, true);
@@ -224,6 +225,8 @@ export class DataHotspotComponent {
             ]
           };
         }
+        // if summarySelection is not set, set it to the first option
+        if (this.summarySelection.value === 0) this.summarySelection.setValue(this.hotspotPayload!.summaryOptions[0].value, { emitEvent: false });
       });
     }
   }
