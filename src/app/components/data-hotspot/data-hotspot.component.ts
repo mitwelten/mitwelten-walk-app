@@ -47,6 +47,13 @@ export class DataHotspotComponent {
         type: 'category',
         axisLabel: {
           interval: 0,
+          overflow: 'break',
+          rich: {
+            a: {
+              lineHeight: 15,
+              align: 'right',
+            }
+          },
           formatter: (value: string) => {
             let label = ''; // Returned string
             const maxLength = 10; // Maximum number of characters per line
@@ -68,7 +75,10 @@ export class DataHotspotComponent {
               label += word;
               lineLength += word.length;
             }
-            label = label[0].toUpperCase() + label.slice(1);
+            label.split('\n').forEach((l, i) => {
+              const l_uppercase = l[0].toUpperCase() + l.slice(1);
+              label = label.replace(l, `{a|${l_uppercase}}`);
+            });
             return label;
           }
         }
@@ -202,7 +212,7 @@ export class DataHotspotComponent {
                 label: {
                   color: '#000',
                   show: true,
-                  formatter: (p: DefaultLabelFormatterCallbackParams) => (Array.isArray(p.data) ? (100 * +p.data[2]).toFixed(1) : 0) + '%'
+                  formatter: (p: DefaultLabelFormatterCallbackParams) => (Array.isArray(p.data) ? (100 * +p.data[2]!).toFixed(1) : 0) + '%'
                 }
               }
             ]
