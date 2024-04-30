@@ -28,6 +28,12 @@ export class DataHotspotComponent {
       .pipe(filter(h => h !== false && h.type === 6))
       .subscribe(hotspot => {
         if (hotspot && hotspot.type === 6) {
+          if (hotspot.id !== this.hotspot?.id) {
+            this.hotspotPayload = undefined;
+            // reset the echarts instance
+            this.chartInstance?.clear();
+            this.chartInstance?.setOption(this.options!, true);
+          }
           this.hotspot = hotspot;
           this.queryDataHotspots();
         };
@@ -173,9 +179,9 @@ export class DataHotspotComponent {
           // reduce the array of arrays to a single array
           data.datapoints = records.reduce((a, b) => a.concat(b), []);
 
-          // TODO: replace the whole hotspotPayload with the new data also if the hotspot id changes!
           if (this.hotspotPayload === undefined) this.hotspotPayload = data;
           else this.hotspotPayload.datapoints = data.datapoints;
+
           this.updateOptions = {
             grid: {
               bottom: 100,
