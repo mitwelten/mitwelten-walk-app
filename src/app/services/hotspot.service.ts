@@ -48,12 +48,13 @@ export interface WildeNachbarnProperties {
   ID: number;
   Art: string;
   Beobachtungsart: string;
+  Beobachtungstyp: string;
   Bemerkungen: string;
   Copyright: string;
   Datum: string;
   Zeitraum: string;
   Meldung: string;
-  Artenportraet?: string;
+  Artportraet?: string;
   weight: number;
   media: string[];
 }
@@ -61,6 +62,7 @@ export interface HotspotCommunity extends Hotspot {
   type: 5;
   id: number;
   species: string;
+  observation: string;
   observation_type: string;
   comment: string;
   copyright: string;
@@ -180,6 +182,13 @@ export class HotspotService {
     this.radius.next(value);
   }
 
+  triggerById(id: number) {
+    const hotspot = this.hotspots.find(h => h.id === id);
+    if (hotspot) {
+      this.trigger.next(hotspot);
+    }
+  }
+
   loadHotspots(mode: 'walk'|'community'|'audiowalk' = 'walk') {
     if (mode === 'walk') {
       this.dataService.getWalkHotspots(1).subscribe(hotspots => {
@@ -214,6 +223,9 @@ export class HotspotService {
     this.dialog.open(TriggerHotspotDialogComponent).afterClosed().subscribe(
       (type: number) => {
         switch (type) {
+          case 0:
+            this.trigger.next(false);
+            break;
           case 1:
             this.trigger.next({
               id: 43, type,
@@ -263,7 +275,8 @@ export class HotspotService {
               id: 87, type,
               location: { lat: 1, lon: 4},
               species: 'Biber',
-              observation_type: 'Frasspur',
+              observation: 'Frasspur',
+              observation_type: 'Zufallsbegegnung',
               comment: 'in der Nähe auch viele weitere neue Frassspuren',
               copyright: 'Wilde Nachbarn (wildenachbarn.ch)',
               date: '03.12.2016',
@@ -301,9 +314,6 @@ export class HotspotService {
             })
             break; */
 
-            default:
-            this.trigger.next(false);
-            break;
         }
       }
     )

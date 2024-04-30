@@ -115,13 +115,14 @@ export class DataService {
           subject: `WN: ${p.Art}`,
           id: p.ID,
           species: p.Art,
-          observation_type: p.Beobachtungsart,
+          observation: p.Beobachtungsart,
+          observation_type: p.Beobachtungstyp,
           comment: p.Bemerkungen,
           copyright: p.Copyright,
           date: p.Datum,
           time_range: p.Zeitraum,
           post_url: p.Meldung,
-          portrait_url: p.Artenportraet,
+          portrait_url: p.Artportraet,
           weight: p.weight,
           media: p.media
         }

@@ -17,7 +17,7 @@ export class DataHotspotComponent {
   options?: EChartsOption;
   chartInstance?: echarts.ECharts;
   updateOptions: EChartsOption = {};
-  summarySelection = new FormControl<number>(1);
+  summarySelection = new FormControl<number>(0);
   chartAutoHeight = false;
 
   constructor(
@@ -28,6 +28,13 @@ export class DataHotspotComponent {
       .pipe(filter(h => h !== false && h.type === 6))
       .subscribe(hotspot => {
         if (hotspot && hotspot.type === 6) {
+          if (hotspot.id !== this.hotspot?.id) {
+            this.hotspotPayload = undefined;
+            this.summarySelection.setValue(0, { emitEvent: false });
+            // reset the echarts instance
+            this.chartInstance?.clear();
+            this.chartInstance?.setOption(this.options!, true);
+          }
           this.hotspot = hotspot;
           this.queryDataHotspots();
         };
@@ -47,6 +54,13 @@ export class DataHotspotComponent {
         type: 'category',
         axisLabel: {
           interval: 0,
+          overflow: 'break',
+          rich: {
+            a: {
+              lineHeight: 15,
+              align: 'right',
+            }
+          },
           formatter: (value: string) => {
             let label = ''; // Returned string
             const maxLength = 10; // Maximum number of characters per line
@@ -68,7 +82,10 @@ export class DataHotspotComponent {
               label += word;
               lineLength += word.length;
             }
-            label = label[0].toUpperCase() + label.slice(1);
+            label.split('\n').forEach((l, i) => {
+              const l_uppercase = l[0].toUpperCase() + l.slice(1);
+              label = label.replace(l, `{a|${l_uppercase}}`);
+            });
             return label;
           }
         }
@@ -163,9 +180,9 @@ export class DataHotspotComponent {
           // reduce the array of arrays to a single array
           data.datapoints = records.reduce((a, b) => a.concat(b), []);
 
-          // TODO: replace the whole hotspotPayload with the new data also if the hotspot id changes!
           if (this.hotspotPayload === undefined) this.hotspotPayload = data;
           else this.hotspotPayload.datapoints = data.datapoints;
+
           this.updateOptions = {
             grid: {
               bottom: 100,
@@ -202,12 +219,14 @@ export class DataHotspotComponent {
                 label: {
                   color: '#000',
                   show: true,
-                  formatter: (p: DefaultLabelFormatterCallbackParams) => (Array.isArray(p.data) ? (100 * +p.data[2]).toFixed(1) : 0) + '%'
+                  formatter: (p: DefaultLabelFormatterCallbackParams) => (Array.isArray(p.data) ? (100 * +p.data[2]!).toFixed(1) : 0) + '%'
                 }
               }
             ]
           };
         }
+        // if summarySelection is not set, set it to the first option
+        if (this.summarySelection.value === 0) this.summarySelection.setValue(this.hotspotPayload!.summaryOptions[0].value, { emitEvent: false });
       });
     }
   }
