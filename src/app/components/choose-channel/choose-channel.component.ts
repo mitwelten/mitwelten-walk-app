@@ -17,7 +17,7 @@ export class ChooseChannelComponent implements OnInit {
   pathMap = [
     '',
     'walk',
-    'walk', // TODO: change to 'stopmotion' when ready (add to routes)
+    'stack-fade', // TODO: change to 'stack-fade' when ready (add to routes)
     'community', // TODO: change to 'community' when ready (add to routes)
     'map',
     'audiowalk', // TODO: change to 'audiowalk' when ready (add to routes)
