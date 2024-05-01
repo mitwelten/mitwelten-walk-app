@@ -17,13 +17,13 @@
   <h2>{{ hotspot.species }}</h2>
   <div>
     <div class="infotable">
-      <strong>Beobachungsart:</strong><span>{{ hotspot.observation }}</span>
-      <strong>Beobachungstyp:</strong><span>{{ hotspot.observation_type }}</span>
-      <strong>Beobachungsdatum:</strong><span>{{ hotspot.date }}, {{ hotspot.time_range }}</span>
+      <ng-container *ngIf="hotspot.observation"><strong>Beobachungsart:</strong><span>{{ hotspot.observation }}</span></ng-container>
+      <ng-container *ngIf="hotspot.observation_type"><strong>Beobachungstyp:</strong><span>{{ hotspot.observation_type }}</span></ng-container>
+      <ng-container *ngIf="hotspot.date || hotspot.time_range"><strong>Beobachungsdatum:</strong><span>{{ hotspot.date }}, {{ hotspot.time_range }}</span></ng-container>
     </div>
-    <a mat-stroked-button color="primary" [href]="hotspot.post_url" target="_blank" rel="noopener noreferrer" style="margin-right: 16px;" >
+    <a *ngIf="hotspot.post_url" mat-stroked-button color="primary" [href]="hotspot.post_url" target="_blank" rel="noopener noreferrer" style="margin-right: 16px;" >
       <mat-icon class="material-symbols-outlined">open_in_new</mat-icon>Meldung</a>
-    <a mat-stroked-button color="primary" [href]="hotspot.portrait_url" target="_blank" rel="noopener noreferrer">
+    <a *ngIf="hotspot.portrait_url" mat-stroked-button color="primary" [href]="hotspot.portrait_url" target="_blank" rel="noopener noreferrer">
       <mat-icon class="material-symbols-outlined">open_in_new</mat-icon>Artenportrait</a>
     <p *ngIf="hotspot.comment">
       {{ hotspot.comment }}
