@@ -82,7 +82,7 @@ import { Component } from '@angular/core';
       margin: 0.8em 0;
     }`,
     `#app-icon-crop {
-      width: 50%;
+      width: 160px;
       height: 100px;
       overflow: hidden;
       border-radius: 9px;
