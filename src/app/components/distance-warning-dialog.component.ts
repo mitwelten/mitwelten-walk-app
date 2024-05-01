@@ -11,6 +11,7 @@ import { Component } from '@angular/core';
         in der Gemeinde Reinach, am Fluss “Birs”, unweit von Basel. Sie erreichen sie mit der Tram 10 oder der S-Bahn
         S3, Station Bahnhof Dornach-Arlesheim, Fussweg ca. 10 Minuten.
       </p>
+      <img style="width: 100%;" src="assets/pfad_perimeter.webp" alt="Pfad Perimeter">
     </div>
     <div mat-dialog-actions>
       <button mat-button mat-dialog-close>Schliessen</button>
