@@ -1,8 +1,9 @@
 <div class="carousel-container">
   <div class="carousel-wrapper" #wrapper>
     <div *ngFor="let img of hotspot?.sequence; index as i" [id]="'img-'+i" class="carousel-image">
-      <img [src]="img.url">
+      <img [src]="img.url" #image>
       <app-copyright class="copyright" [credits]="img.credits"></app-copyright>
+      <app-mini-map [imgRef]="image"></app-mini-map>
     </div>
   </div>
   <span class="material-symbols-outlined carousel-arrow left" (click)="swipeTransition('left')">

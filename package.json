@@ -1,6 +1,6 @@
 {
   "name": "mitwelten-datawalk",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -34,6 +34,7 @@
     "rxjs": "~7.8.1",
     "tone": "^14.7.77",
     "tslib": "^2.6.2",
+    "vecti": "^3.0.10",
     "zone.js": "~0.13.3"
   },
   "devDependencies": {

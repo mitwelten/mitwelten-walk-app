@@ -86,3 +86,11 @@ app-copyright {
   right: 16px;
   z-index: 999;
 }
+
+app-mini-map {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 100px;
+  z-index: 999;
+}
