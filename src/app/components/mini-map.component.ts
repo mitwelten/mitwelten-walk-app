@@ -41,7 +41,7 @@ export class MiniMapComponent implements AfterViewInit {
   /** dragging in progress flag */
   private isDragging = false;
   /** coordinates of the current drag origin / last drag destination */
-  private origin = new Vector(0, 0);
+  private origin?: Vector;
   /** offset of screen rectangle */
   private offset = new Vector(0, 0);
   /** screen orientation */
@@ -106,7 +106,7 @@ export class MiniMapComponent implements AfterViewInit {
     const x = event instanceof TouchEvent ? event.touches[0].clientX : event.clientX;
     const y = event instanceof TouchEvent ? event.touches[0].clientY : event.clientY;
     const xy = new Vector(x, y); // to where i moved
-    const delta = xy.subtract(this.origin); // distance of move (xy) to where i clicked (origin)
+    const delta = xy.subtract(this.origin!); // distance of move (xy) to where i clicked (origin)
     this.origin = xy; // update origin
     this.offset = this.offset.add(delta);
     this.screen.nativeElement.style.transform = `translate(${this.offset.x}px, ${this.offset.y}px)`;
