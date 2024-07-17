@@ -30,18 +30,32 @@ import { Vector } from 'vecti';
 })
 export class MiniMapComponent implements AfterViewInit {
 
-  @ViewChild('image')  image!:  ElementRef<HTMLDivElement>;
-  @ViewChild('screen') screen!: ElementRef<HTMLDivElement>;
+  /** reference to the element (rectangle) in the mini map representing the image */
+  @ViewChild('image')
+  image!:  ElementRef<HTMLDivElement>;
 
+  /** reference to the element (rectangle) in the mini map representing the screen */
+  @ViewChild('screen')
+  screen!: ElementRef<HTMLDivElement>;
+
+  /** dragging in progress flag */
   private isDragging = false;
+  /** coordinates of the current drag origin / last drag destination */
   private origin = new Vector(0, 0);
+  /** offset of screen rectangle */
   private offset = new Vector(0, 0);
+  /** screen orientation */
   private orientation?: 'landscape' | 'portrait';
+  /** original screen dimensions (viewport of image display component) */
   private screenDim?: Vector;
+  /** original image dimensions (intrinsic width/height) */
   private imageDim?: Vector;
+  /** dimensions of the screen rectangle in the minimap */
   private screenRect?: Vector;
+  /** dimensions of the image rectangle in the minimap */
   private imageRect?: Vector;
 
+  /** reference to the image the mini map is displayed for */
   @Input()
   imgRef!: HTMLImageElement;
 
@@ -52,7 +66,9 @@ export class MiniMapComponent implements AfterViewInit {
       this.screenDim = new Vector(this.imgRef.clientWidth, this.imgRef.clientHeight);
       this.orientation = this.screenDim.x < this.screenDim.y ? 'landscape' : 'portrait';
 
+      /** factor by which the original image is scaled to fit the screen (result of `object-fit: cover`) */
       const imgScale = this.orientation === 'landscape' ? this.imageDim.y / this.screenDim.y : this.imageDim.x / this.screenDim.x;
+      // normalise the dimensions of the screen and image rectangles to the same scale
       this.screenRect = this.screenDim.divide(Math.min(this.imageDim.x, this.imageDim.y) / imgScale).multiply(100);
       this.imageRect = this.imageDim.divide(Math.max(this.imageDim.x, this.imageDim.y)).multiply(100);
 
@@ -65,6 +81,7 @@ export class MiniMapComponent implements AfterViewInit {
       this.offset = this.imageRect.subtract(this.screenRect).divide(2);
       this.screen.nativeElement.style.transform = `translate(${this.offset.x}px, ${this.offset.y}px)`;
 
+      // set background of mini map to target image
       this.image.nativeElement.style.backgroundImage = `url(${this.imgRef.src})`;
       this.image.nativeElement.style.backgroundSize = 'cover';
     }
