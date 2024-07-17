@@ -6,12 +6,14 @@
       <app-mini-map [imgRef]="image"></app-mini-map>
     </div>
   </div>
+  <ng-container *ngIf="hotspot?.media!.length > 1">
   <span class="material-symbols-outlined carousel-arrow left" (click)="swipeTransition('left')">
     keyboard_arrow_left
   </span>
   <span class="material-symbols-outlined carousel-arrow right" (click)="swipeTransition('right')">
     keyboard_arrow_right
   </span>
+  </ng-container>
 </div>
 
 <div id="text" *ngIf="hotspot" [@slideUpDown]>
