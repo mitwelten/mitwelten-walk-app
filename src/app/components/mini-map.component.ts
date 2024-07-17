@@ -5,7 +5,7 @@ import { Vector } from 'vecti';
   selector: 'app-mini-map',
   template: `
     <div class="mini-map" #image>
-      <div #screen style="width 50px; height: 80px; border: 1px solid #444; background: #66666688"></div>
+      <div #screen></div>
     </div>
   `,
   styles: [
@@ -20,6 +20,10 @@ import { Vector } from 'vecti';
       overflow: hidden;
       border: 1px solid #4caf50;
       box-shadow: 0 0 4px #444;
+    }
+    .mini-map div {
+      border: 1px solid #444;
+      background: #66666688
     }
     `
   ]
