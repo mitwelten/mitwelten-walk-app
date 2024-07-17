@@ -1,3 +1,4 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { Vector } from 'vecti';
 
@@ -59,11 +60,15 @@ export class MiniMapComponent implements AfterViewInit {
   @Input()
   imgRef!: HTMLImageElement;
 
-  ngAfterViewInit(): void {
+  constructor(private layout: BreakpointObserver) { }
 
+  ngAfterViewInit(): void {
     this.imgRef.onload = () => {
       this.setup();
     }
+    this.layout.observe('(orientation: portrait)').subscribe(() => {
+      this.setup();
+    });
   }
 
   @HostListener('mousedown', ['$event'])
