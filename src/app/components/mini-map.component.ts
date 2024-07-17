@@ -1,11 +1,11 @@
-import { Component, ElementRef, ViewChild, HostListener, Output, OnInit, AfterViewInit, EventEmitter, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { Vector } from 'vecti';
 
 @Component({
   selector: 'app-mini-map',
   template: `
-    <div class="mini-map" #miniMap>
-      <div #port style="width 50px; height: 80px; border: 1px solid #444; background: #66666688"></div>
+    <div class="mini-map" #image>
+      <div #screen style="width 50px; height: 80px; border: 1px solid #444; background: #66666688"></div>
     </div>
   `,
   styles: [
@@ -26,12 +26,12 @@ import { Vector } from 'vecti';
 })
 export class MiniMapComponent implements AfterViewInit {
 
-  @ViewChild('miniMap') miniMap!: ElementRef<HTMLDivElement>;
-  @ViewChild('port') port!: ElementRef<HTMLDivElement>;
+  @ViewChild('image')  image!:  ElementRef<HTMLDivElement>;
+  @ViewChild('screen') screen!: ElementRef<HTMLDivElement>;
 
   private isDragging = false;
-  private localStart = new Vector(0, 0);
-  private localShift = new Vector(0, 0);
+  private origin = new Vector(0, 0);
+  private offset = new Vector(0, 0);
   private orientation?: 'landscape' | 'portrait';
   private screenDim?: Vector;
   private imageDim?: Vector;
@@ -40,9 +40,6 @@ export class MiniMapComponent implements AfterViewInit {
 
   @Input()
   imgRef!: HTMLImageElement;
-
-  @Output()
-  shift = new EventEmitter<[number, number]>();
 
   ngAfterViewInit(): void {
 
@@ -55,16 +52,17 @@ export class MiniMapComponent implements AfterViewInit {
       this.screenRect = this.screenDim.divide(Math.min(this.imageDim.x, this.imageDim.y) / imgScale).multiply(100);
       this.imageRect = this.imageDim.divide(Math.max(this.imageDim.x, this.imageDim.y)).multiply(100);
 
-      this.miniMap.nativeElement.style.width = `${this.imageRect.x}px`;
-      this.miniMap.nativeElement.style.height = `${this.imageRect.y}px`;
-      this.port.nativeElement.style.width = `${this.screenRect.x}px`;
-      this.port.nativeElement.style.height = `${this.screenRect.y}px`;
-      // center the port
-      this.localShift = this.imageRect.subtract(this.screenRect).divide(2);
-      this.port.nativeElement.style.transform = `translate(${this.localShift.x}px, ${this.localShift.y}px)`;
+      this.image.nativeElement.style.width = `${this.imageRect.x}px`;
+      this.image.nativeElement.style.height = `${this.imageRect.y}px`;
+      this.screen.nativeElement.style.width = `${this.screenRect.x}px`;
+      this.screen.nativeElement.style.height = `${this.screenRect.y}px`;
 
-      this.miniMap.nativeElement.style.backgroundImage = `url(${this.imgRef.src})`;
-      this.miniMap.nativeElement.style.backgroundSize = 'cover';
+      // center the screen element
+      this.offset = this.imageRect.subtract(this.screenRect).divide(2);
+      this.screen.nativeElement.style.transform = `translate(${this.offset.x}px, ${this.offset.y}px)`;
+
+      this.image.nativeElement.style.backgroundImage = `url(${this.imgRef.src})`;
+      this.image.nativeElement.style.backgroundSize = 'cover';
     }
   }
 
@@ -73,9 +71,9 @@ export class MiniMapComponent implements AfterViewInit {
   onMouseDown(event: TouchEvent|MouseEvent) {
     this.isDragging = true;
     if (event instanceof TouchEvent) {
-      this.localStart = new Vector(event.touches[0].clientX, event.touches[0].clientY);
+      this.origin = new Vector(event.touches[0].clientX, event.touches[0].clientY);
     } else {
-      this.localStart = new Vector(event.clientX, event.clientY);
+      this.origin = new Vector(event.clientX, event.clientY);
     }
     return false;
   }
@@ -87,13 +85,13 @@ export class MiniMapComponent implements AfterViewInit {
     const x = event instanceof TouchEvent ? event.touches[0].clientX : event.clientX;
     const y = event instanceof TouchEvent ? event.touches[0].clientY : event.clientY;
     const xy = new Vector(x, y); // to where i moved
-    const delta = xy.subtract(this.localStart); // distance of movedTo to where i clicked (localStart)
-    this.localStart = xy; // update localStart
-    this.localShift = this.localShift.add(delta);
-    this.port.nativeElement.style.transform = `translate(${this.localShift.x}px, ${this.localShift.y}px)`;
+    const delta = xy.subtract(this.origin); // distance of move (xy) to where i clicked (origin)
+    this.origin = xy; // update origin
+    this.offset = this.offset.add(delta);
+    this.screen.nativeElement.style.transform = `translate(${this.offset.x}px, ${this.offset.y}px)`;
 
     const z = this.orientation === 'landscape' ? this.imageRect!.x / (this.imageRect!.x - this.screenRect!.x) : this.imageRect!.y / (this.imageRect!.y - this.screenRect!.y);
-    const imageShift = this.localShift.multiply(z);
+    const imageShift = this.offset.multiply(z);
     this.imgRef.style.objectPosition = `${imageShift.x}% ${imageShift.y}% `;
     return false;
   }
