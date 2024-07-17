@@ -12,9 +12,6 @@ import { Vector } from 'vecti';
   styles: [
     `
     .mini-map {
-      position: absolute;
-      top: 0;
-      right: 0;
       width: 100px;
       height: 100px;
       opacity: 0.6;
