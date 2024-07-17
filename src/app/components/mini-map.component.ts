@@ -23,7 +23,7 @@ import { Vector } from 'vecti';
     }
     .mini-map div {
       border: 1px solid #444;
-      background: #66666688
+      background: #4caf5052
     }
     `
   ]
