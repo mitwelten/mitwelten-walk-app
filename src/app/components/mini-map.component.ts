@@ -119,7 +119,15 @@ export class MiniMapComponent implements AfterViewInit {
     const xy = new Vector(x, y); // to where i moved
     const delta = xy.subtract(this.origin!); // distance of move (xy) to where i clicked (origin)
     this.origin = xy; // update origin
-    this.offset = this.offset.add(delta);
+
+    // constrain the movement to the bounds of the image
+    const min = new Vector(0, 0);
+    const max = this.imageRect!.subtract(this.screenRect!);
+    const shifted = this.offset.add(delta);
+    const xs = shifted.x < min.x ? min.x : shifted.x > max.x ? max.x : shifted.x;
+    const ys = shifted.y < min.y ? min.y : shifted.y > max.y ? max.y : shifted.y;
+    this.offset = new Vector(xs, ys);
+
     // shift the screen rectangle, -1 to account for border
     this.screen.nativeElement.style.transform = `translate(${this.offset.x-1}px, ${this.offset.y-1}px)`;
 
