@@ -62,39 +62,7 @@ export class MiniMapComponent implements AfterViewInit {
   ngAfterViewInit(): void {
 
     this.imgRef.onload = () => {
-      this.imageDim = new Vector(this.imgRef.naturalWidth, this.imgRef.naturalHeight);
-      this.screenDim = new Vector(this.imgRef.clientWidth, this.imgRef.clientHeight);
-      this.orientation = this.screenDim.x < this.screenDim.y ? 'landscape' : 'portrait';
-
-      /** factor by which the original image is scaled to fit the screen (result of `object-fit: cover`). use for zoom when implemented */
-      const imgScale = this.orientation === 'landscape' ? this.imageDim.y / this.screenDim.y : this.imageDim.x / this.screenDim.x;
-
-      // normalise the dimensions of the screen to the rectangle representation of the image
-      const imgRatio = this.imageDim.x / this.imageDim.y;
-      const screenRatio = this.screenDim.x / this.screenDim.y;
-      this.imageRect = this.imageDim.divide(Math.max(this.imageDim.x, this.imageDim.y)).multiply(100);
-      if (screenRatio > 1 === imgRatio > 1) {
-        /** long side of screen over long side of image */
-        const norm = Math.max(this.screenDim.x, this.screenDim.y) / Math.max(this.imageRect.x, this.imageRect.y);
-        this.screenRect = this.screenDim.divide(norm);
-      } else {
-        /** long side of screen over short side of image */
-        const norm = Math.max(this.screenDim.x, this.screenDim.y) / Math.min(this.imageRect.x, this.imageRect.y);
-        this.screenRect = this.screenDim.divide(norm);
-      }
-
-      this.image.nativeElement.style.width = `${this.imageRect.x}px`;
-      this.image.nativeElement.style.height = `${this.imageRect.y}px`;
-      this.screen.nativeElement.style.width = `${this.screenRect.x}px`;
-      this.screen.nativeElement.style.height = `${this.screenRect.y}px`;
-
-      // center the screen element, -1 to account for border
-      this.offset = this.imageRect.subtract(this.screenRect).divide(2);
-      this.screen.nativeElement.style.transform = `translate(${this.offset.x-1}px, ${this.offset.y-1}px)`;
-
-      // set background of mini map to target image
-      this.image.nativeElement.style.backgroundImage = `url(${this.imgRef.src})`;
-      this.image.nativeElement.style.backgroundSize = 'cover';
+      this.setup();
     }
   }
 
@@ -142,6 +110,42 @@ export class MiniMapComponent implements AfterViewInit {
   onMouseUp(event: TouchEvent|MouseEvent) {
     this.isDragging = false;
     return false;
+  }
+
+  private setup() {
+    this.imageDim = new Vector(this.imgRef.naturalWidth, this.imgRef.naturalHeight);
+    this.screenDim = new Vector(this.imgRef.clientWidth, this.imgRef.clientHeight);
+    this.orientation = this.screenDim.x < this.screenDim.y ? 'landscape' : 'portrait';
+
+    /** factor by which the original image is scaled to fit the screen (result of `object-fit: cover`). use for zoom when implemented */
+    const imgScale = this.orientation === 'landscape' ? this.imageDim.y / this.screenDim.y : this.imageDim.x / this.screenDim.x;
+
+    // normalise the dimensions of the screen to the rectangle representation of the image
+    const imgRatio = this.imageDim.x / this.imageDim.y;
+    const screenRatio = this.screenDim.x / this.screenDim.y;
+    this.imageRect = this.imageDim.divide(Math.max(this.imageDim.x, this.imageDim.y)).multiply(100);
+    if (screenRatio > 1 === imgRatio > 1) {
+      /** long side of screen over long side of image */
+      const norm = Math.max(this.screenDim.x, this.screenDim.y) / Math.max(this.imageRect.x, this.imageRect.y);
+      this.screenRect = this.screenDim.divide(norm);
+    } else {
+      /** long side of screen over short side of image */
+      const norm = Math.max(this.screenDim.x, this.screenDim.y) / Math.min(this.imageRect.x, this.imageRect.y);
+      this.screenRect = this.screenDim.divide(norm);
+    }
+
+    this.image.nativeElement.style.width = `${this.imageRect.x}px`;
+    this.image.nativeElement.style.height = `${this.imageRect.y}px`;
+    this.screen.nativeElement.style.width = `${this.screenRect.x}px`;
+    this.screen.nativeElement.style.height = `${this.screenRect.y}px`;
+
+    // center the screen element, -1 to account for border
+    this.offset = this.imageRect.subtract(this.screenRect).divide(2);
+    this.screen.nativeElement.style.transform = `translate(${this.offset.x-1}px, ${this.offset.y-1}px)`;
+
+    // set background of mini map to target image
+    this.image.nativeElement.style.backgroundImage = `url(${this.imgRef.src})`;
+    this.image.nativeElement.style.backgroundSize = 'cover';
   }
 
 }
