@@ -1,7 +1,8 @@
 <div class="single-image-container">
   <div class="single-image">
-    <img [src]="hotspot?.url">
+    <img [src]="hotspot?.url" #image>
     <app-copyright class="copyright" [credits]="hotspot?.credits"></app-copyright>
+    <app-mini-map [imgRef]="image"></app-mini-map>
   </div>
 </div>
 
