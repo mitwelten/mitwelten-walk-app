@@ -1,5 +1,6 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
+import { OrientationService } from '../services/orientation.service';
+import { Subject, takeUntil } from 'rxjs';
 import { Vector } from 'vecti';
 
 @Component({
@@ -26,7 +27,7 @@ import { Vector } from 'vecti';
     `
   ]
 })
-export class MiniMapComponent implements AfterViewInit {
+export class MiniMapComponent implements AfterViewInit, OnDestroy {
 
   /** reference to the element (rectangle) in the mini map representing the image */
   @ViewChild('image')
@@ -36,6 +37,8 @@ export class MiniMapComponent implements AfterViewInit {
   @ViewChild('screen')
   screen!: ElementRef<HTMLDivElement>;
 
+  /** rxjs lifecycle management */
+  private destroy = new Subject();
   /** dragging in progress flag */
   private isDragging = false;
   /** coordinates of the current drag origin / last drag destination */
@@ -57,15 +60,20 @@ export class MiniMapComponent implements AfterViewInit {
   @Input()
   imgRef!: HTMLImageElement;
 
-  constructor(private layout: BreakpointObserver) { }
+  constructor(private orientationService: OrientationService) { }
 
   ngAfterViewInit(): void {
     this.imgRef.onload = () => {
       this.setup();
-    }
-    this.layout.observe('(orientation: portrait)').subscribe(() => {
+    };
+    this.orientationService.trigger.pipe(takeUntil(this.destroy)).subscribe((x) => {
       this.setup();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next(null);
+    this.destroy.complete();
   }
 
   @HostListener('mousedown', ['$event'])
