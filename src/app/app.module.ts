@@ -37,6 +37,7 @@ import { ToolsComponent } from './components/tools.component';
 import { CopyrightComponent } from './components/copyright/copyright.component';
 import { MoreTextComponent } from './components/more-text.component';
 import { MiniMapComponent } from './components/mini-map.component';
+import { ParticipateComponent } from './components/participate/participate.component';
 import { ParagraphPipe } from './shared/paragraph.pipe';
 
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -106,6 +107,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MoreTextComponent,
     ParagraphPipe,
     MiniMapComponent,
+    ParticipateComponent,
   ],
   imports: [
     BrowserModule,

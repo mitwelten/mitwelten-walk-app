@@ -13,8 +13,9 @@ import { hotspotCrossfadeAnimation } from 'src/app/shared';
 export class WalkComponent implements OnInit, OnDestroy {
 
   private destroy = new Subject();
-  private mode: 'walk'|'community'|'audiowalk' = 'walk';
-  hotspot?: HotspotType|false;
+
+  public mode: 'walk'|'community'|'audiowalk' = 'walk';
+  public hotspot?: HotspotType|false;
 
   constructor(
     public hotspotService: HotspotService,

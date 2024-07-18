@@ -12,4 +12,6 @@
 
   <app-data-hotspot *ngIf="hotspot && hotspot?.type === 6" [@hotspotCrossfade]></app-data-hotspot>
 
+  <app-participate *ngIf="!hotspot && mode === 'community'" [@hotspotCrossfade]></app-participate>
+
 </div>
