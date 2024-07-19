@@ -164,17 +164,21 @@ export class HotspotService {
           { units: 'meters' })
         })).sort((a,b) => a.distance - b.distance).slice(0, 10);
 
+        if (this.currentHotspot) {
+          // track time spent at hotspot
+          this.currentHotspot.viewtime! += Date.now() - this.currentHotspot.lastTimestamp!;
+          // track distance travelled for active hotspot
+          this.currentHotspot.distanceTraveled! += distance([location.coords.longitude, location.coords.latitude], [this.currentHotspot.lastLocation!.longitude, this.currentHotspot.lastLocation!.latitude], { units: 'meters' });
+        }
+
         // collect hotspots that are within radius
         const filtered = c.filter(h => h.distance <= radius);
-        if (filtered.length > 0) { // TODO: probably check this.currentHotspot first, then filtered.length
+
+        if (filtered.length) {
+          // check if we're at the same hotspot as before
           if (this.currentHotspot && filtered.map(h => h.id).includes(this.currentHotspot.id)) {
-            const i =  filtered.map(h => h.id).indexOf(this.currentHotspot.id)
-            // same hotspot as before
-            // track time spent at hotspot
-            this.currentHotspot.viewtime! += Date.now() - this.currentHotspot.lastTimestamp!;
-            // track distance travelled for active hotspot
-            this.currentHotspot.distanceTraveled! += distance([location.coords.longitude, location.coords.latitude], [this.currentHotspot.lastLocation!.longitude, this.currentHotspot.lastLocation!.latitude], { units: 'meters' });
-            // if viewtime or distance traveled is above threshold, trigger next hotspot
+            const i = filtered.map(h => h.id).indexOf(this.currentHotspot.id);
+            // same hotspot as before: if viewtime or distance traveled is above threshold, trigger next hotspot
             if (this.currentHotspot.viewtime! > 30000 || this.currentHotspot.distanceTraveled! > 10) {
               // trigger next hotspot, update viewtime and distance traveled on current hotspot
               filtered[i].viewtime = this.currentHotspot.viewtime;
@@ -212,8 +216,8 @@ export class HotspotService {
             this.currentHotspot = filtered[0];
           }
 
-          this.currentHotspot.viewtime = 0;
-          this.currentHotspot.distanceTraveled = 0;
+          this.currentHotspot.viewtime = this.currentHotspot.viewtime || 0;
+          this.currentHotspot.distanceTraveled = this.currentHotspot.distanceTraveled || 0;
           this.updateHotspot(location);
 
           this.trigger.next(this.currentHotspot);
