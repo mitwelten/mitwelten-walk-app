@@ -10,6 +10,10 @@ import distance from '@turf/distance';
 
 interface Hotspot {
   location: CoordinatePoint;
+  viewtime?: number;
+  lastTimestamp?: number;
+  distanceTraveled?: number;
+  lastLocation?: GeolocationCoordinates;
   subject?: string;
   id: number;
   type: number;
@@ -158,13 +162,62 @@ export class HotspotService {
           [hotspot.location.lon, hotspot.location.lat],
           [location.coords.longitude, location.coords.latitude],
           { units: 'meters' })
-        })).sort((a,b) => a.distance - b.distance).slice(0, 3);
-        if (c[0].distance <= radius) {
-          if (this.currentHotspot?.id !== c[0].id) {
-            this.currentHotspot = c[0];
-            this.trigger.next(c[0]);
-            this.audioService.ping();
+        })).sort((a,b) => a.distance - b.distance).slice(0, 10);
+
+        // collect hotspots that are within radius
+        const filtered = c.filter(h => h.distance <= radius);
+        if (filtered.length > 0) { // TODO: probably check this.currentHotspot first, then filtered.length
+          if (this.currentHotspot && filtered.map(h => h.id).includes(this.currentHotspot.id)) {
+            const i =  filtered.map(h => h.id).indexOf(this.currentHotspot.id)
+            // same hotspot as before
+            // track time spent at hotspot
+            this.currentHotspot.viewtime! += Date.now() - this.currentHotspot.lastTimestamp!;
+            // track distance travelled for active hotspot
+            this.currentHotspot.distanceTraveled! += distance([location.coords.longitude, location.coords.latitude], [this.currentHotspot.lastLocation!.longitude, this.currentHotspot.lastLocation!.latitude], { units: 'meters' });
+            // if viewtime or distance traveled is above threshold, trigger next hotspot
+            if (this.currentHotspot.viewtime! > 30000 || this.currentHotspot.distanceTraveled! > 10) {
+              // trigger next hotspot, update viewtime and distance traveled on current hotspot
+              filtered[i].viewtime = this.currentHotspot.viewtime;
+              filtered[i].distanceTraveled = this.currentHotspot.distanceTraveled;
+            } else {
+              this.updateHotspot(location);
+              return; // do not trigger new hotspot
+            }
           }
+
+          // new hotspot
+          if (filtered.length > 1) {
+            /* // random selection of hotspot if multiple are within radius
+            let random = Math.floor(Math.random() * filtered.length);
+            let trial = filtered.length + 1;
+            while (filtered[random].id === this.currentHotspot?.id && trial--) {
+              random = Math.floor(Math.random() * filtered.length);
+            }
+            this.currentHotspot = filtered[random]; */
+
+            // alternative: choose by metric: least viewed, least distance traveled
+            // normalize viewtime and distance traveled
+            const maxViewtime = Math.max(...filtered.map(h => h.viewtime || 0));
+            const maxDistanceTraveled = Math.max(...filtered.map(h => h.distanceTraveled || 0));
+            this.currentHotspot = filtered.map(h => {
+              h.viewtime = maxViewtime && h.viewtime ? h.viewtime / maxViewtime : 0;
+              h.distanceTraveled = maxDistanceTraveled && h.distanceTraveled ? h.distanceTraveled / maxDistanceTraveled : 0;
+              return h;
+            }).sort((a, b) => {
+              const d_a = (a.viewtime!**2 + a.distanceTraveled!**2)**0.5;
+              const d_b = (b.viewtime!**2 + b.distanceTraveled!**2)**0.5;
+              return d_a - d_b;
+            })[0];
+          } else {
+            this.currentHotspot = filtered[0];
+          }
+
+          this.currentHotspot.viewtime = 0;
+          this.currentHotspot.distanceTraveled = 0;
+          this.updateHotspot(location);
+
+          this.trigger.next(this.currentHotspot);
+          this.audioService.ping();
         } else {
           this.trigger.next(false);
           this.currentHotspot = null;
@@ -216,6 +269,21 @@ export class HotspotService {
         this.typeFilter.next([5]);
         this.radius.next(20.0);
       });
+    }
+  }
+
+  /** write back to hotspots array */
+  private updateHotspot(location: GeolocationPosition) {
+    if (!this.currentHotspot) return;
+    this.currentHotspot.lastTimestamp = Date.now();
+    this.currentHotspot.lastLocation = location.coords;
+    const id = this.currentHotspot.id;
+    const hotspot = this.hotspots.find(h => h.id === id);
+    if (hotspot) {
+      hotspot.lastTimestamp = this.currentHotspot.lastTimestamp;
+      hotspot.lastLocation = this.currentHotspot.lastLocation;
+      hotspot.viewtime = this.currentHotspot.viewtime;
+      hotspot.distanceTraveled = this.currentHotspot.distanceTraveled;
     }
   }
 

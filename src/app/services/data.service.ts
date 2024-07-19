@@ -113,7 +113,7 @@ export class DataService {
             lon: (f.geometry as Point).coordinates[0]
           },
           subject: `WN: ${p.Art}`,
-          id: p.ID,
+          id: Number(p.ID),
           species: p.Art,
           observation: p.Beobachtungsart,
           observation_type: p.Beobachtungstyp,
