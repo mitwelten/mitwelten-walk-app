@@ -11,7 +11,7 @@ import { Component } from '@angular/core';
     <mat-card-title>Discover</mat-card-title>
     <mat-card-subtitle><a color="accent" href="https://discover.mitwelten.org/" target="_blank">discover.mitwelten.org</a></mat-card-subtitle>
   </mat-card-header>
-  <img mat-card-image src="https://explore.mitwelten.org/public/images/taxond.png" alt="Mitwelten Discover Screenshot">
+  <img mat-card-image src="/assets/mitwelten-discover.png" alt="Mitwelten Discover Screenshot">
 <mat-card-content>
   <p>
     <a color="accent" href="https://discover.mitwelten.org/" target="_blank">discover.mitwelten.org</a> ist eine
@@ -25,7 +25,7 @@ import { Component } from '@angular/core';
   <mat-card-title>Explore</mat-card-title>
   <mat-card-subtitle><a href="https://explore.mitwelten.org/app/" target="_blank">explore.mitwelten.org</a></mat-card-subtitle>
 </mat-card-header>
-<img mat-card-image src="/assets/mitwelten-discover.png" alt="Mitwelten Explore Screenshot">
+<img mat-card-image src="https://explore.mitwelten.org/public/images/taxond.png" alt="Mitwelten Explore Screenshot">
 <mat-card-content>
   <p>
     <a href="https://explore.mitwelten.org/app/" target="_blank">explore.mitwelten.org</a> ermöglicht es, gesammelte
