@@ -182,6 +182,17 @@ export class HotspotService {
         const hotspotsInRadius = c.filter(h => h.distance <= radius);
 
         if (hotspotsInRadius.length) {
+          // if in audiowalk mode, don't retrigger the same hotspot
+          if (hotspotsInRadius[0].type === 4) {
+            if (this.currentHotspot?.id !== hotspotsInRadius[0].id) {
+              this.currentHotspot = hotspotsInRadius[0];
+              this.trigger.next(this.currentHotspot);
+              this.audioService.ping();
+              return
+            } else {
+              return
+            }
+          }
           // check if we're at the same hotspot as before
           if (this.currentHotspot && hotspotsInRadius.map(h => h.id).includes(this.currentHotspot.id)) {
             const i = hotspotsInRadius.map(h => h.id).indexOf(this.currentHotspot.id);
