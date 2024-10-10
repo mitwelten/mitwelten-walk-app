@@ -90,6 +90,10 @@ export class DataService {
     return this.http.get<HotspotType[]>(`${this.apiUrl}/walk/hotspots/${walk_id}`)
       .pipe(map(hotspots => {
         return hotspots.map(h => {
+          h.viewtime = 0;
+          h.distanceTraveled = 0;
+          h.lastLocation = null;
+          h.lastTimestamp = null;
           if (h.type === 1) h.url = this.apiUrl+h.url
           else if (h.type === 2) h.sequence.forEach(s => s.url = this.apiUrl+s.url)
           else if (h.type === 4) {
@@ -124,7 +128,11 @@ export class DataService {
           post_url: p.Meldung,
           portrait_url: p.Artportraet,
           weight: p.weight,
-          media: p.media
+          media: p.media,
+          viewtime: 0,
+          distanceTraveled: 0,
+          lastLocation: null,
+          lastTimestamp: null,
         }
         return hotspot;
       })

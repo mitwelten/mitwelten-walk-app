@@ -10,10 +10,10 @@ import distance from '@turf/distance';
 
 interface Hotspot {
   location: CoordinatePoint;
-  viewtime?: number;
-  lastTimestamp?: number;
-  distanceTraveled?: number;
-  lastLocation?: GeolocationCoordinates;
+  viewtime: number;
+  distanceTraveled: number;
+  lastTimestamp: number | null;
+  lastLocation: GeolocationCoordinates | null;
   subject?: string;
   id: number;
   type: number;
@@ -137,7 +137,7 @@ export class HotspotService {
   */
 
   private hotspots: Array<HotspotType> = [];
-  private currentHotspot: HotspotType | null = null;
+  private currentHotspot: HotspotType | null | undefined;
   private typeFilter = new BehaviorSubject<number[]>([1,2,3,4,6]);
   private radius = new BehaviorSubject<number>(20.0);
 
@@ -164,25 +164,32 @@ export class HotspotService {
           { units: 'meters' })
         })).sort((a,b) => a.distance - b.distance).slice(0, 10);
 
+        // if we're at the same hotspot as before, update viewtime and distance traveled
         if (this.currentHotspot) {
-          // track time spent at hotspot
-          this.currentHotspot.viewtime! += Date.now() - this.currentHotspot.lastTimestamp!;
-          // track distance travelled for active hotspot
-          this.currentHotspot.distanceTraveled! += distance([location.coords.longitude, location.coords.latitude], [this.currentHotspot.lastLocation!.longitude, this.currentHotspot.lastLocation!.latitude], { units: 'meters' });
+          if (this.currentHotspot.lastLocation && this.currentHotspot.lastTimestamp) {
+            // update time spent at hotspot
+            this.currentHotspot.viewtime += Date.now() - this.currentHotspot.lastTimestamp;
+            // update distance travelled for active hotspot
+            this.currentHotspot.distanceTraveled += distance(
+              [location.coords.longitude, location.coords.latitude],
+              [this.currentHotspot.lastLocation.longitude, this.currentHotspot.lastLocation.latitude],
+              { units: 'meters' }
+            );
+          }
         }
 
         // collect hotspots that are within radius
-        const filtered = c.filter(h => h.distance <= radius);
+        const hotspotsInRadius = c.filter(h => h.distance <= radius);
 
-        if (filtered.length) {
+        if (hotspotsInRadius.length) {
           // check if we're at the same hotspot as before
-          if (this.currentHotspot && filtered.map(h => h.id).includes(this.currentHotspot.id)) {
-            const i = filtered.map(h => h.id).indexOf(this.currentHotspot.id);
+          if (this.currentHotspot && hotspotsInRadius.map(h => h.id).includes(this.currentHotspot.id)) {
+            const i = hotspotsInRadius.map(h => h.id).indexOf(this.currentHotspot.id);
             // same hotspot as before: if viewtime or distance traveled is above threshold, trigger next hotspot
-            if (this.currentHotspot.viewtime! > 30000 || this.currentHotspot.distanceTraveled! > 10) {
+            if (this.currentHotspot.viewtime > 30000 || this.currentHotspot.distanceTraveled > 10) {
               // trigger next hotspot, update viewtime and distance traveled on current hotspot
-              filtered[i].viewtime = this.currentHotspot.viewtime;
-              filtered[i].distanceTraveled = this.currentHotspot.distanceTraveled;
+              hotspotsInRadius[i].viewtime = this.currentHotspot.viewtime;
+              hotspotsInRadius[i].distanceTraveled = this.currentHotspot.distanceTraveled;
             } else {
               this.updateHotspot(location);
               return; // do not trigger new hotspot
@@ -190,7 +197,7 @@ export class HotspotService {
           }
 
           // new hotspot
-          if (filtered.length > 1) {
+          if (hotspotsInRadius.length > 1) {
             /* // random selection of hotspot if multiple are within radius
             let random = Math.floor(Math.random() * filtered.length);
             let trial = filtered.length + 1;
@@ -201,23 +208,27 @@ export class HotspotService {
 
             // alternative: choose by metric: least viewed, least distance traveled
             // normalize viewtime and distance traveled
-            const maxViewtime = Math.max(...filtered.map(h => h.viewtime || 0));
-            const maxDistanceTraveled = Math.max(...filtered.map(h => h.distanceTraveled || 0));
-            this.currentHotspot = filtered.map(h => {
+            const maxViewtime = Math.max(...hotspotsInRadius.map(h => h.viewtime || 0));
+            const maxDistanceTraveled = Math.max(...hotspotsInRadius.map(h => h.distanceTraveled || 0));
+            this.currentHotspot = hotspotsInRadius.map(h => {
               h.viewtime = maxViewtime && h.viewtime ? h.viewtime / maxViewtime : 0;
               h.distanceTraveled = maxDistanceTraveled && h.distanceTraveled ? h.distanceTraveled / maxDistanceTraveled : 0;
               return h;
             }).sort((a, b) => {
-              const d_a = (a.viewtime!**2 + a.distanceTraveled!**2)**0.5;
-              const d_b = (b.viewtime!**2 + b.distanceTraveled!**2)**0.5;
+              const d_a = (a.viewtime**2 + a.distanceTraveled**2)**0.5;
+              const d_b = (b.viewtime**2 + b.distanceTraveled**2)**0.5;
               return d_a - d_b;
             })[0];
           } else {
-            this.currentHotspot = filtered[0];
+            // only one hotspot in radius
+            if (this.currentHotspot && hotspotsInRadius[0].id === this.currentHotspot.id) {
+              this.updateHotspot(location);
+              return; // do not trigger new hotspot
+            } else {
+              this.currentHotspot = hotspotsInRadius[0];
+            }
           }
 
-          this.currentHotspot.viewtime = this.currentHotspot.viewtime || 0;
-          this.currentHotspot.distanceTraveled = this.currentHotspot.distanceTraveled || 0;
           this.updateHotspot(location);
 
           this.trigger.next(this.currentHotspot);
@@ -305,7 +316,11 @@ export class HotspotService {
               title: 'Single Image',
               description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
               url: '/assets/2990-0522_2023-05-15T11-00-08Z.jpg',
-              credits: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod'
+              credits: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod',
+              viewtime: 0,
+              distanceTraveled: 0,
+              lastTimestamp: null,
+              lastLocation: null,
             })
             break;
           case 2:
@@ -320,7 +335,11 @@ export class HotspotService {
                 { url: '/assets/img3.jpg', credits: 'asdf' },
                 { url: '/assets/img4.jpg', credits: 'asdf' },
                 { url: '/assets/img5.jpg', credits: 'asdf' },
-              ]
+              ],
+              viewtime: 0,
+              distanceTraveled: 0,
+              lastTimestamp: null,
+              lastLocation: null,
             })
             break;
           case 3:
@@ -329,6 +348,10 @@ export class HotspotService {
               location: { lat: 1, lon: 4},
               title: 'Aufbau eines Auenwald-Ufers',
               text: 'Auenwälder befinden sich an Flussläufen und sind durch periodische Wasserstandschwankungen charakterisiert. Zudem kann man einen Auenwald in verschiedene Vegetationszonen einteilen - abhängig von der jeweiligen Entfernung zum Flussufer. Unmittelbar am Ufer befindet sich der Spülsaum mit sich kurzfristig ansiedelnden Pionierpflanzen. Landeinwärts folgt dann eine Zone mit niedrigen Weidengebüschen, die den mechanischen Belastungen des regelmässigen Hochwassers standhalten. Anschliessend beginnt der eigentliche Auenwald: Die Weichholz-Aue, welche regelmässig überschwemmt wird, beherbergt viele Weide- und Pappelarten. Die Hartholz-Aue, die nur noch selten überschwemmt wird, wird durch Baumarten mit hartem Holz charakterisiert, wie beispielsweise Ulmen, Eichen und Eschen. Zudem verleien viele Lianen der Hartholzaue eine Urwald-Charakter.',
+              viewtime: 0,
+              distanceTraveled: 0,
+              lastTimestamp: null,
+              lastLocation: null,
             })
             break;
           case 4:
@@ -340,6 +363,10 @@ export class HotspotService {
               speakerName: 'Dr. Anna Ionescu',
               speakerFunction: 'Leiterin Forschung',
               contentSubject: 'Untersuchung der Auswirkungen von Klimawandel auf Biodiversität',
+              viewtime: 0,
+              distanceTraveled: 0,
+              lastTimestamp: null,
+              lastLocation: null,
             })
             break;
           case 5:
@@ -360,7 +387,11 @@ export class HotspotService {
                 'https://beidebasel.wildenachbarn.ch/system/files/styles/beobachtungcolorbox_large/private/medien_zu_meldungen/7051/2018-09/DSCN1128%20-%20Arbeitskopie%202.jpg?itok=O5sTokIp',
                 'https://beidebasel.wildenachbarn.ch/system/files/styles/beobachtungcolorbox_large/private/medien_zu_meldungen/7051/2018-09/DSCN1133.jpg?itok=kBf3rZ93',
                 'https://beidebasel.wildenachbarn.ch/system/files/styles/beobachtungcolorbox_large/private/medien_zu_meldungen/7051/2018-09/DSCN1115.jpg?itok=dzRKC9tJ',
-              ]
+              ],
+              viewtime: 0,
+              distanceTraveled: 0,
+              lastTimestamp: null,
+              lastLocation: null,
             })
             break;
           case 6:
@@ -371,7 +402,11 @@ export class HotspotService {
               type: 6,
               endpoint: 'pollinators?tag=136',
               title: 'Jahreszyklus der Morphospezies',
-              text: 'Hier ist zwischen Standorten zu vergleichen wie sich das Vorkommen jeder Morphospezies über die Monate verteilt.'
+              text: 'Hier ist zwischen Standorten zu vergleichen wie sich das Vorkommen jeder Morphospezies über die Monate verteilt.',
+              viewtime: 0,
+              distanceTraveled: 0,
+              lastTimestamp: null,
+              lastLocation: null,
             })
             break;
           /* case 6:
