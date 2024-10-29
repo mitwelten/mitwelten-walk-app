@@ -20,9 +20,9 @@
   <h2>{{ hotspot.species }}</h2>
   <div>
     <div class="infotable">
-      <ng-container *ngIf="hotspot.observation"><strong>Beobachungsart:</strong><span>{{ hotspot.observation }}</span></ng-container>
-      <ng-container *ngIf="hotspot.observation_type"><strong>Beobachungstyp:</strong><span>{{ hotspot.observation_type }}</span></ng-container>
-      <ng-container *ngIf="hotspot.date || hotspot.time_range"><strong>Beobachungsdatum:</strong><span>{{ hotspot.date }}, {{ hotspot.time_range }}</span></ng-container>
+      <!-- <ng-container *ngIf="hotspot.observation"><strong>Art:</strong><span>{{ hotspot.observation }}</span></ng-container> -->
+      <ng-container *ngIf="hotspot.observation_type"><strong>Typ:</strong><span>{{ hotspot.observation_type }}</span></ng-container>
+      <ng-container *ngIf="hotspot.date || hotspot.time_range"><strong>Datum:</strong><span>{{ hotspot.date }}, {{ hotspot.time_range }}</span></ng-container>
     </div>
     <a *ngIf="hotspot.post_url" mat-stroked-button color="primary" [href]="hotspot.post_url" target="_blank" rel="noopener noreferrer" style="margin-right: 16px;" >
       <mat-icon class="material-symbols-outlined">open_in_new</mat-icon>Meldung</a>
